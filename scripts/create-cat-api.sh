@@ -9,7 +9,6 @@
 
   # Map an internal route to CaT API backend for UI
   # cf map-route $APP_NAME apps.internal --hostname $APP_NAME
-fi
 
 #######################
 # Bind to Services

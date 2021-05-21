@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# CCS Scale BaT - GPaaS Cloud Foundry provisioning control script
+# CCS Scale CaT - GPaaS Cloud Foundry provisioning control script
 # Usage:
 # [SKIP_UPS=true] cf-cat.sh -o <ccs-scale-cat> -e <sbx1|sbx2|sbx3|sbx-spark|dev|int> <apply|destroy> <svcs|apps|all>
 #

@@ -17,6 +17,7 @@ cf target -o $ORG -s $SPACE
 # Create / update backing services
 if [[ $SCOPE =~ svcs|all ]]; then
   . ./scripts/create-services.sh
+  . ./scripts/create-ip-router-service.sh
 fi
 
 # Create / update applications

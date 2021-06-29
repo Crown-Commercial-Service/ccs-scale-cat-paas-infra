@@ -1,0 +1,13 @@
+---
+applications:
+  - name: ((APP_NAME))
+    instances: ((INSTANCES))
+    memory: ((MEMORY))
+    buildpacks:
+      - nginx_buildpack
+
+    health-check-type: http
+    health-check-http-endpoint: /_route-service-health
+
+    env:
+      APP_NAME: ((APP_NAME))

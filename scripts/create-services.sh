@@ -3,7 +3,15 @@
 ##################
 # Postgres Service
 ##################
-cf create-service postgres $SERVICE_PLAN_PG $(expand_var ${SERVICE_NAME_PG})
+ENV_SERVICE_NAME_PG=$(expand_var ${SERVICE_NAME_PG})
+cf create-service postgres $SERVICE_PLAN_PG $ENV_SERVICE_NAME_PG
+
+while cf service "${ENV_SERVICE_NAME_PG}" | grep -q "in progress"; do
+    sleep 20
+    echo "Waiting for ${ENV_SERVICE_NAME_PG} to finish provisioning..."
+done
+
+cf create-service-key $(expand_var ${SERVICE_NAME_PG}) $(expand_var ${SERVICE_KEY_PG})
 
 #############
 # User-Provided Services

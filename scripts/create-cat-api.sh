@@ -28,7 +28,7 @@ VCAP_SERVICES="{$(cf env $APP_NAME | sed -n '/^VCAP_SERVICES:/,/^$/{//!p;}')"
 echo "${VCAP_SERVICES}"
 echo "${ENV}"
 echo "${APP_NAME}"
-ENV_UPS_NAME=$(expand_var $UPS_NAME)
+export ENV_UPS_NAME=$(expand_var $UPS_NAME)
 
 # CaT API
 cf set-env $APP_NAME AGREEMENTS_SERVICE_API_KEY $(echo $VCAP_SERVICES | jq -r '."user-provided"[] | select(.name == env.ENV_UPS_NAME).credentials."agreements-svc-api-key"')

@@ -41,6 +41,14 @@ cf set-env $APP_NAME "spring.security.oauth2.resourceserver.jwt.jwk-set-uri" $(e
 #cf set-env $APP_NAME APP_DOMAIN "$APP_NAME.london.cloudapps.digital"
 
 #######################
+# Log drain to logit.io
+#######################
+LOGIT_HOSTNAME=$(echo $VCAP_SERVICES | jq -r '."user-provided"[] | select(.name == env.ENV_UPS_NAME).credentials."logit-hostname"')
+LOGIT_PORT=$(echo $VCAP_SERVICES | jq -r '."user-provided"[] | select(.name == env.ENV_UPS_NAME).credentials."logit-port"')
+cf cups logit-ssl-drain -l syslog-tls://$LOGIT_HOSTNAME:$LOGIT_PORT
+cf bind-service $APP_NAME logit-ssl-drain
+
+#######################
 # Restage and start
 #######################
 cf restage $APP_NAME

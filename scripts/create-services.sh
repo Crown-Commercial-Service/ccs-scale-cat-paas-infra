@@ -24,10 +24,8 @@ create_update_ups () {
 
   # If the service already exists, update it otherwise create it
   if cf service $UPS_NAME &> /dev/null; then
-    # TODO: Create github issue - input prompt does not work
-    # https://github.com/cloudfoundry/cli/issues
-    echo "Update $UPS_LABEL service details as prompted:"
-    # cf uups $UPS_NAME -p "$UPS_PROPS"
+    echo "Update $UPS_LABEL service details as prompted (values hidden):"
+    cf uups $UPS_NAME -p "$UPS_PROPS"
   else
     echo "Enter $UPS_LABEL service details as prompted:"
     cf cups $UPS_NAME -p "$UPS_PROPS"
@@ -38,6 +36,6 @@ create_update_ups () {
 if [[ "$SKIP_UPS" != true ]]; then
   ENV_UPS_NAME=$(expand_var $UPS_NAME)
   ENV_UPS_LABEL="${ENV} CaT UPS"
-  UPS_PROPS="jaggaer-client-id, jaggaer-client-secret, auth-server-jwk-set-uri, agreements-svc-api-key, agreements-svc-url"
+  UPS_PROPS="jaggaer-client-id, jaggaer-client-secret, auth-server-jwk-set-uri, agreements-svc-api-key, agreements-svc-url, logit-hostname, logit-port"
   create_update_ups "$ENV_UPS_NAME" "$ENV_UPS_LABEL" "$UPS_PROPS"
 fi

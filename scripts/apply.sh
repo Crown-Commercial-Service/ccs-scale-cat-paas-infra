@@ -28,5 +28,5 @@ if [[ $SCOPE =~ app|all ]]; then
   APP_NAME_API=$(expand_var $APP_NAME_API)
   APP_NAME_UI=$(expand_var $APP_NAME_UI)
   . ./scripts/create-cat-api.sh
-  . ./scripts/create-cat-ui.sh
+  . ./scripts/create-cat-buyer-ui.sh
 fi

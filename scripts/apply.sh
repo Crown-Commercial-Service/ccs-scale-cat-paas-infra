@@ -25,7 +25,9 @@ if [[ $SCOPE =~ app|all ]]; then
   export CF_DOCKER_PASSWORD=$AWS_ECR_REPO_SECRET_ACCESS_KEY
 
   # CaT API & UI
-  APP_NAME=$(expand_var $APP_NAME_API)
+  ENV_APP_NAME_API=$(expand_var $APP_NAME_API)
+  ENV_APP_NAME_UI=$(expand_var $APP_NAME_UI)
   . ./scripts/create-cat-api.sh
-  # . ./scripts/create-cat-ui.sh
+  . ./scripts/create-cat-buyer-ui.sh
+  . ./scripts/create-log-drain-ups.sh
 fi

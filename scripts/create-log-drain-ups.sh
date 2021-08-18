@@ -16,9 +16,9 @@ create_update_log_drain_ups () {
   LOGIT_PORT=$(echo $VCAP_SERVICES | jq -r '."user-provided"[] | select(.name == env.ENV_UPS_NAME).credentials."logit-port"')
 
   if cf service $UPS_NAME &> /dev/null; then
-	cf uups $UPS_NAME -l syslog-tls://$LOGIT_HOSTNAME:$LOGIT_PORT
+    cf uups $UPS_NAME -l syslog-tls://$LOGIT_HOSTNAME:$LOGIT_PORT
   else
-	cf cups $UPS_NAME -l syslog-tls://$LOGIT_HOSTNAME:$LOGIT_PORT
+    cf cups $UPS_NAME -l syslog-tls://$LOGIT_HOSTNAME:$LOGIT_PORT
   fi	
   
 }

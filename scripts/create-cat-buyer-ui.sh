@@ -8,15 +8,20 @@
 #######################
 # Bind to Services
 #######################
-cf bind-service $APP_NAME_UI $(expand_var $UPS_NAME)
+cf bind-service $ENV_APP_NAME_UI $(expand_var $UPS_NAME)
 
 ##################
 # Create Network Policy
 # Allows public UI app to connect to private API service
 ##################
-cf add-network-policy $APP_NAME_UI $APP_NAME_API --protocol tcp --port 8080
+cf add-network-policy $ENV_APP_NAME_UI $ENV_APP_NAME_API --protocol tcp --port 8080
 
 #######################
-# Log drain to logit.io
+# Set ENV variables
 #######################
-cf bind-service $APP_NAME_UI $(expand_var $UPS_NAME_LOG_DRAIN_SERVICE)
+cf set-env $ENV_APP_NAME_UI TENDERS_API_BASE_URL $(expand_var $TENDERS_API_BASE_URL)
+
+#######################
+# Restage and start
+#######################
+cf restage $ENV_APP_NAME_UI

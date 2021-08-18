@@ -36,6 +36,6 @@ create_update_ups () {
 if [[ "$SKIP_UPS" != true ]]; then
   ENV_UPS_NAME=$(expand_var $UPS_NAME)
   ENV_UPS_LABEL="${ENV} CaT UPS"
-  UPS_PROPS="jaggaer-client-id, jaggaer-client-secret, auth-server-jwk-set-uri, agreements-svc-api-key, agreements-svc-url, logit-hostname, logit-port, conclave-url, conclave-client-id, conclave-client-secret, conclave-api-key, tenders-svc-url, tenders-svc-port"
+  UPS_PROPS="jaggaer-client-id, jaggaer-client-secret, auth-server-jwk-set-uri, agreements-svc-api-key, agreements-svc-url, logit-hostname, logit-port, conclave-url, conclave-client-id, conclave-client-secret, conclave-api-key"
   create_update_ups "$ENV_UPS_NAME" "$ENV_UPS_LABEL" "$UPS_PROPS"
 fi

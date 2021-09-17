@@ -11,4 +11,5 @@ module "deploy-all" {
   cf_password           = var.cf_password
   syslog_drain_url      = "https://d74f58fc-479f-413d-bb66-1cec772b5f5a-ls.logit.io:17256"
   postgres_service_plan = "small-ha-11"
+  nginx_instances       = 3
 }

@@ -22,4 +22,12 @@ variable "cf_password" {
   sensitive = true
 }
 
+variable "nginx_memory" {
+  default = 1024
+}
+
+variable "nginx_instances" {
+  default = 2
+}
+
 variable "syslog_drain_url" {}

@@ -13,11 +13,11 @@ variable "healthcheck_timeout" {
 }
 
 variable "instances" {
-  default = 1
+  default = 2
 }
 
 variable "memory" {
-  default = 256
+  default = 1024
 }
 
 variable "region_domain" {

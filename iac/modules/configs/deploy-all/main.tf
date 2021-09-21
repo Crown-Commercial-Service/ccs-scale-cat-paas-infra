@@ -4,14 +4,16 @@
 # This configuration will deploy all components.
 #########################################################
 module "tenders-db" {
-  source                 = "../../tenders-db"
-  organisation           = var.organisation
-  space                  = var.space
-  environment            = var.environment
-  postgres_instance_name = var.postgres_instance_name
-  postgres_service_plan  = var.postgres_service_plan
-  cf_username            = var.cf_username
-  cf_password            = var.cf_password
+  source                  = "../../tenders-db"
+  organisation            = var.organisation
+  space                   = var.space
+  environment             = var.environment
+  postgres_instance_name  = var.postgres_instance_name
+  postgres_service_plan   = var.postgres_service_plan
+  postgres_create_timeout = var.agreements_db_create_timeout
+  postgres_delete_timeout = var.agreements_db_delete_timeout
+  cf_username             = var.cf_username
+  cf_password             = var.cf_password
 }
 
 module "logit-ups" {

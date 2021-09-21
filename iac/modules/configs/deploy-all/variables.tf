@@ -14,6 +14,14 @@ variable "postgres_service_plan" {
   default = "tiny-unencrypted-11"
 }
 
+variable "agreements_db_create_timeout" {
+  default = "30m"
+}
+
+variable "agreements_db_delete_timeout" {
+  default = "30m"
+}
+
 variable "cf_username" {
   sensitive = true
 }

@@ -21,7 +21,6 @@ module "logit-ups" {
   organisation     = var.organisation
   space            = var.space
   environment      = var.environment
-  syslog_drain_url = var.syslog_drain_url
   cf_username      = var.cf_username
   cf_password      = var.cf_password
 }

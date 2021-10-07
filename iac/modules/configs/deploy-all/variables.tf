@@ -37,5 +37,3 @@ variable "nginx_memory" {
 variable "nginx_instances" {
   default = 2
 }
-
-variable "syslog_drain_url" {}

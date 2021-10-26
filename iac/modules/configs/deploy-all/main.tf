@@ -35,11 +35,11 @@ module "ip-router" {
 }
 
 module "redis" {
-  source       = "../../redis"
-  organisation = var.organisation
-  space        = var.space
-  environment  = var.environment
-  service_plan = var.redis_service_plan
+  source         = "../../redis"
+  organisation   = var.organisation
+  space          = var.space
+  environment    = var.environment
+  service_plan   = var.redis_service_plan
   create_timeout = var.redis_create_timeout
   delete_timeout = var.redis_delete_timeout
 }

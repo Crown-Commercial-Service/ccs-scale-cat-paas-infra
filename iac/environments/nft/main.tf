@@ -12,4 +12,5 @@ module "deploy-all" {
   postgres_service_plan = "medium-ha-11"
   nginx_memory          = 2048
   nginx_instances       = 3
+  redis_service_plan    = "large-ha-6_x"
 }

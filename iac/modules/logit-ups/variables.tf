@@ -8,8 +8,6 @@ variable "organisation" {}
 
 variable "space" {}
 
-variable "syslog_drain_url" {}
-
 variable "cf_username" {
   sensitive = true
 }

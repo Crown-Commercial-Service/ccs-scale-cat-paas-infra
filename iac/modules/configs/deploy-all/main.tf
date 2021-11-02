@@ -17,13 +17,12 @@ module "tenders-db" {
 }
 
 module "logit-ups" {
-  source           = "../../logit-ups"
-  organisation     = var.organisation
-  space            = var.space
-  environment      = var.environment
-  syslog_drain_url = var.syslog_drain_url
-  cf_username      = var.cf_username
-  cf_password      = var.cf_password
+  source       = "../../logit-ups"
+  organisation = var.organisation
+  space        = var.space
+  environment  = var.environment
+  cf_username  = var.cf_username
+  cf_password  = var.cf_password
 }
 
 module "ip-router" {
@@ -33,4 +32,14 @@ module "ip-router" {
   environment  = var.environment
   memory       = var.nginx_memory
   instances    = var.nginx_instances
+}
+
+module "redis" {
+  source         = "../../redis"
+  organisation   = var.organisation
+  space          = var.space
+  environment    = var.environment
+  service_plan   = var.redis_service_plan
+  create_timeout = var.redis_create_timeout
+  delete_timeout = var.redis_delete_timeout
 }

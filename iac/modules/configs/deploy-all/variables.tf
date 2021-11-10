@@ -38,4 +38,14 @@ variable "nginx_instances" {
   default = 2
 }
 
-variable "syslog_drain_url" {}
+variable "redis_service_plan" {
+  default = "small-ha-6_x"
+}
+
+variable "redis_create_timeout" {
+  default = "30m"
+}
+
+variable "redis_delete_timeout" {
+  default = "30m"
+}

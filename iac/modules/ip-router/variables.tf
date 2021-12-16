@@ -23,3 +23,7 @@ variable "memory" {
 variable "region_domain" {
   default = "london.cloudapps.digital"
 }
+
+variable "nginx_client_max_body_size" {
+  default = "300M"
+}

@@ -34,6 +34,7 @@ resource "cloudfoundry_app" "nginx" {
   disk_quota = var.disk_quota
   environment = {
     ALLOWED_IPS : join("\n", [data.aws_ssm_parameter.allowed_ip_ranges.value, data.aws_ssm_parameter.env_allowed_ip_ranges.value])
+    CLIENT_MAX_BODY_SIZE: var.nginx_client_max_body_size
   }
   health_check_timeout       = var.healthcheck_timeout
   health_check_type          = "http"

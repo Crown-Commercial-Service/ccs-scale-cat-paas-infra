@@ -43,3 +43,10 @@ module "redis" {
   create_timeout = var.redis_create_timeout
   delete_timeout = var.redis_delete_timeout
 }
+
+module "s3" {
+  source         = "../../s3"
+  organisation   = var.organisation
+  space          = var.space
+  environment    = var.environment
+}

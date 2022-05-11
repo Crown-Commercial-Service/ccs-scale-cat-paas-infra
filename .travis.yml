@@ -55,6 +55,13 @@ deploy:
     on:
       branch: release/uat
 
+  # PRE
+  - provider: script
+    skip_cleanup: true
+    script: CF_ENVIRONMENT=pre bash ./deploy.sh
+    on:
+      branch: release/pre      
+
 env:
   global:
     - TF_VERSION=1.0.5

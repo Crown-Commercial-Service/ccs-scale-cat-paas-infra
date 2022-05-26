@@ -9,5 +9,5 @@ module "deploy-all" {
   environment           = "dev"
   cf_username           = var.cf_username
   cf_password           = var.cf_password
-  postgres_service_plan = "small-ha-11"
+  postgres_service_plan = "small-ha-13"
 }

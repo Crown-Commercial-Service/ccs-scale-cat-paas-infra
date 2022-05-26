@@ -26,7 +26,8 @@ The main environments are provisioned automatically via Travis CI. Merges to key
 - `release/int` branch -> `int` space
 - `release/nft` branch -> `nft` space
 - `release/uat` branch -> `uat` space
-- other environments TBD (these mappings may change as we evolve the process as more environments come online)
+- `release/pre` branch -> `pre-production` space
+- `release/prd` branch -> `production` space
 - feature branches can be deployed to specific sandboxes by making minor changes in the `travis.yml` file (follow instructions)
 
 ## Provision the service infrastructure from a local machine (sandbox spaces only)

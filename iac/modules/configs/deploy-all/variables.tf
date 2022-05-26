@@ -11,7 +11,7 @@ variable "postgres_instance_name" {
 }
 
 variable "postgres_service_plan" {
-  default = "tiny-unencrypted-11"
+  default = "tiny-unencrypted-13"
 }
 
 variable "agreements_db_create_timeout" {

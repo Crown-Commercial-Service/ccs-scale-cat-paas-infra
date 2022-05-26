@@ -60,7 +60,14 @@ deploy:
     skip_cleanup: true
     script: CF_ENVIRONMENT=pre bash ./deploy.sh
     on:
-      branch: release/pre      
+      branch: release/pre
+
+  # PRD
+  - provider: script
+    skip_cleanup: true
+    script: CF_ENVIRONMENT=prd bash ./deploy.sh
+    on:
+      branch: release/prd          
 
 env:
   global:

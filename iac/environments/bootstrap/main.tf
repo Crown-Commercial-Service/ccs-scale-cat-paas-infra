@@ -57,7 +57,7 @@ module "bootstrap-uat" {
   subdomains                 = "uat.${data.aws_ssm_parameter.buyer_ui_domain.value}"
 }
 
-lmodule "bootstrap-uat2" {
+module "bootstrap-uat2" {
   source                     = "../../modules/bootstrap"
   space                      = "uat2"
   environment                = "uat2"

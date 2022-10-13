@@ -57,6 +57,15 @@ module "bootstrap-uat" {
   subdomains                 = "uat.${data.aws_ssm_parameter.buyer_ui_domain.value}"
 }
 
+lmodule "bootstrap-uat2" {
+  source                     = "../../modules/bootstrap"
+  space                      = "uat2"
+  environment                = "uat2"
+  cf_username                = var.cf_username
+  cf_password                = var.cf_password
+  subdomains                 = "uat2.${data.aws_ssm_parameter.buyer_ui_domain.value}"
+}
+
 module "bootstrap-pre" {
   source                     = "../../modules/bootstrap"
   space                      = "pre-production"

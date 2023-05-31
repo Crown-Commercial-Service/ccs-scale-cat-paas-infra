@@ -34,6 +34,15 @@ module "ip-router" {
   instances    = var.nginx_instances
 }
 
+module "ip-router-jaggaer-testing" {
+  source       = "../../ip-router-jaggaer-testing"
+  organisation = var.organisation
+  space        = var.space
+  environment  = var.environment
+  memory       = var.nginx_memory
+  instances    = var.nginx_instances
+}
+
 module "redis" {
   source         = "../../redis"
   organisation   = var.organisation

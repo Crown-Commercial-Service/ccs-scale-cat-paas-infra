@@ -47,7 +47,7 @@ resource "cloudfoundry_app" "nginx" {
   source_code_hash           = data.archive_file.nginx.output_base64sha256
   space                      = data.cloudfoundry_space.space.id
   stopped                    = false
-  timeout                    = 600
+  timeout                    = 60
 }
 
 resource "cloudfoundry_route" "nginx" {

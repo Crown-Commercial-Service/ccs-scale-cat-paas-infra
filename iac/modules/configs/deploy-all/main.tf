@@ -34,6 +34,14 @@ module "ip-router" {
   instances    = var.nginx_instances
 }
 
+module "opensearch" {
+  source        = "../../opensearch"
+  environment   = var.environment
+  organisation  = var.organisation
+  service_plan  = var.opensearch_service_plan
+  space         = var.space
+}
+
 module "redis" {
   source         = "../../redis"
   organisation   = var.organisation

@@ -42,6 +42,14 @@ module "opensearch" {
   space         = var.space
 }
 
+module "autoscaler" {
+  source        = "../../autoscaler"
+  environment   = var.environment
+  organisation  = var.organisation
+  service_plan  = var.autoscaler_service_plan
+  space         = var.space
+}
+
 module "redis" {
   source         = "../../redis"
   organisation   = var.organisation

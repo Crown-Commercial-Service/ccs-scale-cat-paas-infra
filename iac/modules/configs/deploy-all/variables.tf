@@ -18,6 +18,10 @@ variable "opensearch_service_plan" {
   default = "tiny-1"
 }
 
+variable "autoscaler_service_plan" {
+  default = "autoscaler-free-plan"
+}
+
 variable "agreements_db_create_timeout" {
   default = "30m"
 }

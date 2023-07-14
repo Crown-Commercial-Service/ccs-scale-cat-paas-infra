@@ -14,6 +14,10 @@ variable "postgres_service_plan" {
   default = "tiny-unencrypted-13"
 }
 
+variable "opensearch_service_plan" {
+  default = "small-ha-1"
+}
+
 variable "agreements_db_create_timeout" {
   default = "30m"
 }

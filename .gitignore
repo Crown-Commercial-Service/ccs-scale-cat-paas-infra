@@ -12,6 +12,9 @@
 # Secrets var file
 **/secret.tfvars
 
+# Localised backend options
+local.tfbackend
+
 # Node deps and artefacts, keep node_modules dir
 **/package-lock.json
 **/node_modules/**/

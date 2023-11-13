@@ -1,5 +1,28 @@
 # ccs-scale-cat-paas-infra
 
+## Checking out - Git Submodule
+
+Note that this repo makes use of a Git submodule to load what's known as the Core infrastructure code. Therefore it will require slightly different operation compared to that of a single-repo checkout.
+
+### Cloning, first time
+
+In short, use the `--recurse-submodules` switch, thus:
+```bash
+git clone --recurse-submodules REPO_URL
+```
+
+### Pulling later changes
+
+Likewise when you pull upstream changes, you will likely want to update the submodule in step with the main repo. This is achieved as follows:
+
+```bash
+git pull --recurse-submodules origin main
+```
+
+### Further reading
+
+If you are intending to amend any of the submodule code, you will need to be aware of how to manage inter-dependent Git modules in the same file tree. The [offical Git docs](https://git-scm.com/book/en/v2/Git-Tools-Submodules) are a pretty good place to start.
+
 ## Local initialisation & provisioning (sandbox spaces only)
 
 Terraform state for each space (environment) is persisted to a dedicated AWS account. Access keys for an account in this environment with the appropriate permissions must be obtained before provisioning any infrastructure from a local development machine. The S3 state bucket name and Dynamo DB locaking table name must also be known.

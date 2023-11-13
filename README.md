@@ -23,6 +23,10 @@ git pull --recurse-submodules origin main
 
 If you are intending to amend any of the submodule code, you will need to be aware of how to manage inter-dependent Git modules in the same file tree. The [offical Git docs](https://git-scm.com/book/en/v2/Git-Tools-Submodules) are a pretty good place to start.
 
+## Native AWS Operations
+
+If you're using this IAC repo to deploy ECS services etc (i.e. you are post-GPaaS migration) then you're likely to need the scripts provided in the Core repo - please read the documentation on [setting up a single Python virtualenv for all of the helper scripts](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/scripts/README.md).
+
 ## Local initialisation & provisioning (sandbox spaces only)
 
 Terraform state for each space (environment) is persisted to a dedicated AWS account. Access keys for an account in this environment with the appropriate permissions must be obtained before provisioning any infrastructure from a local development machine. The S3 state bucket name and Dynamo DB locaking table name must also be known.

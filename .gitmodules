@@ -1,0 +1,4 @@
+[submodule "iac/core"]
+	path = iac/core
+	url = git@github.com:Crown-Commercial-Service/ccs-migration-alpha-tools.git
+	branch = main

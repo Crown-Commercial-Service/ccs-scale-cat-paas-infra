@@ -1,0 +1,4 @@
+# Add only package requirements which are in addition to those
+# expressed in core/requirements.in
+# See:
+#  https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/scripts/README.md

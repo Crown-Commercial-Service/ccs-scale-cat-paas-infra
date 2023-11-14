@@ -1,0 +1,10 @@
+##
+# Copy this file to local.auto.tfvars (which is excluded from Git)
+# and populate as appropriate.
+#
+# Editing this file? Please keep the variables in alphabetical order.
+# Thank you!
+##
+
+# Set true if you expect this environment to be destroyed from time-to-time.
+environment_is_ephemeral = true

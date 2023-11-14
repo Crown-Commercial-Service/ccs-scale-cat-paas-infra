@@ -15,6 +15,20 @@ aws_region = "eu-west-2"
 # To specify different builds
 docker_image_tags = {
   buyer_ui_http = "latest",
+  cat_api_http  = "latest",
+}
+
+# Map in the format: description = "CIDR_BLOCK"
+cat_api_ingress_cidr_safelist = {
+  everywhere = "0.0.0.0/0"
+}
+
+# Map of CAT API specific settings
+cat_api_settings = {
+  dev_mode                   = true,
+  eetime_enabled             = true,
+  log_level                  = "DEBUG",
+  resolve_buyer_users_by_sso = false
 }
 
 # Set true if you expect this environment to be destroyed from time-to-time.
@@ -22,6 +36,20 @@ environment_is_ephemeral = true
 
 # Choose a name for your dev environment, include your own name
 environment_name = "DEV-YOUR_NAME"
+
+# ID and subdomain name for the Hosted Zone to use for A records and cert validation records
+hosted_zone = {
+  id   = "/hostedzone/Z1234568YYYYY",
+  name = "some.domain.example.com"
+}
+
+# RDS sizing options
+rds_allocated_storage_gb         = 10
+rds_backup_retention_period_days = 14
+rds_db_instance_class            = "db.t3.small"
+rds_postgres_engine_version      = 14.6
+# By default this is false - Set true for ephemeral environments
+rds_skip_final_snapshot          = true
 
 # Used to prefix resource names - The various formats are to satisfy the divergent
 # naming requirements across AWS resources
@@ -31,9 +59,57 @@ resource_name_prefixes = {
   hyphens_lower = "cas-euw2-dev",
 }
 
+# Options for Opensearch domain
+search_domain_engine_version  = "OpenSearch_1.3"
+search_domain_instance_count  = 2
+search_domain_volume_size_gib = 20
+
+# Qualifiers to prepend to the hosted zone name in order to specify the public services' FQDNs
+service_subdomain_prefixes = {
+  cat_api = "api"
+}
+
+# Paths to existing SSM parameters used for application configuration environment variables
+ssm_parameter_paths = {
+  agreements-service-base-url               = "/dummy",
+  auth-server-jwk-set-uri                   = "/dummy",
+  conclave-wrapper-api-base-url             = "/dummy",
+  conclave-wrapper-api-key                  = "/dummy",
+  conclave-wrapper-identities-api-base-url  = "/dummy",
+  conclave-wrapper-identities-api-key       = "/dummy",
+  document-upload-service-api-key           = "/dummy",
+  document-upload-service-aws-access-key-id = "/dummy",
+  document-upload-service-aws-secret-key    = "/dummy",
+  document-upload-service-get-base-url      = "/dummy",
+  document-upload-service-s3-bucket         = "/dummy",
+  document-upload-service-upload-base-url   = "/dummy",
+  gov-uk-notify_api-key                     = "/dummy",
+  gov-uk-notify_invalid-duns-template-id    = "/dummy",
+  gov-uk-notify_target-email                = "/dummy",
+  gov-uk-notify_template-id                 = "/dummy",
+  jaggaer-base-url                          = "/dummy",
+  jaggaer-client-id                         = "/dummy",
+  jaggaer-client-secret                     = "/dummy",
+  jaggaer-itt-template-id                   = "/dummy",
+  jaggaer-project-template-id               = "/dummy",
+  jaggaer-self-service-id                   = "/dummy",
+  jaggaer-token-url                         = "/dummy",
+  oppertunities-s3-export-schedule          = "/dummy",
+  oppertunities-s3-export-ui-link           = "/dummy",
+  projects-to-opensearch-sync-schedule      = "/dummy",
+  rollbar-access-token                      = "/dummy",
+  rollbar-environment                       = "/dummy",
+}
+
 # Specify the settings for each task and its containers - See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 task_container_configs = {
   buyer_ui = {
+    http_cpu     = 1024,
+    http_memory  = 2048,
+    total_cpu    = 1024,
+    total_memory = 2048,
+  },
+  cat_api = {
     http_cpu     = 1024,
     http_memory  = 2048,
     total_cpu    = 1024,

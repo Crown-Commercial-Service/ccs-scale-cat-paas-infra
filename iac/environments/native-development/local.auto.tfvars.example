@@ -6,5 +6,40 @@
 # Thank you!
 ##
 
+# Enter your dev AWS account ID
+aws_account_id = "123456789012"
+
+# This value is unlikely to change
+aws_region = "eu-west-2"
+
+# To specify different builds
+docker_image_tags = {
+  buyer_ui_http = "latest",
+}
+
 # Set true if you expect this environment to be destroyed from time-to-time.
 environment_is_ephemeral = true
+
+# Choose a name for your dev environment, include your own name
+environment_name = "DEV-YOUR_NAME"
+
+# Used to prefix resource names - The various formats are to satisfy the divergent
+# naming requirements across AWS resources
+resource_name_prefixes = {
+  normal        = "CAS:EUW2:DEV",
+  hyphens       = "CAS-EUW2-DEV",
+  hyphens_lower = "cas-euw2-dev",
+}
+
+# Specify the settings for each task and its containers - See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
+task_container_configs = {
+  buyer_ui = {
+    http_cpu     = 1024,
+    http_memory  = 2048,
+    total_cpu    = 1024,
+    total_memory = 2048,
+  }
+}
+
+# CIDR block for the VPC for this app
+vpc_cidr_block = "10.3.0.0/24"

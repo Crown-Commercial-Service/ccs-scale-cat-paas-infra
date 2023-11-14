@@ -4,10 +4,10 @@
 #  https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/scripts/ecr_repository/README.md
 #
 module "ecr_repos" {
-  source           = "../../core/resource-groups/ecr-repository-group"
-  is_ephemeral     = var.environment_is_ephemeral
+  source       = "../../core/resource-groups/ecr-repository-group"
+  is_ephemeral = var.environment_is_ephemeral
   repository_names = [
     "buyer-ui",
-    "tenders-api",
+    "cat-api",
   ]
 }

@@ -15,7 +15,7 @@ module "ecs_cluster" {
 }
 
 resource "aws_iam_role" "ecs_execution_role" {
-  name        = "ecs-execution"
+  name        = "${var.resource_name_prefixes.hyphens_lower}-ecs-execution"
   description = "Role assumed by the ECS service during provision and setup of tasks"
 
   assume_role_policy = jsonencode({

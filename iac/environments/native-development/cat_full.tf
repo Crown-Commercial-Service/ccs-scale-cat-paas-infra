@@ -3,8 +3,9 @@ module "cat_full" {
 
   aws_account_id                   = var.aws_account_id
   aws_region                       = var.aws_region
+  cat_api_environment              = var.cat_api_environment
   cat_api_ingress_cidr_safelist    = var.cat_api_ingress_cidr_safelist
-  cat_api_settings                 = var.cat_api_settings
+  cat_api_ssm_secret_paths         = local.cat_api_ssm_secret_paths
   docker_image_tags                = var.docker_image_tags
   environment_is_ephemeral         = var.environment_is_ephemeral
   environment_name                 = var.environment_name
@@ -19,7 +20,6 @@ module "cat_full" {
   search_domain_instance_count     = var.search_domain_instance_count
   search_domain_volume_size_gib    = var.search_domain_volume_size_gib
   service_subdomain_prefixes       = var.service_subdomain_prefixes
-  ssm_parameter_paths              = var.ssm_parameter_paths
   task_container_configs           = var.task_container_configs
   vpc_cidr_block                   = var.vpc_cidr_block
 }

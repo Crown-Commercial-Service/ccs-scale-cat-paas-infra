@@ -17,14 +17,48 @@ variable "cat_api_ingress_cidr_safelist" {
   }
 }
 
-variable "cat_api_settings" {
+variable "cat_api_environment" {
   type = object({
-    dev_mode                   = bool,
-    eetime_enabled             = bool,
-    log_level                  = string,
-    resolve_buyer_users_by_sso = bool,
+    agreements-service-base-url              = string,
+    auth-server-jwk-set-uri                  = string,
+    conclave-wrapper-api-base-url            = string,
+    conclave-wrapper-identities-api-base-url = string,
+    dev_mode                                 = bool,
+    document-upload-service-get-base-url     = string,
+    document-upload-service-s3-bucket        = string,
+    document-upload-service-upload-base-url  = string,
+    eetime_enabled                           = bool,
+    gov-uk-notify_invalid-duns-template-id   = string,
+    gov-uk-notify_target-email               = string,
+    gov-uk-notify_template-id                = string,
+    jaggaer-base-url                         = string,
+    jaggaer-client-id                        = string,
+    jaggaer-itt-template-id                  = string,
+    jaggaer-project-template-id              = string,
+    jaggaer-self-service-id                  = string,
+    jaggaer-token-url                        = string,
+    log_level                                = string,
+    oppertunities-s3-export-schedule         = string,
+    oppertunities-s3-export-ui-link          = string,
+    projects-to-opensearch-sync-schedule     = string,
+    resolve_buyer_users_by_sso               = bool,
+    rollbar-environment                      = string,
   })
-  description = "Settings specific to the CAT API"
+  description = "Environment variable values specific to the CAT API"
+}
+
+variable "cat_api_ssm_secret_paths" {
+  type = object({
+    conclave-wrapper-api-key                  = string,
+    conclave-wrapper-identities-api-key       = string,
+    document-upload-service-api-key           = string,
+    document-upload-service-aws-access-key-id = string,
+    document-upload-service-aws-secret-key    = string,
+    gov-uk-notify_api-key                     = string,
+    jaggaer-client-secret                     = string,
+    rollbar-access-token                      = string,
+  })
+  description = "Paths to SSM parameters containing secrets for the CAT API"
 }
 
 variable "docker_image_tags" {
@@ -113,40 +147,6 @@ variable "service_subdomain_prefixes" {
   type = object({
     cat_api = string,
   })
-}
-
-variable "ssm_parameter_paths" {
-  type = object({
-    agreements-service-base-url               = string,
-    auth-server-jwk-set-uri                   = string,
-    conclave-wrapper-api-base-url             = string,
-    conclave-wrapper-api-key                  = string,
-    conclave-wrapper-identities-api-base-url  = string,
-    conclave-wrapper-identities-api-key       = string,
-    document-upload-service-api-key           = string,
-    document-upload-service-aws-access-key-id = string,
-    document-upload-service-aws-secret-key    = string,
-    document-upload-service-get-base-url      = string,
-    document-upload-service-s3-bucket         = string,
-    document-upload-service-upload-base-url   = string,
-    gov-uk-notify_api-key                     = string,
-    gov-uk-notify_invalid-duns-template-id    = string,
-    gov-uk-notify_target-email                = string,
-    gov-uk-notify_template-id                 = string,
-    jaggaer-base-url                          = string,
-    jaggaer-client-id                         = string,
-    jaggaer-client-secret                     = string,
-    jaggaer-itt-template-id                   = string,
-    jaggaer-project-template-id               = string,
-    jaggaer-self-service-id                   = string,
-    jaggaer-token-url                         = string,
-    oppertunities-s3-export-schedule          = string,
-    oppertunities-s3-export-ui-link           = string,
-    projects-to-opensearch-sync-schedule      = string,
-    rollbar-access-token                      = string,
-    rollbar-environment                       = string,
-  })
-  description = "Paths to the pre-existing SSM parameters necessary for CAS application functionality"
 }
 
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size

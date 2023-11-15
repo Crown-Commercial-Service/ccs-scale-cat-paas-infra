@@ -12,10 +12,32 @@ aws_account_id = "123456789012"
 # This value is unlikely to change
 aws_region = "eu-west-2"
 
-# To specify different builds
-docker_image_tags = {
-  buyer_ui_http = "latest",
-  cat_api_http  = "latest",
+# Settings for the CAT API, passed down as environment variables
+cat_api_environment = {
+  agreements-service-base-url              = "",
+  auth-server-jwk-set-uri                  = "",
+  conclave-wrapper-api-base-url            = "",
+  conclave-wrapper-identities-api-base-url = "",
+  dev_mode                                 = true,
+  document-upload-service-get-base-url     = "",
+  document-upload-service-s3-bucket        = "",
+  document-upload-service-upload-base-url  = "",
+  eetime_enabled                           = true,
+  gov-uk-notify_invalid-duns-template-id   = "",
+  gov-uk-notify_target-email               = "",
+  gov-uk-notify_template-id                = "",
+  jaggaer-base-url                         = "",
+  jaggaer-client-id                        = "",
+  jaggaer-itt-template-id                  = "",
+  jaggaer-project-template-id              = "",
+  jaggaer-self-service-id                  = "",
+  jaggaer-token-url                        = "",
+  log_level                                = "TRACE",
+  oppertunities-s3-export-schedule         = "",
+  oppertunities-s3-export-ui-link          = "",
+  projects-to-opensearch-sync-schedule     = "",
+  resolve_buyer_users_by_sso               = false
+  rollbar-environment                      = "",
 }
 
 # Map in the format: description = "CIDR_BLOCK"
@@ -23,12 +45,22 @@ cat_api_ingress_cidr_safelist = {
   everywhere = "0.0.0.0/0"
 }
 
-# Map of CAT API specific settings
-cat_api_settings = {
-  dev_mode                   = true,
-  eetime_enabled             = true,
-  log_level                  = "DEBUG",
-  resolve_buyer_users_by_sso = false
+# Paths to SSM parameters containing secrets for the CAT API
+cat_api_ssm_secret_paths = {
+  conclave-wrapper-api-key                  = "",
+  conclave-wrapper-identities-api-key       = "",
+  document-upload-service-api-key           = "",
+  document-upload-service-aws-access-key-id = "",
+  document-upload-service-aws-secret-key    = "",
+  gov-uk-notify_api-key                     = "",
+  jaggaer-client-secret                     = "",
+  rollbar-access-token                      = "",
+}
+
+# To specify different builds
+docker_image_tags = {
+  buyer_ui_http = "latest",
+  cat_api_http  = "latest",
 }
 
 # Set true if you expect this environment to be destroyed from time-to-time.

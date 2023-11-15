@@ -71,32 +71,32 @@ module "cat_api_task" {
     http = {
       cpu = var.task_container_configs.cat_api.http_cpu
       environment_variables = [
-        { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_BASEURL", value = data.aws_ssm_parameter.parameter["agreements-service-base-url"].value },
-        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_BASEURL", value = data.aws_ssm_parameter.parameter["conclave-wrapper-api-base-url"].value },
-        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESBASEURL", value = data.aws_ssm_parameter.parameter["conclave-wrapper-identities-api-base-url"].value },
+        { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_BASEURL", value = var.cat_api_environment["agreements-service-base-url"] },
+        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_BASEURL", value = var.cat_api_environment["conclave-wrapper-api-base-url"] },
+        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESBASEURL", value = var.cat_api_environment["conclave-wrapper-identities-api-base-url"] },
         # Skipping CONFIG_EXTERNAL_DOCUPLOADSVC_AWSACCESSKEYID and CONFIG_EXTERNAL_DOCUPLOADSVC_AWSSECRETKEY
-        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_GETBASEURL", value = data.aws_ssm_parameter.parameter["document-upload-service-get-base-url"].value },
-        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_S3BUCKET", value = data.aws_ssm_parameter.parameter["document-upload-service-s3-bucket"].value },
-        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_UPLOADBASEURL", value = data.aws_ssm_parameter.parameter["document-upload-service-upload-base-url"].value },
-        { name = "CONFIG_EXTERNAL_JAGGAER_BASEURL", value = data.aws_ssm_parameter.parameter["jaggaer-base-url"].value },
-        { name = "CONFIG_EXTERNAL_JAGGAER_CREATEPROJECT_TEMPLATEID", value = data.aws_ssm_parameter.parameter["jaggaer-project-template-id"].value },
-        { name = "CONFIG_EXTERNAL_JAGGAER_CREATERFX_TEMPLATEID", value = data.aws_ssm_parameter.parameter["jaggaer-itt-template-id"].value },
-        { name = "CONFIG_EXTERNAL_JAGGAER_SELFSERVICEID", value = data.aws_ssm_parameter.parameter["jaggaer-self-service-id"].value },
-        { name = "CONFIG_EXTERNAL_NOTIFICATION_USERREGISTRATION_INVALIDDUNSTEMPLATEID", value = data.aws_ssm_parameter.parameter["gov-uk-notify_invalid-duns-template-id"].value },
-        { name = "CONFIG_EXTERNAL_NOTIFICATION_USERREGISTRATION_TARGETEMAIL", value = data.aws_ssm_parameter.parameter["gov-uk-notify_target-email"].value },
-        { name = "CONFIG_EXTERNAL_NOTIFICATION_USERREGISTRATION_TEMPLATEID", value = data.aws_ssm_parameter.parameter["gov-uk-notify_template-id"].value },
-        { name = "CONFIG_EXTERNAL_PROJECTS_SYNC_SCHEDULE", value = data.aws_ssm_parameter.parameter["projects-to-opensearch-sync-schedule"].value },
-        { name = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_SCHEDULE", value = data.aws_ssm_parameter.parameter["oppertunities-s3-export-schedule"].value },
-        { name = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_UI_LINK", value = data.aws_ssm_parameter.parameter["oppertunities-s3-export-ui-link"].value },
-        { name = "CONFIG_FLAGS_DEVMODE", value = var.cat_api_settings.dev_mode },
-        { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = var.cat_api_settings.resolve_buyer_users_by_sso },
-        { name = "CONFIG_ROLLBAR_ENVIRONMENT", value = data.aws_ssm_parameter.parameter["rollbar-environment"].value },
-        { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = var.cat_api_settings.eetime_enabled },
-        { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_settings.log_level },
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_GETBASEURL", value = var.cat_api_environment["document-upload-service-get-base-url"] },
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_S3BUCKET", value = var.cat_api_environment["document-upload-service-s3-bucket"] },
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_UPLOADBASEURL", value = var.cat_api_environment["document-upload-service-upload-base-url"] },
+        { name = "CONFIG_EXTERNAL_JAGGAER_BASEURL", value = var.cat_api_environment["jaggaer-base-url"] },
+        { name = "CONFIG_EXTERNAL_JAGGAER_CREATEPROJECT_TEMPLATEID", value = var.cat_api_environment["jaggaer-project-template-id"] },
+        { name = "CONFIG_EXTERNAL_JAGGAER_CREATERFX_TEMPLATEID", value = var.cat_api_environment["jaggaer-itt-template-id"] },
+        { name = "CONFIG_EXTERNAL_JAGGAER_SELFSERVICEID", value = var.cat_api_environment["jaggaer-self-service-id"] },
+        { name = "CONFIG_EXTERNAL_NOTIFICATION_USERREGISTRATION_INVALIDDUNSTEMPLATEID", value = var.cat_api_environment["gov-uk-notify_invalid-duns-template-id"] },
+        { name = "CONFIG_EXTERNAL_NOTIFICATION_USERREGISTRATION_TARGETEMAIL", value = var.cat_api_environment["gov-uk-notify_target-email"] },
+        { name = "CONFIG_EXTERNAL_NOTIFICATION_USERREGISTRATION_TEMPLATEID", value = var.cat_api_environment["gov-uk-notify_template-id"] },
+        { name = "CONFIG_EXTERNAL_PROJECTS_SYNC_SCHEDULE", value = var.cat_api_environment["projects-to-opensearch-sync-schedule"] },
+        { name = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_SCHEDULE", value = var.cat_api_environment["oppertunities-s3-export-schedule"] },
+        { name = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_UI_LINK", value = var.cat_api_environment["oppertunities-s3-export-ui-link"] },
+        { name = "CONFIG_FLAGS_DEVMODE", value = var.cat_api_environment["dev_mode"] },
+        { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = var.cat_api_environment["resolve_buyer_users_by_sso"] },
+        { name = "CONFIG_ROLLBAR_ENVIRONMENT", value = var.cat_api_environment["rollbar-environment"] },
+        { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = var.cat_api_environment["eetime_enabled"] },
+        { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_environment["log_level"] },
         { name = "SPRING_PROFILES_ACTIVE", value = "cloud" },
-        { name = "SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_JAGGAER_TOKENURI", value = data.aws_ssm_parameter.parameter["jaggaer-token-url"].value },
-        { name = "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_JAGGAER_CLIENTID", value = data.aws_ssm_parameter.parameter["jaggaer-client-id"].value },
-        { name = "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI", value = data.aws_ssm_parameter.parameter["auth-server-jwk-set-uri"].value },
+        { name = "SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_JAGGAER_TOKENURI", value = var.cat_api_environment["jaggaer-token-url"] },
+        { name = "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_JAGGAER_CLIENTID", value = var.cat_api_environment["jaggaer-client-id"] },
+        { name = "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI", value = var.cat_api_environment["auth-server-jwk-set-uri"] },
         { name = "VCAP_SERVICES", value = jsonencode(local.cat_api_vcap_object) },
       ]
       essential           = true
@@ -108,14 +108,14 @@ module "cat_api_task" {
       override_command    = null
       port                = 8080
       secret_environment_variables = [
-        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_APIKEY", valueFrom = local.ssm_secret_parameters["conclave-wrapper-api-key"] },
-        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESAPIKEY", valueFrom = local.ssm_secret_parameters["conclave-wrapper-identities-api-key"] },
-        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_APIKEY", valueFrom = local.ssm_secret_parameters["document-upload-service-api-key"] },
-        { name = "CONFIG_EXTERNAL_NOTIFICATION_APIKEY", valueFrom = local.ssm_secret_parameters["gov-uk-notify_api-key"] },
-        { name = "CONFIG_ROLLBAR_ACCESSTOKEN", valueFrom = local.ssm_secret_parameters["rollbar-access-token"] },
+        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-api-key"] },
+        { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESAPIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-identities-api-key"] },
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-api-key"] },
+        { name = "CONFIG_EXTERNAL_NOTIFICATION_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["gov-uk-notify_api-key"] },
+        { name = "CONFIG_ROLLBAR_ACCESSTOKEN", valueFrom = var.cat_api_ssm_secret_paths["rollbar-access-token"] },
         // might need to be prefixed with jdbc: to work?
         { name = "SPRING_DATASOURCE_URL", valueFrom = module.db.postgres_connection_url_ssm_parameter_arn },
-        { name = "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_JAGGAER_CLIENTSECRET", valueFrom = local.ssm_secret_parameters["jaggaer-client-secret"] },
+        { name = "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_JAGGAER_CLIENTSECRET", valueFrom = var.cat_api_ssm_secret_paths["jaggaer-client-secret"] },
       ]
     }
   }

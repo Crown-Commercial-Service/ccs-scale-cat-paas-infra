@@ -1,11 +1,20 @@
 module "cat_full" {
   source = "../../compositions/cat-full"
 
-  aws_account_id                   = var.aws_account_id
-  aws_region                       = var.aws_region
-  cat_api_environment              = var.cat_api_environment
-  cat_api_ingress_cidr_safelist    = var.cat_api_ingress_cidr_safelist
-  cat_api_ssm_secret_paths         = local.cat_api_ssm_secret_paths
+  aws_account_id                = var.aws_account_id
+  aws_region                    = var.aws_region
+  cat_api_environment           = var.cat_api_environment
+  cat_api_ingress_cidr_safelist = var.cat_api_ingress_cidr_safelist
+  cat_api_ssm_secret_paths = {
+    conclave-wrapper-api-key                  = aws_ssm_parameter.legacy_parameter["conclave-wrapper-api-key"].arn,
+    conclave-wrapper-identities-api-key       = aws_ssm_parameter.legacy_parameter["conclave-wrapper-identities-api-key"].arn,
+    document-upload-service-api-key           = aws_ssm_parameter.legacy_parameter["document-upload-service-api-key"].arn,
+    document-upload-service-aws-access-key-id = aws_ssm_parameter.legacy_parameter["document-upload-service-aws-access-key-id"].arn,
+    document-upload-service-aws-secret-key    = aws_ssm_parameter.legacy_parameter["document-upload-service-aws-secret-key"].arn,
+    gov-uk-notify_api-key                     = aws_ssm_parameter.legacy_parameter["gov-uk-notify_api-key"].arn,
+    jaggaer-client-secret                     = aws_ssm_parameter.legacy_parameter["jaggaer-client-secret"].arn,
+    rollbar-access-token                      = aws_ssm_parameter.legacy_parameter["rollbar-access-token"].arn,
+  }
   docker_image_tags                = var.docker_image_tags
   environment_is_ephemeral         = var.environment_is_ephemeral
   environment_name                 = var.environment_name

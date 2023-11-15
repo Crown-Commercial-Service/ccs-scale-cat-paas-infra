@@ -1,6 +1,5 @@
 locals {
-  // Naming convention here is to satisfy some sort of discovery mechanism in CAT API (TBD)
-  search_domain_name = "cas-ccs-scale-cat-opensearch"
+  search_domain_name = "${var.resource_name_prefixes.hyphens_lower}-search"
 }
 
 module "search_domain" {

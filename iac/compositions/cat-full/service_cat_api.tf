@@ -3,6 +3,7 @@ locals {
     #VCAP_SERVICES={"aws-s3-bucket": [{"aws_region": "..."}], "opensearch": [{"hostname": "abc", "username": "def", "password": "ghi", "port": "1234"}]}
     opensearch = [
       {
+        "name"     = "aws-ccs-scale-cat-opensearch" # Naming convention matters to the code
         "hostname" = module.search_domain.opensearch_endpoint,
       }
     ]

@@ -68,7 +68,7 @@ module "cat_api_task" {
   aws_region     = var.aws_region
 
   container_definitions = {
-    cat = {
+    http = {
       cpu = var.task_container_configs.cat_api.http_cpu
       environment_variables = [
         { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_BASEURL", value = data.aws_ssm_parameter.parameter["agreements-service-base-url"].value },
@@ -102,12 +102,11 @@ module "cat_api_task" {
       essential           = true
       healthcheck_command = "curl -f http://localhost:8080/health || exit 1"
       image               = "${module.ecr_repos.repository_urls["cat-api"]}:${var.docker_image_tags.cat_api_http}"
-      // TODO: log groups
-      //      log_group_name      = module.logs.log_group_name
-      memory           = var.task_container_configs.cat_api.http_memory
-      mounts           = []
-      override_command = null
-      port             = 8080
+      log_group_name      = "cat_api"
+      memory              = var.task_container_configs.cat_api.http_memory
+      mounts              = []
+      override_command    = null
+      port                = 8080
       secret_environment_variables = [
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_APIKEY", valueFrom = local.ssm_secret_parameters["conclave-wrapper-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESAPIKEY", valueFrom = local.ssm_secret_parameters["conclave-wrapper-identities-api-key"] },

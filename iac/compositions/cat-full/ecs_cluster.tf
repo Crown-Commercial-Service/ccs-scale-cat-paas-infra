@@ -10,7 +10,7 @@ module "ecs_cluster" {
     "ecr" : module.ecr_repos.pull_repo_images_policy_document_json
     "log" : data.aws_iam_policy_document.ecs_execution_log_permissions.json,
     "pass_task_role" : data.aws_iam_policy_document.ecs_execution_pass_task_role_permissions.json,
-    # TODO "ssm" : data.aws_iam_policy_document.ecs_execution_ssm_permissions.json,
+    "ssm" : data.aws_iam_policy_document.ecs_execution_ssm_permissions.json,
   }
 }
 
@@ -48,8 +48,8 @@ data "aws_iam_policy_document" "ecs_execution_pass_task_role_permissions" {
   ]
 }
 
-# TODO add SSM params to which the ECS execution role needs access
-#data "aws_iam_policy_document" "ecs_execution_ssm_permissions" {
-#  source_policy_documents = [
-#  ]
-#}
+data "aws_iam_policy_document" "ecs_execution_ssm_permissions" {
+  source_policy_documents = [
+    data.aws_iam_policy_document.read_secret_parameters.json
+  ]
+}

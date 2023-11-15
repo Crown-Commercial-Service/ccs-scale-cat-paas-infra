@@ -26,3 +26,19 @@ data "aws_ssm_parameter" "parameter" {
   for_each = local.ssm_parameters_to_retrieve
   name     = each.value
 }
+
+data "aws_iam_policy_document" "read_secret_parameters" {
+  version = "2012-10-17"
+
+  statement {
+    sid = "AllowReadSecretParameterPaths"
+
+    effect = "Allow"
+
+    actions = [
+      "ssm:GetParameters"
+    ]
+
+    resources = values(local.ssm_secret_parameters)
+  }
+}

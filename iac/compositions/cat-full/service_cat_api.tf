@@ -156,26 +156,6 @@ resource "aws_ecs_service" "cat_api" {
   }
 }
 
-resource "aws_security_group" "cat_api_tasks" {
-  name        = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
-  description = "Identifies the holder as one of the CAT API tasks"
-  vpc_id      = module.vpc.vpc_id
-
-  tags = {
-    Name = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
-  }
-}
-
-resource "aws_security_group_rule" "cat_api_tasks__https_anywhere" {
-  cidr_blocks       = ["0.0.0.0/0"]
-  from_port         = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cat_api_tasks.id
-  to_port           = 443
-  type              = "egress"
-}
-
-
 resource "aws_security_group" "cat_api_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:CATAPI"
   description = "ALB for CAT API"
@@ -198,3 +178,73 @@ resource "aws_security_group_rule" "cat_api_lb__public_https_in" {
   type              = "ingress"
 }
 
+resource "aws_security_group" "cat_api_tasks" {
+  name        = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
+  description = "Identifies the holder as one of the CAT API tasks"
+  vpc_id      = module.vpc.vpc_id
+
+  tags = {
+    Name = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
+  }
+}
+
+resource "aws_security_group_rule" "cat_api_tasks__https_anywhere" {
+  cidr_blocks       = ["0.0.0.0/0"]
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.cat_api_tasks.id
+  to_port           = 443
+  type              = "egress"
+}
+
+resource "aws_security_group_rule" "cat_api_lb__8080_tasks_out" {
+  description = "Allow outward service traffic from the CAT API LB to the tasks"
+
+  from_port                = 8080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_lb.id
+  source_security_group_id = aws_security_group.cat_api_tasks.id
+  to_port                  = 8080
+  type                     = "egress"
+}
+
+resource "aws_security_group_rule" "cat_api_tasks__lb_8080_in" {
+  description = "Allow inward service traffic from the CAT API LB to the tasks"
+
+  from_port                = 8080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_tasks.id
+  source_security_group_id = aws_security_group.cat_api_lb.id
+  to_port                  = 8080
+  type                     = "ingress"
+}
+
+resource "aws_security_group" "cat_api_clients" {
+  name        = "${var.resource_name_prefixes.normal}:CATAPICLIENT"
+  description = "Identifies the holder as being permitted to access the CAT API LB internally from the VPC"
+  vpc_id      = module.vpc.vpc_id
+
+  tags = {
+    Name = "${var.resource_name_prefixes.normal}:CATAPICLIENT"
+  }
+}
+
+resource "aws_security_group_rule" "cat_api_clients__cat_api_lb_https_out" {
+  description              = "Allow HTTPS out of the CAT API clients to the CAT API LB"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_clients.id
+  source_security_group_id = aws_security_group.cat_api_lb.id
+  to_port                  = 443
+  type                     = "egress"
+}
+
+resource "aws_security_group_rule" "cat_api_lb__cat_api_clients_https_in" {
+  description              = "Allow inward HTTP traffic from the CAT API clients to the CAT API LB"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_lb.id
+  source_security_group_id = aws_security_group.cat_api_clients.id
+  to_port                  = 443
+  type                     = "ingress"
+}

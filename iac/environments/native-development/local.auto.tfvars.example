@@ -47,6 +47,7 @@ cat_api_ingress_cidr_safelist = {
 
 # Paths to SSM parameters containing secrets for the CAT API
 cat_api_ssm_secret_paths = {
+  agreements-service-api-key                = "",
   conclave-wrapper-api-key                  = "",
   conclave-wrapper-identities-api-key       = "",
   document-upload-service-api-key           = "",
@@ -99,38 +100,6 @@ search_domain_volume_size_gib = 20
 # Qualifiers to prepend to the hosted zone name in order to specify the public services' FQDNs
 service_subdomain_prefixes = {
   cat_api = "api"
-}
-
-# Paths to existing SSM parameters used for application configuration environment variables
-ssm_parameter_paths = {
-  agreements-service-base-url               = "/dummy",
-  auth-server-jwk-set-uri                   = "/dummy",
-  conclave-wrapper-api-base-url             = "/dummy",
-  conclave-wrapper-api-key                  = "/dummy",
-  conclave-wrapper-identities-api-base-url  = "/dummy",
-  conclave-wrapper-identities-api-key       = "/dummy",
-  document-upload-service-api-key           = "/dummy",
-  document-upload-service-aws-access-key-id = "/dummy",
-  document-upload-service-aws-secret-key    = "/dummy",
-  document-upload-service-get-base-url      = "/dummy",
-  document-upload-service-s3-bucket         = "/dummy",
-  document-upload-service-upload-base-url   = "/dummy",
-  gov-uk-notify_api-key                     = "/dummy",
-  gov-uk-notify_invalid-duns-template-id    = "/dummy",
-  gov-uk-notify_target-email                = "/dummy",
-  gov-uk-notify_template-id                 = "/dummy",
-  jaggaer-base-url                          = "/dummy",
-  jaggaer-client-id                         = "/dummy",
-  jaggaer-client-secret                     = "/dummy",
-  jaggaer-itt-template-id                   = "/dummy",
-  jaggaer-project-template-id               = "/dummy",
-  jaggaer-self-service-id                   = "/dummy",
-  jaggaer-token-url                         = "/dummy",
-  oppertunities-s3-export-schedule          = "/dummy",
-  oppertunities-s3-export-ui-link           = "/dummy",
-  projects-to-opensearch-sync-schedule      = "/dummy",
-  rollbar-access-token                      = "/dummy",
-  rollbar-environment                       = "/dummy",
 }
 
 # Specify the settings for each task and its containers - See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size

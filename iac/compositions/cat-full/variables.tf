@@ -49,6 +49,7 @@ variable "cat_api_environment" {
 
 variable "cat_api_ssm_secret_paths" {
   type = object({
+    agreements-service-api-key                = string,
     conclave-wrapper-api-key                  = string,
     conclave-wrapper-identities-api-key       = string,
     document-upload-service-api-key           = string,

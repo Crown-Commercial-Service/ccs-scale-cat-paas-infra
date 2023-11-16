@@ -47,20 +47,6 @@ variable "cat_api_ingress_cidr_safelist" {
   }
 }
 
-variable "cat_api_ssm_secret_paths" {
-  type = object({
-    conclave-wrapper-api-key                  = string,
-    conclave-wrapper-identities-api-key       = string,
-    document-upload-service-api-key           = string,
-    document-upload-service-aws-access-key-id = string,
-    document-upload-service-aws-secret-key    = string,
-    gov-uk-notify_api-key                     = string,
-    jaggaer-client-secret                     = string,
-    rollbar-access-token                      = string,
-  })
-  description = "Paths to SSM parameters containing secrets for the CAT API"
-}
-
 variable "docker_image_tags" {
   type = object({
     buyer_ui_http = string,

@@ -74,7 +74,6 @@ module "cat_api_task" {
         { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_BASEURL", value = var.cat_api_environment["agreements-service-base-url"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_BASEURL", value = var.cat_api_environment["conclave-wrapper-api-base-url"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESBASEURL", value = var.cat_api_environment["conclave-wrapper-identities-api-base-url"] },
-        # Skipping CONFIG_EXTERNAL_DOCUPLOADSVC_AWSACCESSKEYID and CONFIG_EXTERNAL_DOCUPLOADSVC_AWSSECRETKEY
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_GETBASEURL", value = var.cat_api_environment["document-upload-service-get-base-url"] },
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_S3BUCKET", value = var.cat_api_environment["document-upload-service-s3-bucket"] },
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_UPLOADBASEURL", value = var.cat_api_environment["document-upload-service-upload-base-url"] },
@@ -88,10 +87,10 @@ module "cat_api_task" {
         { name = "CONFIG_EXTERNAL_PROJECTS_SYNC_SCHEDULE", value = var.cat_api_environment["projects-to-opensearch-sync-schedule"] },
         { name = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_SCHEDULE", value = var.cat_api_environment["oppertunities-s3-export-schedule"] },
         { name = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_UI_LINK", value = var.cat_api_environment["oppertunities-s3-export-ui-link"] },
-        { name = "CONFIG_FLAGS_DEVMODE", value = var.cat_api_environment["dev_mode"] },
-        { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = var.cat_api_environment["resolve_buyer_users_by_sso"] },
+        { name = "CONFIG_FLAGS_DEVMODE", value = tostring(var.cat_api_environment["dev_mode"]) },
+        { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = tostring(var.cat_api_environment["resolve_buyer_users_by_sso"]) },
         { name = "CONFIG_ROLLBAR_ENVIRONMENT", value = var.cat_api_environment["rollbar-environment"] },
-        { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = var.cat_api_environment["eetime_enabled"] },
+        { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = tostring(var.cat_api_environment["eetime_enabled"]) },
         { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_environment["log_level"] },
         { name = "SPRING_PROFILES_ACTIVE", value = "cloud" },
         { name = "SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_JAGGAER_TOKENURI", value = var.cat_api_environment["jaggaer-token-url"] },
@@ -108,8 +107,11 @@ module "cat_api_task" {
       override_command    = null
       port                = 8080
       secret_environment_variables = [
+        { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["agreements-service-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESAPIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-identities-api-key"] },
+        { name = "CONFIG_EXTERNAL_DOCUPLOAD_SVC_AWSACCESSKEYID", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-access-key-id"] }, # TODO: Use IAM role permissions
+        { name = "CONFIG_EXTERNAL_DOCUPLOAD_SVC_AWSSECRETKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-secret-key"] },      # TODO: Use IAM role permissions
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-api-key"] },
         { name = "CONFIG_EXTERNAL_NOTIFICATION_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["gov-uk-notify_api-key"] },
         { name = "CONFIG_ROLLBAR_ACCESSTOKEN", valueFrom = var.cat_api_ssm_secret_paths["rollbar-access-token"] },
@@ -144,6 +146,7 @@ resource "aws_ecs_service" "cat_api" {
     security_groups = [
       aws_security_group.cat_api_tasks.id,
       module.db.db_clients_security_group_id,
+      module.search_domain.opensearch_clients_security_group_id
     ]
     subnets = module.vpc.subnets.application.ids
   }
@@ -155,26 +158,6 @@ resource "aws_ecs_service" "cat_api" {
     ]
   }
 }
-
-resource "aws_security_group" "cat_api_tasks" {
-  name        = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
-  description = "Identifies the holder as one of the CAT API tasks"
-  vpc_id      = module.vpc.vpc_id
-
-  tags = {
-    Name = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
-  }
-}
-
-resource "aws_security_group_rule" "cat_api_tasks__https_anywhere" {
-  cidr_blocks       = ["0.0.0.0/0"]
-  from_port         = 443
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cat_api_tasks.id
-  to_port           = 443
-  type              = "egress"
-}
-
 
 resource "aws_security_group" "cat_api_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:CATAPI"
@@ -198,3 +181,73 @@ resource "aws_security_group_rule" "cat_api_lb__public_https_in" {
   type              = "ingress"
 }
 
+resource "aws_security_group" "cat_api_tasks" {
+  name        = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
+  description = "Identifies the holder as one of the CAT API tasks"
+  vpc_id      = module.vpc.vpc_id
+
+  tags = {
+    Name = "${var.resource_name_prefixes.normal}:ECSTASK:CATAPI"
+  }
+}
+
+resource "aws_security_group_rule" "cat_api_tasks__https_anywhere" {
+  cidr_blocks       = ["0.0.0.0/0"]
+  from_port         = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.cat_api_tasks.id
+  to_port           = 443
+  type              = "egress"
+}
+
+resource "aws_security_group_rule" "cat_api_lb__8080_tasks_out" {
+  description = "Allow outward service traffic from the CAT API LB to the tasks"
+
+  from_port                = 8080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_lb.id
+  source_security_group_id = aws_security_group.cat_api_tasks.id
+  to_port                  = 8080
+  type                     = "egress"
+}
+
+resource "aws_security_group_rule" "cat_api_tasks__lb_8080_in" {
+  description = "Allow inward service traffic from the CAT API LB to the tasks"
+
+  from_port                = 8080
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_tasks.id
+  source_security_group_id = aws_security_group.cat_api_lb.id
+  to_port                  = 8080
+  type                     = "ingress"
+}
+
+resource "aws_security_group" "cat_api_clients" {
+  name        = "${var.resource_name_prefixes.normal}:CATAPICLIENT"
+  description = "Identifies the holder as being permitted to access the CAT API LB internally from the VPC"
+  vpc_id      = module.vpc.vpc_id
+
+  tags = {
+    Name = "${var.resource_name_prefixes.normal}:CATAPICLIENT"
+  }
+}
+
+resource "aws_security_group_rule" "cat_api_clients__cat_api_lb_https_out" {
+  description              = "Allow HTTPS out of the CAT API clients to the CAT API LB"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_clients.id
+  source_security_group_id = aws_security_group.cat_api_lb.id
+  to_port                  = 443
+  type                     = "egress"
+}
+
+resource "aws_security_group_rule" "cat_api_lb__cat_api_clients_https_in" {
+  description              = "Allow inward HTTPS traffic from the CAT API clients to the CAT API LB"
+  from_port                = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.cat_api_lb.id
+  source_security_group_id = aws_security_group.cat_api_clients.id
+  to_port                  = 443
+  type                     = "ingress"
+}

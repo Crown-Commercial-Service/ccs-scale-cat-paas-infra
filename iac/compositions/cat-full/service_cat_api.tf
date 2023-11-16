@@ -243,7 +243,7 @@ resource "aws_security_group_rule" "cat_api_clients__cat_api_lb_https_out" {
 }
 
 resource "aws_security_group_rule" "cat_api_lb__cat_api_clients_https_in" {
-  description              = "Allow inward HTTP traffic from the CAT API clients to the CAT API LB"
+  description              = "Allow inward HTTPS traffic from the CAT API clients to the CAT API LB"
   from_port                = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.cat_api_lb.id

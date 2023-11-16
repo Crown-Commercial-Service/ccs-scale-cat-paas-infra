@@ -1,5 +1,6 @@
 locals {
   legacy_parameters_to_create = [
+    "agreements-service-api-key",
     "conclave-wrapper-api-key",
     "conclave-wrapper-identities-api-key",
     "document-upload-service-api-key",

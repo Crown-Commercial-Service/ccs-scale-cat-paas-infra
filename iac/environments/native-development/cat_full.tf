@@ -6,6 +6,7 @@ module "cat_full" {
   cat_api_environment           = var.cat_api_environment
   cat_api_ingress_cidr_safelist = var.cat_api_ingress_cidr_safelist
   cat_api_ssm_secret_paths = {
+    agreements-service-api-key                = aws_ssm_parameter.legacy_parameter["agreements-service-api-key"].arn,
     conclave-wrapper-api-key                  = aws_ssm_parameter.legacy_parameter["conclave-wrapper-api-key"].arn,
     conclave-wrapper-identities-api-key       = aws_ssm_parameter.legacy_parameter["conclave-wrapper-identities-api-key"].arn,
     document-upload-service-api-key           = aws_ssm_parameter.legacy_parameter["document-upload-service-api-key"].arn,

@@ -47,6 +47,7 @@ cat_api_ingress_cidr_safelist = {
 
 # Paths to SSM parameters containing secrets for the CAT API
 cat_api_ssm_secret_paths = {
+  agreements-service-api-key                = "",
   conclave-wrapper-api-key                  = "",
   conclave-wrapper-identities-api-key       = "",
   document-upload-service-api-key           = "",

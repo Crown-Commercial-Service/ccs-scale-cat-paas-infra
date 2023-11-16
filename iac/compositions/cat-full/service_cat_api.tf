@@ -146,6 +146,7 @@ resource "aws_ecs_service" "cat_api" {
     security_groups = [
       aws_security_group.cat_api_tasks.id,
       module.db.db_clients_security_group_id,
+      module.search_domain.opensearch_clients_security_group_id
     ]
     subnets = module.vpc.subnets.application.ids
   }

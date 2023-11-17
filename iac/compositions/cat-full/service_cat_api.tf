@@ -2,7 +2,15 @@ locals {
   cat_api_spring_datasource_url = format("jdbc:postgresql://%s:%d/%s", module.db.db_connection_host, module.db.db_connection_port, module.db.db_connection_name)
 
   cat_api_vcap_object = {
-    #VCAP_SERVICES={"aws-s3-bucket": [{"aws_region": "..."}], "opensearch": [{"hostname": "abc", "username": "def", "password": "ghi", "port": "1234"}]}
+    aws-s3-bucket = [
+      {
+        aws_access_key_id     = "",
+        aws_secret_access_key = "",
+        aws_region            = var.aws_region,
+        bucket_name           = local.documents_bucket_name,
+        name                  = "aws-ccs-scale-cat-tenders-s3-documents", # Naming convention matters to the code
+      }
+    ],
     opensearch = [
       {
         "name"     = "aws-ccs-scale-cat-opensearch", # Naming convention matters to the code
@@ -128,6 +136,11 @@ module "cat_api_task" {
   family_name            = "cat_api"
   task_cpu               = var.task_container_configs.cat_api.total_cpu
   task_memory            = var.task_container_configs.cat_api.total_memory
+}
+
+resource "aws_iam_role_policy_attachment" "cat_api__documents_bucket_full_access" {
+  role       = module.cat_api_task.task_role_name
+  policy_arn = aws_iam_policy.documents_bucket_full_access.arn
 }
 
 resource "aws_ecs_service" "cat_api" {

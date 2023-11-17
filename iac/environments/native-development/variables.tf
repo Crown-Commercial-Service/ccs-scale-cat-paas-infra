@@ -163,6 +163,21 @@ variable "service_subdomain_prefixes" {
   })
 }
 
+variable "session_redis_engine_version" {
+  type        = string
+  description = "Version of Redis engine for the user session cache"
+}
+
+variable "session_redis_node_type" {
+  type        = string
+  description = "Type of node to deploy for the user session cache"
+}
+
+variable "session_redis_num_cache_nodes" {
+  type        = number
+  description = "Number of nodes to instantiate for the user session cache"
+}
+
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 variable "task_container_configs" {
   type = object({

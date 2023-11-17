@@ -42,6 +42,9 @@ module "cat_full" {
   search_domain_instance_count     = var.search_domain_instance_count
   search_domain_volume_size_gib    = var.search_domain_volume_size_gib
   service_subdomain_prefixes       = var.service_subdomain_prefixes
+  session_redis_engine_version     = var.session_redis_engine_version
+  session_redis_node_type          = var.session_redis_node_type
+  session_redis_num_cache_nodes    = var.session_redis_num_cache_nodes
   task_container_configs           = var.task_container_configs
   vpc_cidr_block                   = var.vpc_cidr_block
 }

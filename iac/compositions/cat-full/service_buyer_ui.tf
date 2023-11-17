@@ -64,6 +64,17 @@ resource "aws_lb_target_group" "buyer_ui" {
   }
 }
 
+locals {
+  buyer_ui_vcap_object = {
+    redis = [
+      {
+        name        = "redis"
+        credentials = local.redis_credentials
+      }
+    ]
+  }
+}
+
 module "buyer_ui_task" {
   source = "../../core/resource-groups/ecs-fargate-task-definition"
 
@@ -89,6 +100,7 @@ module "buyer_ui_task" {
         { name = "LOGIN_DIRECTOR_URL", value = var.buyer_ui_environment["login-director-url"] },
         { name = "ROLLBAR_HOST", value = var.buyer_ui_environment["rollbar-host"] },
         { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_lb.cat_api.dns_name}" },
+        { name = "VCAP_SERVICES", value = jsonencode(local.buyer_ui_vcap_object) },
       ]
       essential                    = true
       healthcheck_command          = "curl -f http://localhost:3000/isAlive || exit 1"
@@ -106,7 +118,7 @@ module "buyer_ui_task" {
         { name = "GCLOUD_TOKEN", valueFrom = var.buyer_ui_ssm_secret_paths["gcloud-token"] },
         { name = "LOGIT_API_KEY", valueFrom = var.buyer_ui_ssm_secret_paths["logit-api-key"] },
         { name = "ROLLBAR_ACCESS_TOKEN", valueFrom = var.buyer_ui_ssm_secret_paths["rollbar-access-token"] },
-        { name = "SESSION_SECRET", valueFrom = var.buyer_ui_ssm_secret_paths["session-secret"] },
+        { name = "SESSION_SECRET", valueFrom = aws_ssm_parameter.session_secret.arn },
       ]
     }
   }
@@ -135,6 +147,7 @@ resource "aws_ecs_service" "buyer_ui" {
     security_groups  = [
       aws_security_group.buyer_ui_tasks.id,
       aws_security_group.cat_api_clients.id,
+      module.session_cache.clients_security_group_id,
     ]
     subnets = module.vpc.subnets.web.ids
   }

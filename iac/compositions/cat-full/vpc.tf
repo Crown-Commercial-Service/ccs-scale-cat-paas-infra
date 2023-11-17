@@ -1,5 +1,7 @@
 locals {
   database_ports = [
+    { db_type : "opensearch", port : 443 },
+    { db_type : "postgres", port : 5432 },
   ]
 }
 

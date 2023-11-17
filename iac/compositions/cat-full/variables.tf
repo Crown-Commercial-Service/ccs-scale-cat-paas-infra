@@ -8,6 +8,48 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "buyer_ui_environment" {
+  type = object({
+    agreements-service-api-url    = string,
+    auth-server-base-url          = string,
+    auth-identity-base-url        = string,
+    conclave-wrapper-api-base-url = string,
+    dashboard-banner              = string,
+    gcloud-index                  = string,
+    gcloud-search-api-url         = string,
+    gcloud-services-api-url       = string,
+    gcloud-supplier-api-url       = string,
+    google-tag-manager-id         = string,
+    google-site-tag-id            = string,
+    login-director-url            = string,
+    rollbar-host                  = string,
+  })
+  description = "Environment variable values specific to the Buyer UI"
+}
+
+variable "buyer_ui_ingress_cidr_safelist" {
+  type        = map(string)
+  description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the Buyer UI, format {description: CIDR}"
+  validation {
+    condition     = length(var.buyer_ui_ingress_cidr_safelist) <= 20
+    error_message = "The buyer_ui_ingress_cidr_safelist can have a maximum of 20 entries."
+  }
+}
+
+variable "buyer_ui_ssm_secret_paths" {
+  type = object({
+    auth-server-client-id     = string
+    auth-server-client-secret = string
+    conclave-wrapper-api-key  = string
+    gcloud-search-api-token   = string
+    gcloud-token              = string
+    logit-api-key             = string
+    rollbar-access-token      = string
+    session-secret            = string
+  })
+  description = "Paths to SSM parameters containing secrets for the Buyer UI"
+}
+
 variable "cat_api_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAT API, format {description: CIDR}"
@@ -146,7 +188,8 @@ variable "search_domain_volume_size_gib" {
 
 variable "service_subdomain_prefixes" {
   type = object({
-    cat_api = string,
+    buyer_ui = string,
+    cat_api  = string,
   })
 }
 

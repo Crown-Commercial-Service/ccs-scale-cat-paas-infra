@@ -170,8 +170,8 @@ resource "aws_security_group" "cat_api_lb" {
 }
 
 resource "aws_security_group_rule" "cat_api_lb__public_https_in" {
-  description = "Allow HTTPS from approved addresses into the CAT API LB"
-  from_port   = 443
+  description     = "Allow HTTPS from approved addresses into the CAT API LB"
+  from_port       = 443
   prefix_list_ids = [
     aws_ec2_managed_prefix_list.cat_api_ingress_safelist.id
   ]

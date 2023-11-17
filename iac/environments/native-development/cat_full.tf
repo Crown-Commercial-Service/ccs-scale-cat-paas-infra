@@ -1,11 +1,23 @@
 module "cat_full" {
   source = "../../compositions/cat-full"
 
-  aws_account_id                = var.aws_account_id
-  aws_region                    = var.aws_region
+  aws_account_id                 = var.aws_account_id
+  aws_region                     = var.aws_region
+  buyer_ui_environment           = var.buyer_ui_environment
+  buyer_ui_ingress_cidr_safelist = var.buyer_ui_ingress_cidr_safelist
+  buyer_ui_ssm_secret_paths      = {
+    auth-server-client-id     = aws_ssm_parameter.legacy_parameter["auth-server-client-id"].arn
+    auth-server-client-secret = aws_ssm_parameter.legacy_parameter["auth-server-client-secret"].arn
+    conclave-wrapper-api-key  = aws_ssm_parameter.legacy_parameter["conclave-wrapper-api-key"].arn
+    gcloud-search-api-token   = aws_ssm_parameter.legacy_parameter["gcloud-search-api-token"].arn
+    gcloud-token              = aws_ssm_parameter.legacy_parameter["gcloud-token"].arn
+    logit-api-key             = aws_ssm_parameter.legacy_parameter["logit-api-key"].arn
+    rollbar-access-token      = aws_ssm_parameter.legacy_parameter["rollbar-access-token"].arn
+    session-secret            = aws_ssm_parameter.legacy_parameter["session-secret"].arn
+  }
   cat_api_environment           = var.cat_api_environment
   cat_api_ingress_cidr_safelist = var.cat_api_ingress_cidr_safelist
-  cat_api_ssm_secret_paths = {
+  cat_api_ssm_secret_paths      = {
     agreements-service-api-key                = aws_ssm_parameter.legacy_parameter["agreements-service-api-key"].arn,
     conclave-wrapper-api-key                  = aws_ssm_parameter.legacy_parameter["conclave-wrapper-api-key"].arn,
     conclave-wrapper-identities-api-key       = aws_ssm_parameter.legacy_parameter["conclave-wrapper-identities-api-key"].arn,

@@ -1,4 +1,6 @@
 locals {
+  cat_api_spring_datasource_url = format("jdbc:postgresql://%s:%d/%s", module.db.db_connection_host, module.db.db_connection_port, module.db.db_connection_name)
+
   cat_api_vcap_object = {
     #VCAP_SERVICES={"aws-s3-bucket": [{"aws_region": "..."}], "opensearch": [{"hostname": "abc", "username": "def", "password": "ghi", "port": "1234"}]}
     opensearch = [
@@ -92,6 +94,8 @@ module "cat_api_task" {
         { name = "CONFIG_ROLLBAR_ENVIRONMENT", value = var.cat_api_environment["rollbar-environment"] },
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = tostring(var.cat_api_environment["eetime_enabled"]) },
         { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_environment["log_level"] },
+        { name = "SPRING_DATASOURCE_URL", value = local.cat_api_spring_datasource_url },
+        { name = "SPRING_DATASOURCE_USERNAME", value = module.db.db_connection_username },
         { name = "SPRING_PROFILES_ACTIVE", value = "cloud" },
         { name = "SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_JAGGAER_TOKENURI", value = var.cat_api_environment["jaggaer-token-url"] },
         { name = "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_JAGGAER_CLIENTID", value = var.cat_api_environment["jaggaer-client-id"] },
@@ -115,8 +119,7 @@ module "cat_api_task" {
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-api-key"] },
         { name = "CONFIG_EXTERNAL_NOTIFICATION_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["gov-uk-notify_api-key"] },
         { name = "CONFIG_ROLLBAR_ACCESSTOKEN", valueFrom = var.cat_api_ssm_secret_paths["rollbar-access-token"] },
-        // might need to be prefixed with jdbc: to work?
-        { name = "SPRING_DATASOURCE_URL", valueFrom = module.db.postgres_connection_url_ssm_parameter_arn },
+        { name = "SPRING_DATASOURCE_PASSWORD", valueFrom = module.db.postgres_connection_password_ssm_parameter_arn },
         { name = "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_JAGGAER_CLIENTSECRET", valueFrom = var.cat_api_ssm_secret_paths["jaggaer-client-secret"] },
       ]
     }

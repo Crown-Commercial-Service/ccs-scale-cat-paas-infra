@@ -48,6 +48,29 @@ resource "aws_lb_listener" "buyer_ui" {
   }
 }
 
+# Paths we wish to exclude from outside access
+resource "aws_lb_listener_rule" "blocked_frontend_paths" {
+  listener_arn = aws_lb_listener.buyer_ui.arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${aws_route53_record.buyer_ui.fqdn}/\">Home</a>.</p>"
+      status_code  = "404"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/isAlive",
+      ]
+    }
+  }
+}
+
 resource "aws_lb_target_group" "buyer_ui" {
   name            = "${var.resource_name_prefixes.hyphens}-TG-BUYERUI"
   ip_address_type = "ipv4"

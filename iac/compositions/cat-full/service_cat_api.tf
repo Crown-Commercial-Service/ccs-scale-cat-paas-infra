@@ -5,10 +5,8 @@ locals {
     aws-s3-bucket = [
       {
         credentials = {
-          aws_access_key_id     = "",
-          aws_region            = var.aws_region,
-          aws_secret_access_key = "",
-          bucket_name           = local.documents_bucket_name,
+          aws_region  = var.aws_region,
+          bucket_name = local.documents_bucket_name,
         },
         name = "aws-ccs-scale-cat-tenders-s3-documents", # Naming convention matters to the code
       }
@@ -17,10 +15,7 @@ locals {
       {
         credentials = {
           hostname = module.search_domain.opensearch_endpoint,
-          password = "",
           port     = "443", # Assumes there has been no customisation/change in the core module that owns module.search_domain
-          uri      = format("https://%s", module.search_domain.opensearch_endpoint),
-          username = "",
         },
         name = "aws-ccs-scale-cat-opensearch", # Naming convention matters to the code
       }
@@ -71,9 +66,12 @@ resource "aws_lb_target_group" "cat_api" {
   target_type     = "ip"
   vpc_id          = module.vpc.vpc_id
 
+  # CAT API doesn't have a healthcheck endpoint.
+  # If the root is returning a 401 then the service is 'up' but
+  # we need a proper healthy route.
   health_check {
-    matcher  = "200"
-    path     = "/health"
+    matcher  = "401"
+    path     = "/"
     port     = "8080"
     protocol = "HTTP"
   }
@@ -119,8 +117,9 @@ module "cat_api_task" {
         { name = "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI", value = var.cat_api_environment["auth-server-jwk-set-uri"] },
         { name = "VCAP_SERVICES", value = jsonencode(local.cat_api_vcap_object) },
       ]
-      essential           = true
-      healthcheck_command = "curl -f http://localhost:8080/health || exit 1"
+      essential = true
+      # TODO: A meaningful healthcheck endpoint must be polled
+      healthcheck_command = "/bin/true"
       image               = "${module.ecr_repos.repository_urls["cat-api"]}:${var.docker_image_tags.cat_api_http}"
       log_group_name      = "cat_api"
       memory              = var.task_container_configs.cat_api.http_memory
@@ -131,8 +130,8 @@ module "cat_api_task" {
         { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["agreements-service-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESAPIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-identities-api-key"] },
-        { name = "CONFIG_EXTERNAL_DOCUPLOAD_SVC_AWSACCESSKEYID", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-access-key-id"] }, # TODO: Use IAM role permissions
-        { name = "CONFIG_EXTERNAL_DOCUPLOAD_SVC_AWSSECRETKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-secret-key"] },      # TODO: Use IAM role permissions
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_AWSACCESSKEYID", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-access-key-id"] }, # TODO: Use IAM role permissions
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_AWSSECRETKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-secret-key"] },      # TODO: Use IAM role permissions
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-api-key"] },
         { name = "CONFIG_EXTERNAL_NOTIFICATION_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["gov-uk-notify_api-key"] },
         { name = "CONFIG_ROLLBAR_ACCESSTOKEN", valueFrom = var.cat_api_ssm_secret_paths["rollbar-access-token"] },

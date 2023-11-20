@@ -22,6 +22,8 @@ variable "buyer_ui_environment" {
     google-tag-manager-id         = string
     google-site-tag-id            = string
     login-director-url            = string
+    logit-environment             = string
+    node-env                      = string
     rollbar-host                  = string
   })
   description = "Environment variable values specific to the Buyer UI"

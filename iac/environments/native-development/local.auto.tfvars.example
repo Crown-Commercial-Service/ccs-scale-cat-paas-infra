@@ -26,6 +26,8 @@ buyer_ui_environment = {
   google-tag-manager-id         = ""
   google-site-tag-id            = ""
   login-director-url            = ""
+  logit-environment             = ""
+  node-env                      = ""
   rollbar-host                  = ""
 }
 

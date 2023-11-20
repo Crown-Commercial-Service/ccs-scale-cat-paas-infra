@@ -4,19 +4,27 @@ locals {
   cat_api_vcap_object = {
     aws-s3-bucket = [
       {
-        aws_access_key_id     = "",
-        aws_secret_access_key = "",
-        aws_region            = var.aws_region,
-        bucket_name           = local.documents_bucket_name,
-        name                  = "aws-ccs-scale-cat-tenders-s3-documents", # Naming convention matters to the code
+        credentials = {
+          aws_access_key_id     = "",
+          aws_region            = var.aws_region,
+          aws_secret_access_key = "",
+          bucket_name           = local.documents_bucket_name,
+        },
+        name = "aws-ccs-scale-cat-tenders-s3-documents", # Naming convention matters to the code
       }
     ],
     opensearch = [
       {
-        "name"     = "aws-ccs-scale-cat-opensearch", # Naming convention matters to the code
-        "hostname" = module.search_domain.opensearch_endpoint,
+        credentials = {
+          hostname = module.search_domain.opensearch_endpoint,
+          password = "",
+          port     = "443", # Assumes there has been no customisation/change in the core module that owns module.search_domain
+          uri      = format("https://%s", module.search_domain.opensearch_endpoint),
+          username = "",
+        },
+        name = "aws-ccs-scale-cat-opensearch", # Naming convention matters to the code
       }
-    ]
+    ],
   }
 }
 
@@ -101,6 +109,7 @@ module "cat_api_task" {
         { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = tostring(var.cat_api_environment["resolve_buyer_users_by_sso"]) },
         { name = "CONFIG_ROLLBAR_ENVIRONMENT", value = var.cat_api_environment["rollbar-environment"] },
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = tostring(var.cat_api_environment["eetime_enabled"]) },
+        { name = "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION", value = "{enabled: false}" }, # Mirror existing
         { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_environment["log_level"] },
         { name = "SPRING_DATASOURCE_URL", value = local.cat_api_spring_datasource_url },
         { name = "SPRING_DATASOURCE_USERNAME", value = module.db.db_connection_username },

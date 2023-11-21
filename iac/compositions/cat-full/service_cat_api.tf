@@ -4,20 +4,25 @@ locals {
   cat_api_vcap_object = {
     aws-s3-bucket = [
       {
-        aws_access_key_id     = "",
-        aws_secret_access_key = "",
-        aws_region            = var.aws_region,
-        bucket_name           = local.documents_bucket_name,
-        name                  = "aws-ccs-scale-cat-tenders-s3-documents", # Naming convention matters to the code
+        credentials = {
+          aws_region  = var.aws_region,
+          bucket_name = local.documents_bucket_name,
+        },
+        name = "aws-ccs-scale-cat-tenders-s3-documents", # Naming convention matters to the code
       }
     ],
     opensearch = [
       {
-        "name"     = "aws-ccs-scale-cat-opensearch", # Naming convention matters to the code
-        "hostname" = module.search_domain.opensearch_endpoint,
+        credentials = {
+          hostname = module.search_domain.opensearch_endpoint,
+          port     = "443", # Assumes there has been no customisation/change in the core module that owns module.search_domain
+        },
+        name = "aws-ccs-scale-cat-opensearch", # Naming convention matters to the code
       }
-    ]
+    ],
   }
+
+  document_upload_service_bucket_arn = format("arn:aws:s3:::%s", var.cat_api_environment["document-upload-service-s3-bucket"])
 }
 
 resource "aws_lb" "cat_api" {
@@ -55,6 +60,27 @@ resource "aws_lb_listener" "cat_api" {
   }
 }
 
+resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
+  listener_arn = aws_lb_listener.cat_api.arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "application/json"
+      status_code  = "403"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/actuator/*"
+      ]
+    }
+  }
+}
+
 resource "aws_lb_target_group" "cat_api" {
   name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
   ip_address_type = "ipv4"
@@ -65,7 +91,7 @@ resource "aws_lb_target_group" "cat_api" {
 
   health_check {
     matcher  = "200"
-    path     = "/health"
+    path     = "/actuator/health"
     port     = "8080"
     protocol = "HTTP"
   }
@@ -101,7 +127,9 @@ module "cat_api_task" {
         { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = tostring(var.cat_api_environment["resolve_buyer_users_by_sso"]) },
         { name = "CONFIG_ROLLBAR_ENVIRONMENT", value = var.cat_api_environment["rollbar-environment"] },
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = tostring(var.cat_api_environment["eetime_enabled"]) },
+        { name = "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION", value = "{enabled: false}" }, # Mirror existing
         { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_environment["log_level"] },
+        { name = "MANAGEMENT_CLOUDFOUNDRY_ENABLED", value = "false" },
         { name = "SPRING_DATASOURCE_URL", value = local.cat_api_spring_datasource_url },
         { name = "SPRING_DATASOURCE_USERNAME", value = module.db.db_connection_username },
         { name = "SPRING_PROFILES_ACTIVE", value = "cloud" },
@@ -111,7 +139,7 @@ module "cat_api_task" {
         { name = "VCAP_SERVICES", value = jsonencode(local.cat_api_vcap_object) },
       ]
       essential           = true
-      healthcheck_command = "curl -f http://localhost:8080/health || exit 1"
+      healthcheck_command = "curl -sf http://localhost:8080/actuator/health || exit 1"
       image               = "${module.ecr_repos.repository_urls["cat-api"]}:${var.docker_image_tags.cat_api_http}"
       log_group_name      = "cat_api"
       memory              = var.task_container_configs.cat_api.http_memory
@@ -122,8 +150,8 @@ module "cat_api_task" {
         { name = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["agreements-service-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-api-key"] },
         { name = "CONFIG_EXTERNAL_CONCLAVEWRAPPER_IDENTITIESAPIKEY", valueFrom = var.cat_api_ssm_secret_paths["conclave-wrapper-identities-api-key"] },
-        { name = "CONFIG_EXTERNAL_DOCUPLOAD_SVC_AWSACCESSKEYID", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-access-key-id"] }, # TODO: Use IAM role permissions
-        { name = "CONFIG_EXTERNAL_DOCUPLOAD_SVC_AWSSECRETKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-secret-key"] },      # TODO: Use IAM role permissions
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_AWSACCESSKEYID", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-access-key-id"] }, # TODO: Use IAM role permissions
+        { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_AWSSECRETKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-aws-secret-key"] },      # TODO: Use IAM role permissions
         { name = "CONFIG_EXTERNAL_DOCUPLOADSVC_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["document-upload-service-api-key"] },
         { name = "CONFIG_EXTERNAL_NOTIFICATION_APIKEY", valueFrom = var.cat_api_ssm_secret_paths["gov-uk-notify_api-key"] },
         { name = "CONFIG_ROLLBAR_ACCESSTOKEN", valueFrom = var.cat_api_ssm_secret_paths["rollbar-access-token"] },
@@ -141,6 +169,26 @@ module "cat_api_task" {
 resource "aws_iam_role_policy_attachment" "cat_api__documents_bucket_full_access" {
   role       = module.cat_api_task.task_role_name
   policy_arn = aws_iam_policy.documents_bucket_full_access.arn
+}
+
+data "aws_iam_policy_document" "document_upload_service_bucket_read_access" {
+  statement {
+    sid     = "AllowDocumentUploadBucketRead"
+    actions = ["s3:GetObject"]
+    effect  = "Allow"
+
+    resources = [local.document_upload_service_bucket_arn]
+  }
+}
+
+resource "aws_iam_policy" "document_upload_service_bucket_read_access" {
+  name   = format("%s-document-upload-service-bucket-read-access", var.resource_name_prefixes.hyphens_lower)
+  policy = data.aws_iam_policy_document.document_upload_service_bucket_read_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "cat_api__document_upload_service_bucket_read_access" {
+  role       = module.cat_api_task.task_role_name
+  policy_arn = aws_iam_policy.document_upload_service_bucket_read_access.arn
 }
 
 resource "aws_ecs_service" "cat_api" {

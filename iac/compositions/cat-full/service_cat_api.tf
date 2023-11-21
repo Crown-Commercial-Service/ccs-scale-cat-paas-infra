@@ -21,6 +21,8 @@ locals {
       }
     ],
   }
+
+  document_upload_service_bucket_arn = format("arn:aws:s3:::%s", var.cat_api_environment["document-upload-service-s3-bucket"])
 }
 
 resource "aws_lb" "cat_api" {
@@ -58,6 +60,27 @@ resource "aws_lb_listener" "cat_api" {
   }
 }
 
+resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
+  listener_arn = aws_lb_listener.cat_api.arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "application/json"
+      status_code  = "403"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/actuator/*"
+      ]
+    }
+  }
+}
+
 resource "aws_lb_target_group" "cat_api" {
   name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
   ip_address_type = "ipv4"
@@ -66,12 +89,9 @@ resource "aws_lb_target_group" "cat_api" {
   target_type     = "ip"
   vpc_id          = module.vpc.vpc_id
 
-  # CAT API doesn't have a healthcheck endpoint.
-  # If the root is returning a 401 then the service is 'up' but
-  # we need a proper healthy route.
   health_check {
-    matcher  = "401"
-    path     = "/"
+    matcher  = "200"
+    path     = "/actuator/health"
     port     = "8080"
     protocol = "HTTP"
   }
@@ -109,6 +129,7 @@ module "cat_api_task" {
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = tostring(var.cat_api_environment["eetime_enabled"]) },
         { name = "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION", value = "{enabled: false}" }, # Mirror existing
         { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_environment["log_level"] },
+        { name = "MANAGEMENT_CLOUDFOUNDRY_ENABLED", value = "false" },
         { name = "SPRING_DATASOURCE_URL", value = local.cat_api_spring_datasource_url },
         { name = "SPRING_DATASOURCE_USERNAME", value = module.db.db_connection_username },
         { name = "SPRING_PROFILES_ACTIVE", value = "cloud" },
@@ -117,9 +138,8 @@ module "cat_api_task" {
         { name = "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI", value = var.cat_api_environment["auth-server-jwk-set-uri"] },
         { name = "VCAP_SERVICES", value = jsonencode(local.cat_api_vcap_object) },
       ]
-      essential = true
-      # TODO: A meaningful healthcheck endpoint must be polled
-      healthcheck_command = "/bin/true"
+      essential           = true
+      healthcheck_command = "curl -sf http://localhost:8080/actuator/health || exit 1"
       image               = "${module.ecr_repos.repository_urls["cat-api"]}:${var.docker_image_tags.cat_api_http}"
       log_group_name      = "cat_api"
       memory              = var.task_container_configs.cat_api.http_memory
@@ -149,6 +169,26 @@ module "cat_api_task" {
 resource "aws_iam_role_policy_attachment" "cat_api__documents_bucket_full_access" {
   role       = module.cat_api_task.task_role_name
   policy_arn = aws_iam_policy.documents_bucket_full_access.arn
+}
+
+data "aws_iam_policy_document" "document_upload_service_bucket_read_access" {
+  statement {
+    sid     = "AllowDocumentUploadBucketRead"
+    actions = ["s3:GetObject"]
+    effect  = "Allow"
+
+    resources = [local.document_upload_service_bucket_arn]
+  }
+}
+
+resource "aws_iam_policy" "document_upload_service_bucket_read_access" {
+  name   = format("%s-document-upload-service-bucket-read-access", var.resource_name_prefixes.hyphens_lower)
+  policy = data.aws_iam_policy_document.document_upload_service_bucket_read_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "cat_api__document_upload_service_bucket_read_access" {
+  role       = module.cat_api_task.task_role_name
+  policy_arn = aws_iam_policy.document_upload_service_bucket_read_access.arn
 }
 
 resource "aws_ecs_service" "cat_api" {

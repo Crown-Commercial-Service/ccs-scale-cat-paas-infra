@@ -51,6 +51,7 @@ data "aws_iam_policy_document" "ecs_execution_pass_task_role_permissions" {
 data "aws_iam_policy_document" "ecs_execution_ssm_permissions" {
   source_policy_documents = [
     data.aws_iam_policy_document.read_secret_parameters.json,
+    data.aws_iam_policy_document.read_session_secret.json,
     module.db.read_postgres_connection_url_ssm_policy_document_json,
     module.db.read_postgres_connection_password_ssm_policy_document_json,
   ]

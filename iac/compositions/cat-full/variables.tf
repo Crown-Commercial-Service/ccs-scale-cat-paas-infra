@@ -22,6 +22,8 @@ variable "buyer_ui_environment" {
     google-tag-manager-id         = string,
     google-site-tag-id            = string,
     login-director-url            = string,
+    logit-environment             = string,
+    node-env                      = string,
     rollbar-host                  = string,
   })
   description = "Environment variable values specific to the Buyer UI"
@@ -191,6 +193,21 @@ variable "service_subdomain_prefixes" {
     buyer_ui = string,
     cat_api  = string,
   })
+}
+
+variable "session_redis_engine_version" {
+  type        = string
+  description = "Version of Redis engine for the user session cache"
+}
+
+variable "session_redis_node_type" {
+  type        = string
+  description = "Type of node to deploy for the user session cache"
+}
+
+variable "session_redis_num_cache_nodes" {
+  type        = number
+  description = "Number of nodes to instantiate for the user session cache"
 }
 
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size

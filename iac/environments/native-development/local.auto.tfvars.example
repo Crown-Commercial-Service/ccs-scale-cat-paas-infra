@@ -26,6 +26,8 @@ buyer_ui_environment = {
   google-tag-manager-id         = ""
   google-site-tag-id            = ""
   login-director-url            = ""
+  logit-environment             = ""
+  node-env                      = ""
   rollbar-host                  = ""
 }
 
@@ -124,6 +126,11 @@ service_subdomain_prefixes = {
   buyer_ui = "buyers"
   cat_api  = "api"
 }
+
+# User cache Redis options
+session_redis_engine_version  = "6.2"
+session_redis_node_type       = "cache.t2.small"
+session_redis_num_cache_nodes = 1
 
 # Specify the settings for each task and its containers - See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 task_container_configs = {

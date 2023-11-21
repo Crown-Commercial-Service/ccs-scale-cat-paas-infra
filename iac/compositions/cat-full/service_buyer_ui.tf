@@ -127,7 +127,7 @@ module "buyer_ui_task" {
         { name = "ROLLBAR_HOST", value = var.buyer_ui_environment["rollbar-host"] },
         # Setting SESSIONS_MODE differently will necessitate in-transit encryption for Redis
         { name = "SESSIONS_MODE", value = "aws-native" },
-        { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_lb.cat_api.dns_name}" },
+        { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_route53_record.cat_api.fqdn}" },
         { name = "VCAP_SERVICES", value = jsonencode(local.buyer_ui_vcap_object) },
       ]
       essential                    = true

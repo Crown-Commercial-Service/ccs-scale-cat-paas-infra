@@ -1,5 +1,5 @@
 locals {
-  documents_bucket_name = format("%s-ccs-scale-cat-tenders-documents", var.resource_name_prefixes.hyphens_lower)
+  documents_bucket_name = format("%s-ccs-scale-cat-tenders-s3-documents", var.resource_name_prefixes.hyphens_lower)
 }
 
 module "documents_bucket" {

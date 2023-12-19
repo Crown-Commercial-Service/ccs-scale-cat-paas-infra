@@ -1,11 +1,13 @@
 module "cat_full" {
   source = "../../compositions/cat-full"
 
-  aws_account_id                 = var.aws_account_id
-  aws_region                     = var.aws_region
-  buyer_ui_environment           = var.buyer_ui_environment
-  buyer_ui_ingress_cidr_safelist = var.buyer_ui_ingress_cidr_safelist
-  buyer_ui_ssm_secret_paths      = {
+  aws_account_id                          = var.aws_account_id
+  aws_region                              = var.aws_region
+  buyer_ui_environment                    = var.buyer_ui_environment
+  buyer_ui_ingress_cidr_safelist          = var.buyer_ui_ingress_cidr_safelist
+  buyer_ui_public_cert_attempt_validation = var.buyer_ui_public_cert_attempt_validation
+  buyer_ui_public_fqdn                    = var.buyer_ui_public_fqdn
+  buyer_ui_ssm_secret_paths               = {
     auth-server-client-id     = aws_ssm_parameter.legacy_parameter["auth-server-client-id"].arn
     auth-server-client-secret = aws_ssm_parameter.legacy_parameter["auth-server-client-secret"].arn
     conclave-wrapper-api-key  = aws_ssm_parameter.legacy_parameter["conclave-wrapper-api-key"].arn
@@ -31,7 +33,8 @@ module "cat_full" {
   docker_image_tags                = var.docker_image_tags
   environment_is_ephemeral         = var.environment_is_ephemeral
   environment_name                 = var.environment_name
-  hosted_zone                      = var.hosted_zone
+  hosted_zone_api                  = var.hosted_zone_api
+  hosted_zone_ui                   = var.hosted_zone_ui
   rds_allocated_storage_gb         = var.rds_allocated_storage_gb
   rds_backup_retention_period_days = var.rds_backup_retention_period_days
   rds_db_instance_class            = var.rds_db_instance_class

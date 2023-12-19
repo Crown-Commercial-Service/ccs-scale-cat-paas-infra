@@ -7,16 +7,46 @@ resource "aws_lb" "buyer_ui" {
 }
 
 resource "aws_route53_record" "buyer_ui" {
-  name            = local.fqdns.buyer_ui
+  name            = var.hosted_zone_ui.name
   allow_overwrite = true
   type            = "A"
-  zone_id         = var.hosted_zone.id
+  zone_id         = var.hosted_zone_ui.id
 
   alias {
     name                   = aws_lb.buyer_ui.dns_name
     zone_id                = aws_lb.buyer_ui.zone_id
     evaluate_target_health = true
   }
+}
+
+/* Client requests will arrive at the Buyer UI with a HOST header corresponding to
+   the public hostname of the Buyer UI (which is CNAMEd through to the buyer_ui
+   "A" record defined above). */
+resource "aws_acm_certificate" "public_buyer_ui" {
+  domain_name       = var.buyer_ui_public_fqdn
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+locals {
+  public_buyer_ui_cert_validations = [
+    for dvo in aws_acm_certificate.public_buyer_ui.domain_validation_options : {
+      name  = dvo.resource_record_name
+      value = dvo.resource_record_value
+      type  = dvo.resource_record_type
+    }
+  ]
+}
+
+resource "aws_acm_certificate_validation" "public_buyer_ui" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.buyer_ui_public_cert_attempt_validation ? 1 : 0
+
+  certificate_arn         = aws_acm_certificate.public_buyer_ui.arn
+  validation_record_fqdns = [for validation in local.public_buyer_ui_cert_validations : validation.name]
 }
 
 # Redirect all port 80 requests to port 443
@@ -36,7 +66,10 @@ resource "aws_lb_listener" "buyer_ui_http_redirect" {
 }
 
 resource "aws_lb_listener" "buyer_ui" {
-  certificate_arn   = module.buyer_ui_cert.certificate_arn
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.buyer_ui_public_cert_attempt_validation ? 1 : 0
+
+  certificate_arn   = aws_acm_certificate.public_buyer_ui.arn
   load_balancer_arn = aws_lb.buyer_ui.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -50,14 +83,17 @@ resource "aws_lb_listener" "buyer_ui" {
 
 # Paths we wish to exclude from outside access
 resource "aws_lb_listener_rule" "blocked_frontend_paths" {
-  listener_arn = aws_lb_listener.buyer_ui.arn
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.buyer_ui_public_cert_attempt_validation ? 1 : 0
+
+  listener_arn = aws_lb_listener.buyer_ui[0].arn
 
   action {
     type = "fixed-response"
 
     fixed_response {
       content_type = "text/html"
-      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${aws_route53_record.buyer_ui.fqdn}/\">Home</a>.</p>"
+      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.buyer_ui_public_fqdn}/\">Home</a>.</p>"
       status_code  = "404"
     }
   }
@@ -111,7 +147,7 @@ module "buyer_ui_task" {
         { name = "AGREEMENTS_SERVICE_API_URL", value = var.buyer_ui_environment["agreements-service-api-url"] },
         { name = "AUTH_SERVER_BASE_URL", value = var.buyer_ui_environment["auth-server-base-url"] },
         { name = "AUTH_IDENTITY_BASE_URL", value = var.buyer_ui_environment["auth-identity-base-url"] },
-        { name = "CAT_URL", value = "https://${aws_route53_record.buyer_ui.fqdn}" },
+        { name = "CAT_URL", value = "https://${var.buyer_ui_public_fqdn}" },
         { name = "CONCLAVE_WRAPPER_API_BASE_URL", value = var.buyer_ui_environment["conclave-wrapper-api-base-url"] },
         { name = "DASHBOARD_BANNER", value = var.buyer_ui_environment["dashboard-banner"] },
         { name = "GCLOUD_INDEX", value = var.buyer_ui_environment["gcloud-index"] },
@@ -130,12 +166,13 @@ module "buyer_ui_task" {
         { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_route53_record.cat_api.fqdn}" },
         { name = "VCAP_SERVICES", value = jsonencode(local.buyer_ui_vcap_object) },
       ]
-      essential                    = true
-      healthcheck_command          = "curl -f http://localhost:3000/isAlive || exit 1"
-      image                        = "${module.ecr_repos.repository_urls["buyer-ui"]}:${var.docker_image_tags.buyer_ui_http}"
-      log_group_name               = "${var.environment_name}-buyer-ui-nginx" # Must exist already
-      memory                       = var.task_container_configs.buyer_ui.http_memory
-      mounts                       = []
+      essential           = true
+      healthcheck_command = "curl -f http://localhost:3000/isAlive || exit 1"
+      image               = "${module.ecr_repos.repository_urls["buyer-ui"]}:${var.docker_image_tags.buyer_ui_http}"
+      log_group_name      = "${var.environment_name}-buyer-ui-nginx" # Must exist already
+      memory              = var.task_container_configs.buyer_ui.http_memory
+      mounts              = [
+      ]
       override_command             = null
       port                         = 3000
       secret_environment_variables = [
@@ -164,10 +201,13 @@ resource "aws_ecs_service" "buyer_ui" {
   name                 = "buyer_ui"
   task_definition      = module.buyer_ui_task.task_definition_arn
 
-  load_balancer {
-    container_name   = "http"
-    container_port   = 3000
-    target_group_arn = aws_lb_target_group.buyer_ui.arn
+  dynamic "load_balancer" {
+    for_each = var.buyer_ui_public_cert_attempt_validation ? toset([1]) : toset([])
+    content {
+      container_name   = "http"
+      container_port   = 3000
+      target_group_arn = aws_lb_target_group.buyer_ui.arn
+    }
   }
 
   network_configuration {

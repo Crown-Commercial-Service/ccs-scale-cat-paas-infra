@@ -38,6 +38,17 @@ variable "buyer_ui_ingress_cidr_safelist" {
   }
 }
 
+variable "buyer_ui_public_cert_attempt_validation" {
+  type        = bool
+  default     = true
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
+variable "buyer_ui_public_fqdn" {
+  type        = string
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
 variable "cat_api_environment" {
   type = object({
     agreements-service-base-url              = string,
@@ -95,12 +106,20 @@ variable "environment_name" {
   description = "Name for this environment, to distinguish it from other environments for this system / application."
 }
 
-variable "hosted_zone" {
+variable "hosted_zone_api" {
   type = object({
     id   = string
     name = string
   })
-  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records"
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
+}
+
+variable "hosted_zone_ui" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
 variable "rds_allocated_storage_gb" {

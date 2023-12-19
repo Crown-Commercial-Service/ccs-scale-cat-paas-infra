@@ -27,6 +27,10 @@ If you are intending to amend any of the submodule code, you will need to be awa
 
 If you're using this IAC repo to deploy ECS services etc (i.e. you are post-GPaaS migration) then you're likely to need the scripts provided in the Core repo - please read the documentation on [setting up a single Python virtualenv for all of the helper scripts](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/scripts/README.md).
 
+## CI Deployment in Native AWS
+
+Please see [the CI Depoyment doc](docs/ci-deployment.md) for some of the added excitement in deployment of this stack.
+
 ## Local initialisation & provisioning (sandbox spaces only)
 
 Terraform state for each space (environment) is persisted to a dedicated AWS account. Access keys for an account in this environment with the appropriate permissions must be obtained before provisioning any infrastructure from a local development machine. The S3 state bucket name and Dynamo DB locaking table name must also be known.

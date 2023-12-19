@@ -36,10 +36,10 @@ resource "aws_lb" "cat_api" {
 }
 
 resource "aws_route53_record" "cat_api" {
-  name            = local.fqdns.cat_api
+  name            = var.hosted_zone_api.name
   allow_overwrite = true
   type            = "A"
-  zone_id         = var.hosted_zone.id
+  zone_id         = var.hosted_zone_api.id
   alias {
     name                   = aws_lb.cat_api.dns_name
     zone_id                = aws_lb.cat_api.zone_id

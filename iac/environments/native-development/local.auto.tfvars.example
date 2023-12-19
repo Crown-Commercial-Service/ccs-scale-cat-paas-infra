@@ -36,6 +36,16 @@ buyer_ui_ingress_cidr_safelist = {
   everywhere = "0.0.0.0/0"
 }
 
+/* If set to `false`, prevents Terraform from trying to validate the cert ownership -
+   This will the the setting required when you first apply Terraform, to enable the
+   process to finish cleanly. Once CNAME records have been created according to the
+   output `public_buyer_ui_cert_validation_records_required`, you can reset this
+   variable to `true` and re-apply. */
+buyer_ui_public_cert_attempt_validation = false
+
+# The public-facing FQDN of the UI as will be supplied in HOST headers for client requests.
+buyer_ui_public_fqdn = "casbuyerui.mcbhenwood.com"
+
 # Settings for the CAT API, passed down as environment variables
 cat_api_environment = {
   agreements-service-base-url              = "",
@@ -94,10 +104,19 @@ environment_is_ephemeral = true
 # Choose a name for your dev environment, include your own name
 environment_name = "DEV-YOUR_NAME"
 
-# ID and subdomain name for the Hosted Zone to use for A records and cert validation records
-hosted_zone = {
+# ID and subdomain name for the Hosted Zone to use for A records and cert validation records for the API
+hosted_zone_api = {
   id   = "/hostedzone/Z1234568YYYYY",
   name = "some.domain.example.com"
+}
+
+/* ID and subdomain name for the Hosted Zone to use for A records and cert validation records for the UI -
+   Note that client requests to the Buyer UI will be addressed to a HOST header which corresponds to the
+   buyer_ui_public_fqdn variable and that the details below for the hosted_zone_ui are to create the
+   actual A record alias for the ALB in the account. */
+hosted_zone_ui = {
+  id   = "/hostedzone/Z1234568ZZZZZ",
+  name = "someother.domain.example.com"
 }
 
 # RDS sizing options

@@ -21,8 +21,6 @@ locals {
       }
     ],
   }
-
-  document_upload_service_bucket_arn = format("arn:aws:s3:::%s", var.cat_api_environment["document-upload-service-s3-bucket"])
 }
 
 resource "aws_lb" "cat_api" {
@@ -169,26 +167,6 @@ module "cat_api_task" {
 resource "aws_iam_role_policy_attachment" "cat_api__documents_bucket_full_access" {
   role       = module.cat_api_task.task_role_name
   policy_arn = aws_iam_policy.documents_bucket_full_access.arn
-}
-
-data "aws_iam_policy_document" "document_upload_service_bucket_read_access" {
-  statement {
-    sid     = "AllowDocumentUploadBucketRead"
-    actions = ["s3:GetObject"]
-    effect  = "Allow"
-
-    resources = [local.document_upload_service_bucket_arn]
-  }
-}
-
-resource "aws_iam_policy" "document_upload_service_bucket_read_access" {
-  name   = format("%s-document-upload-service-bucket-read-access", var.resource_name_prefixes.hyphens_lower)
-  policy = data.aws_iam_policy_document.document_upload_service_bucket_read_access.json
-}
-
-resource "aws_iam_role_policy_attachment" "cat_api__document_upload_service_bucket_read_access" {
-  role       = module.cat_api_task.task_role_name
-  policy_arn = aws_iam_policy.document_upload_service_bucket_read_access.arn
 }
 
 resource "aws_ecs_service" "cat_api" {

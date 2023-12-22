@@ -1,9 +1,3 @@
-# TODO: Remove
-moved {
-  from = aws_ssm_parameter.legacy_parameter
-  to   = module.cat_full.aws_ssm_parameter.manual_config
-}
-
 module "cat_full" {
   source = "../../compositions/cat-full"
 

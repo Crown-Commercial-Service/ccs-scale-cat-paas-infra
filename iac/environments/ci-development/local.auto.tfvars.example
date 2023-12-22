@@ -46,6 +46,12 @@ buyer_ui_public_cert_attempt_validation = false
 # The public-facing FQDN of the UI as will be supplied in HOST headers for client requests.
 buyer_ui_public_fqdn = "dev.redirect.contractawardservice.crowncommercial.gov.uk"
 
+# Service-specific config TODO Source clearer explanation
+cat_api_config_flags_devmode = ""
+
+# Service-specific config TODO Source clearer explanation
+cat_api_eetime_enabled = false
+
 # Settings for the CAT API, passed down as environment variables
 cat_api_environment = {
   agreements-service-base-url              = "",
@@ -79,6 +85,9 @@ cat_api_ingress_cidr_safelist = {
   everywhere = "0.0.0.0/0"
 }
 
+# Log Level for Java CAT API service
+cat_api_log_level = "INFO"
+
 # Paths to SSM parameters containing secrets for the CAT API
 cat_api_ssm_secret_paths = {
   agreements-service-api-key                = "",
@@ -91,6 +100,9 @@ cat_api_ssm_secret_paths = {
   jaggaer-client-secret                     = "",
   rollbar-access-token                      = "",
 }
+
+# Service-specific config TODO Source clearer explanation
+cat_api_resolve_buyer_users_by_sso = false
 
 # To specify different builds
 docker_image_tags = {
@@ -150,6 +162,9 @@ service_subdomain_prefixes = {
 session_redis_engine_version  = "6.2"
 session_redis_node_type       = "cache.t2.small"
 session_redis_num_cache_nodes = 1
+
+# Prefix for each SSM parameter created
+ssm_parameter_name_prefix = "/cat/tf-dev"
 
 # Specify the settings for each task and its containers - See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 task_container_configs = {

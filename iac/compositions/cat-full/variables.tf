@@ -7,28 +7,6 @@ variable "aws_region" {
   type        = string
   description = "Region into which to deploy region-specific resources"
 }
-
-variable "buyer_ui_environment" {
-  type = object({
-    agreements-service-api-url    = string,
-    auth-server-base-url          = string,
-    auth-identity-base-url        = string,
-    conclave-wrapper-api-base-url = string,
-    dashboard-banner              = string,
-    gcloud-index                  = string,
-    gcloud-search-api-url         = string,
-    gcloud-services-api-url       = string,
-    gcloud-supplier-api-url       = string,
-    google-tag-manager-id         = string,
-    google-site-tag-id            = string,
-    login-director-url            = string,
-    logit-environment             = string,
-    node-env                      = string,
-    rollbar-host                  = string,
-  })
-  description = "Environment variable values specific to the Buyer UI"
-}
-
 variable "buyer_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the Buyer UI, format {description: CIDR}"
@@ -48,18 +26,14 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
-variable "buyer_ui_ssm_secret_paths" {
-  type = object({
-    auth-server-client-id     = string
-    auth-server-client-secret = string
-    conclave-wrapper-api-key  = string
-    gcloud-search-api-token   = string
-    gcloud-token              = string
-    logit-api-key             = string
-    rollbar-access-token      = string
-    session-secret            = string
-  })
-  description = "Paths to SSM parameters containing secrets for the Buyer UI"
+variable "cat_api_config_flags_devmode" {
+  type        = string
+  description = "Service-specific config" # TODO Source clearer explanation
+}
+
+variable "cat_api_eetime_enabled" {
+  type        = string
+  description = "Service-specific config" # TODO Source clearer explanation
 }
 
 variable "cat_api_ingress_cidr_safelist" {
@@ -71,49 +45,14 @@ variable "cat_api_ingress_cidr_safelist" {
   }
 }
 
-variable "cat_api_environment" {
-  type = object({
-    agreements-service-base-url              = string,
-    auth-server-jwk-set-uri                  = string,
-    conclave-wrapper-api-base-url            = string,
-    conclave-wrapper-identities-api-base-url = string,
-    dev_mode                                 = bool,
-    document-upload-service-get-base-url     = string,
-    document-upload-service-s3-bucket        = string,
-    document-upload-service-upload-base-url  = string,
-    eetime_enabled                           = bool,
-    gov-uk-notify_invalid-duns-template-id   = string,
-    gov-uk-notify_target-email               = string,
-    gov-uk-notify_template-id                = string,
-    jaggaer-base-url                         = string,
-    jaggaer-client-id                        = string,
-    jaggaer-itt-template-id                  = string,
-    jaggaer-project-template-id              = string,
-    jaggaer-self-service-id                  = string,
-    jaggaer-token-url                        = string,
-    log_level                                = string,
-    oppertunities-s3-export-schedule         = string,
-    oppertunities-s3-export-ui-link          = string,
-    projects-to-opensearch-sync-schedule     = string,
-    resolve_buyer_users_by_sso               = bool,
-    rollbar-environment                      = string,
-  })
-  description = "Environment variable values specific to the CAT API"
+variable "cat_api_log_level" {
+  type        = string
+  description = "Log Level for Java CAT API service"
 }
 
-variable "cat_api_ssm_secret_paths" {
-  type = object({
-    agreements-service-api-key                = string,
-    conclave-wrapper-api-key                  = string,
-    conclave-wrapper-identities-api-key       = string,
-    document-upload-service-api-key           = string,
-    document-upload-service-aws-access-key-id = string,
-    document-upload-service-aws-secret-key    = string,
-    gov-uk-notify_api-key                     = string,
-    jaggaer-client-secret                     = string,
-    rollbar-access-token                      = string,
-  })
-  description = "Paths to SSM parameters containing secrets for the CAT API"
+variable "cat_api_resolve_buyer_users_by_sso" {
+  type        = bool
+  description = "Service-specific config" # TODO Source clearer explanation
 }
 
 variable "docker_image_tags" {
@@ -226,6 +165,11 @@ variable "session_redis_node_type" {
 variable "session_redis_num_cache_nodes" {
   type        = number
   description = "Number of nodes to instantiate for the user session cache"
+}
+
+variable "ssm_parameter_name_prefix" {
+  type        = string
+  description = "Prefix for each SSM parameter created"
 }
 
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size

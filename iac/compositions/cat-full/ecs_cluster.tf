@@ -10,7 +10,7 @@ module "ecs_cluster" {
     "ecr" : module.ecr_repos.pull_repo_images_policy_document_json
     "log" : data.aws_iam_policy_document.ecs_execution_log_permissions.json,
     "pass_task_role" : data.aws_iam_policy_document.ecs_execution_pass_task_role_permissions.json,
-    "ssm" : data.aws_iam_policy_document.ecs_execution_ssm_permissions.json,
+    "ssm" : data.aws_iam_policy_document.read_all_ssm_params.json,
   }
 }
 
@@ -48,11 +48,21 @@ data "aws_iam_policy_document" "ecs_execution_pass_task_role_permissions" {
   ]
 }
 
-data "aws_iam_policy_document" "ecs_execution_ssm_permissions" {
-  source_policy_documents = [
-    data.aws_iam_policy_document.read_secret_parameters.json,
-    data.aws_iam_policy_document.read_session_secret.json,
-    module.db.read_postgres_connection_url_ssm_policy_document_json,
-    module.db.read_postgres_connection_password_ssm_policy_document_json,
-  ]
+# With insane levels of config comes insane IAM policy
+data "aws_iam_policy_document" "read_all_ssm_params" {
+  version = "2012-10-17"
+
+  statement {
+    sid = "AllowReadAllSSM"
+
+    effect = "Allow"
+
+    actions = [
+      "ssm:GetParameters",
+    ]
+
+    resources = [
+      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/*"
+    ]
+  }
 }

@@ -144,23 +144,9 @@ module "buyer_ui_task" {
     http = {
       cpu                   = var.task_container_configs.buyer_ui.http_cpu
       environment_variables = [
-        { name = "AGREEMENTS_SERVICE_API_URL", value = var.buyer_ui_environment["agreements-service-api-url"] },
-        { name = "AUTH_SERVER_BASE_URL", value = var.buyer_ui_environment["auth-server-base-url"] },
-        { name = "AUTH_IDENTITY_BASE_URL", value = var.buyer_ui_environment["auth-identity-base-url"] },
         { name = "CAT_URL", value = "https://${var.buyer_ui_public_fqdn}" },
-        { name = "CONCLAVE_WRAPPER_API_BASE_URL", value = var.buyer_ui_environment["conclave-wrapper-api-base-url"] },
-        { name = "DASHBOARD_BANNER", value = var.buyer_ui_environment["dashboard-banner"] },
-        { name = "GCLOUD_INDEX", value = var.buyer_ui_environment["gcloud-index"] },
-        { name = "GCLOUD_SEARCH_API_URL", value = var.buyer_ui_environment["gcloud-search-api-url"] },
-        { name = "GCLOUD_SERVICES_API_URL", value = var.buyer_ui_environment["gcloud-services-api-url"] },
-        { name = "GCLOUD_SUPPLIER_API_URL", value = var.buyer_ui_environment["gcloud-supplier-api-url"] },
-        { name = "GOOGLE_TAG_MANAGER_ID", value = var.buyer_ui_environment["google-tag-manager-id"] },
-        { name = "GOOGLE_SITE_TAG_ID", value = var.buyer_ui_environment["google-site-tag-id"] },
-        { name = "LOGIN_DIRECTOR_URL", value = var.buyer_ui_environment["login-director-url"] },
-        { name = "LOGIT_ENVIRONMENT", value = var.buyer_ui_environment["logit-environment"] },
-        { name = "NODE_ENV", value = var.buyer_ui_environment["node-env"] },
+        { name = "NODE_ENV", value = "production" },
         { name = "PORT", value = "3000" },
-        { name = "ROLLBAR_HOST", value = var.buyer_ui_environment["rollbar-host"] },
         # Setting SESSIONS_MODE differently will necessitate in-transit encryption for Redis
         { name = "SESSIONS_MODE", value = "aws-native" },
         { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_route53_record.cat_api.fqdn}" },
@@ -176,13 +162,49 @@ module "buyer_ui_task" {
       override_command             = null
       port                         = 3000
       secret_environment_variables = [
-        { name = "AUTH_SERVER_CLIENT_ID", valueFrom = var.buyer_ui_ssm_secret_paths["auth-server-client-id"] },
-        { name = "AUTH_SERVER_CLIENT_SECRET", valueFrom = var.buyer_ui_ssm_secret_paths["auth-server-client-secret"] },
-        { name = "CONCLAVE_WRAPPER_API_KEY", valueFrom = var.buyer_ui_ssm_secret_paths["conclave-wrapper-api-key"] },
-        { name = "GCLOUD_SEARCH_API_TOKEN", valueFrom = var.buyer_ui_ssm_secret_paths["gcloud-search-api-token"] },
-        { name = "GCLOUD_TOKEN", valueFrom = var.buyer_ui_ssm_secret_paths["gcloud-token"] },
-        { name = "LOGIT_API_KEY", valueFrom = var.buyer_ui_ssm_secret_paths["logit-api-key"] },
-        { name = "ROLLBAR_ACCESS_TOKEN", valueFrom = var.buyer_ui_ssm_secret_paths["rollbar-access-token"] },
+        {
+          name      = "AGREEMENTS_SERVICE_API_URL",
+          valueFrom = aws_ssm_parameter.manual_config["agreements-service-api-url"].arn
+        },
+        { name = "AUTH_SERVER_BASE_URL", valueFrom = aws_ssm_parameter.manual_config["auth-server-base-url"].arn },
+        { name = "AUTH_SERVER_CLIENT_ID", valueFrom = aws_ssm_parameter.manual_config["auth-server-client-id"].arn },
+        {
+          name      = "AUTH_SERVER_CLIENT_SECRET",
+          valueFrom = aws_ssm_parameter.manual_config["auth-server-client-secret"].arn
+        },
+        { name = "AUTH_IDENTITY_BASE_URL", valueFrom = aws_ssm_parameter.manual_config["auth-identity-base-url"].arn },
+
+        {
+          name      = "CONCLAVE_WRAPPER_API_BASE_URL",
+          valueFrom = aws_ssm_parameter.manual_config["conclave-wrapper-api-base-url"].arn
+        },
+        {
+          name      = "CONCLAVE_WRAPPER_API_KEY",
+          valueFrom = aws_ssm_parameter.manual_config["conclave-wrapper-api-key"].arn
+        },
+        { name = "DASHBOARD_BANNER", valueFrom = aws_ssm_parameter.manual_config["dashboard-banner"].arn },
+        { name = "GCLOUD_INDEX", valueFrom = aws_ssm_parameter.manual_config["gcloud-index"].arn },
+        {
+          name      = "GCLOUD_SEARCH_API_TOKEN",
+          valueFrom = aws_ssm_parameter.manual_config["gcloud-search-api-token"].arn
+        },
+        { name = "GCLOUD_SEARCH_API_URL", valueFrom = aws_ssm_parameter.manual_config["gcloud-search-api-url"].arn },
+        { name = "GCLOUD_TOKEN", valueFrom = aws_ssm_parameter.manual_config["gcloud-token"].arn },
+        {
+          name      = "GCLOUD_SERVICES_API_URL",
+          valueFrom = aws_ssm_parameter.manual_config["gcloud-services-api-url"].arn
+        },
+        {
+          name      = "GCLOUD_SUPPLIER_API_URL",
+          valueFrom = aws_ssm_parameter.manual_config["gcloud-supplier-api-url"].arn
+        },
+        { name = "GOOGLE_TAG_MANAGER_ID", valueFrom = aws_ssm_parameter.manual_config["google-tag-manager-id"].arn },
+        { name = "GOOGLE_SITE_TAG_ID", valueFrom = aws_ssm_parameter.manual_config["google-site-tag-id"].arn },
+        { name = "LOGIN_DIRECTOR_URL", valueFrom = aws_ssm_parameter.manual_config["login-director-url"].arn },
+        { name = "LOGIT_API_KEY", valueFrom = aws_ssm_parameter.manual_config["logit-api-key"].arn },
+        { name = "LOGIT_ENVIRONMENT", valueFrom = aws_ssm_parameter.manual_config["logit-environment"].arn },
+        { name = "ROLLBAR_ACCESS_TOKEN", valueFrom = aws_ssm_parameter.manual_config["rollbar-access-token"].arn },
+        { name = "ROLLBAR_HOST", valueFrom = aws_ssm_parameter.manual_config["rollbar-host"].arn },
         { name = "SESSION_SECRET", valueFrom = aws_ssm_parameter.session_secret.arn },
       ]
     }

@@ -37,3 +37,27 @@ public_buyer_ui_cname_target = "cas-ui-aws.example.com"
 ```
 
 Use the values of these outputs as directed in steps 3 thru 5.
+
+### Scale or redeploy the services
+
+By default, each of the services is scaled to zero instances when the Terraform is applied. Services are deployed or terminated by scaling up or down the number of tasks for each service.
+
+There is [a helper script](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/tree/main/scripts/update_service/update_service.py) to do this. It's basically a thin wrapper around the ECS `update-service` API call, with a waiter to ensure that (e.g.) a CI pipeline can be confident of moving on to a next step. See the script for details of uses but here is how you might scale up one of the services:
+
+```bash
+terraform -chdir=infrastructure/environments/development output -json | scripts/core/update_service/update_service.py - web --scale-to=2
+```
+
+Beware: Note the hyphen `-` between the script filename and the service name. It's used to pipe the Terraform output into the script.
+
+The script can also be used to perform a simple redeploy from ECR without scaling, as follows:
+
+```bash
+terraform -chdir=infrastructure/environments/development output -json | scripts/core/update_service/update_service.py - web --redeploy
+```
+
+See [the script itself](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/tree/main/scripts/update_service/update_service.py) for full explanations.
+
+It's intended this step is run by an IAM principal with restricted permissions. There exist both an IAM policy and an IAM group with the name `run-update-service`. Any basic principal assigned the permissions therein will be able to run the above command.
+
+(Note that the IAM principal will also require the ability to read the Terraform state file in S3 because this script relies upon the output from `terraform output`).

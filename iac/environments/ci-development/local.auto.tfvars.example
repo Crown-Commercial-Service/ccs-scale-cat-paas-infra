@@ -184,3 +184,14 @@ task_container_configs = {
 
 # CIDR block for the VPC for this app
 vpc_cidr_block = "10.3.0.0/24"
+
+## For the gpaas-postgres-migrator
+#
+cf_config = {
+  api_endpoint        = "https://api.london.cloud.service.gov.uk"
+  cf_cli_docker_image = "governmentpaas/cf-cli"
+  db_service_instance = "ccs-scale-cat-tenders-pg-service"
+  org                 = "ccs-scale-cat"
+  space               = "pre-production"
+}
+postgres_docker_image = "postgres:14.8"

@@ -47,7 +47,7 @@ buyer_ui_public_cert_attempt_validation = false
 buyer_ui_public_fqdn = "uat.redirect.contractawardservice.crowncommercial.gov.uk"
 
 # Service-specific config TODO Source clearer explanation
-cat_api_config_flags_uatmode = ""
+cat_api_config_flags_devmode = ""
 
 # Service-specific config TODO Source clearer explanation
 cat_api_eetime_enabled = false

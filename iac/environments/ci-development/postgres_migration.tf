@@ -82,8 +82,6 @@ module "migrate_postgres" {
   cf_config      = var.cf_config
 
   count_rows_tables = [
-    "allowed_email_domains",
-    "assessments",
     "assessment_dimension_criteria",
     "assessment_dimension_submission_types",
     "assessment_dimension_weighting",
@@ -96,8 +94,7 @@ module "migrate_postgres" {
     "assessment_tool_dimensions",
     "assessment_tool_submission_group",
     "assessment_tools",
-    "ar_internal_metadata",
-    "arask_jobs",
+    "assessments",
     "buyer_user_details",
     "cap_load_jobs",
     "cap_load_locations",
@@ -105,7 +102,6 @@ module "migrate_postgres" {
     "cap_load_scalability",
     "cap_load_service_capability",
     "contract_details",
-    "client_calls",
     "dimension_submission_types",
     "dimension_valid_values",
     "dimensions",
@@ -121,13 +117,11 @@ module "migrate_postgres" {
     "load_capability_services",
     "load_pricing",
     "lot_requirement_taxons",
-    "organisations",
     "organisation_mapping",
     "procurement_event_history",
     "procurement_events",
     "procurement_projects",
     "project_user_mapping",
-    "pwned_passwords",
     "question_and_answer",
     "requirement_taxons",
     "requirements",
@@ -140,8 +134,7 @@ module "migrate_postgres" {
     "supplier_selections",
     "supplier_submissions",
     "task_history",
-    "tasks",
-    "schema_migrations"
+    "tasks"
   ]
 
   db_clients_security_group_id = module.cat_full.db_clients_security_group_id

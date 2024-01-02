@@ -140,10 +140,10 @@ module "migrate_postgres" {
   db_clients_security_group_id = module.cat_full.db_clients_security_group_id
   ecs_cluster_arn              = module.cat_full.ecs_cluster_arn
   ecs_execution_role           = module.cat_full.ecs_execution_role
-  efs_subnet_ids = [
+  efs_subnet_ids = {
     module.cat_full.subnets.application.az_ids["a"],
     module.cat_full.subnets.application.az_ids["b"]
-  ]
+  }
   migrator_name                          = "cat"
   postgres_docker_image                  = var.postgres_docker_image
   resource_name_prefixes                 = var.resource_name_prefixes

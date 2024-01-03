@@ -80,21 +80,21 @@ resource "aws_route53_record" "cat_api" {
 #   }
 # }
 
-resource "aws_lb_target_group" "cat_api" {
-  name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
-  ip_address_type = "ipv4"
-  port            = "8080"
-  protocol        = "HTTP"
-  target_type     = "ip"
-  vpc_id          = module.vpc.vpc_id
+# resource "aws_lb_target_group" "cat_api" {
+#   name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
+#   ip_address_type = "ipv4"
+#   port            = "8080"
+#   protocol        = "HTTP"
+#   target_type     = "ip"
+#   vpc_id          = module.vpc.vpc_id
 
-  health_check {
-    matcher  = "200"
-    path     = "/actuator/health"
-    port     = "8080"
-    protocol = "HTTP"
-  }
-}
+#   health_check {
+#     matcher  = "200"
+#     path     = "/actuator/health"
+#     port     = "8080"
+#     protocol = "HTTP"
+#   }
+# }
 
 module "cat_api_task" {
   source = "../../core/resource-groups/ecs-fargate-task-definition"

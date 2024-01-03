@@ -46,39 +46,39 @@ resource "aws_route53_record" "cat_api" {
   }
 }
 
-resource "aws_lb_listener" "cat_api" {
-  certificate_arn   = module.cat_api_cert.certificate_arn
-  load_balancer_arn = aws_lb.cat_api.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
+# resource "aws_lb_listener" "cat_api" {
+#   certificate_arn   = module.cat_api_cert.certificate_arn
+#   load_balancer_arn = aws_lb.cat_api.arn
+#   port              = "443"
+#   protocol          = "HTTPS"
+#   ssl_policy        = "ELBSecurityPolicy-2016-08"
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.cat_api.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.cat_api.arn
+#   }
+# }
 
-resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
-  listener_arn = aws_lb_listener.cat_api.arn
+# resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
+#   listener_arn = aws_lb_listener.cat_api.arn
 
-  action {
-    type = "fixed-response"
+#   action {
+#     type = "fixed-response"
 
-    fixed_response {
-      content_type = "application/json"
-      status_code  = "403"
-    }
-  }
+#     fixed_response {
+#       content_type = "application/json"
+#       status_code  = "403"
+#     }
+#   }
 
-  condition {
-    path_pattern {
-      values = [
-        "/actuator/*"
-      ]
-    }
-  }
-}
+#   condition {
+#     path_pattern {
+#       values = [
+#         "/actuator/*"
+#       ]
+#     }
+#   }
+# }
 
 resource "aws_lb_target_group" "cat_api" {
   name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"

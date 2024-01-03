@@ -270,11 +270,11 @@ resource "aws_ecs_service" "cat_api" {
   name                 = "cat_api"
   task_definition      = module.cat_api_task.task_definition_arn
 
-  load_balancer {
-    container_name   = "http"
-    container_port   = 8080
-    target_group_arn = aws_lb_target_group.cat_api.arn
-  }
+  # load_balancer {
+  #   container_name   = "http"
+  #   container_port   = 8080
+  #   target_group_arn = aws_lb_target_group.cat_api.arn
+  # }
 
   network_configuration {
     assign_public_ip = false

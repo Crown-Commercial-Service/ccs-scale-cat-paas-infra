@@ -221,12 +221,13 @@ module "buyer_ui_task" {
 }
 
 resource "aws_ecs_service" "buyer_ui" {
-  cluster              = module.ecs_cluster.cluster_arn
-  desired_count        = 0 # Deploy manually
-  force_new_deployment = false
-  launch_type          = "FARGATE"
-  name                 = "buyer_ui"
-  task_definition      = module.buyer_ui_task.task_definition_arn
+  cluster                = module.ecs_cluster.cluster_arn
+  desired_count          = 0 # Deploy manually
+  enable_execute_command = var.enable_ecs_execute_command
+  force_new_deployment   = false
+  launch_type            = "FARGATE"
+  name                   = "buyer_ui"
+  task_definition        = module.buyer_ui_task.task_definition_arn
 
   dynamic "load_balancer" {
     for_each = var.buyer_ui_public_cert_attempt_validation ? toset([1]) : toset([])

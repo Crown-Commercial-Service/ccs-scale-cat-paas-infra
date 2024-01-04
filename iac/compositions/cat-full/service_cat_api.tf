@@ -268,12 +268,13 @@ resource "aws_iam_role_policy_attachment" "cat_api__documents_bucket_full_access
 }
 
 resource "aws_ecs_service" "cat_api" {
-  cluster              = module.ecs_cluster.cluster_arn
-  desired_count        = 0 # Deploy manually
-  force_new_deployment = false
-  launch_type          = "FARGATE"
-  name                 = "cat_api"
-  task_definition      = module.cat_api_task.task_definition_arn
+  cluster                = module.ecs_cluster.cluster_arn
+  desired_count          = 0 # Deploy manually
+  enable_execute_command = var.enable_ecs_execute_command
+  force_new_deployment   = false
+  launch_type            = "FARGATE"
+  name                   = "cat_api"
+  task_definition        = module.cat_api_task.task_definition_arn
 
   load_balancer {
     container_name   = "http"
@@ -297,6 +298,11 @@ resource "aws_ecs_service" "cat_api" {
       desired_count
     ]
   }
+}
+
+resource "aws_iam_role_policy_attachment" "cat_api_task__ecs_exec_access" {
+  role       = module.cat_api_task.task_role_name
+  policy_arn = aws_iam_policy.ecs_exec_policy.arn
 }
 
 resource "aws_security_group" "cat_api_lb" {

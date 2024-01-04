@@ -65,6 +65,12 @@ variable "docker_image_tags" {
   description = "Docker tag for deployment of each of the services from ECR"
 }
 
+variable "enable_ecs_execute_command" {
+  type        = bool
+  description = "If 1, enables ecs exec on all ecs services"
+  default     = true
+}
+
 variable "environment_is_ephemeral" {
   type        = bool
   description = "If true, indicates that the environment is expected to be destroyed from time to time - Allows for (e.g.) `force_destroy` on S3 buckets"

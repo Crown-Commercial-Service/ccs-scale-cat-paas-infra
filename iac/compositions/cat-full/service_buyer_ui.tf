@@ -255,6 +255,11 @@ resource "aws_ecs_service" "buyer_ui" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "buyer_ui_task__ecs_exec_access" {
+  role       = module.buyer_ui_task.task_role_name
+  policy_arn = aws_iam_policy.ecs_exec_policy.arn
+}
+
 resource "aws_security_group" "buyer_ui_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:BUYERUI"
   description = "ALB for Buyer UI"

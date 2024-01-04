@@ -12,6 +12,7 @@ module "cat_full" {
   cat_api_log_level                       = var.cat_api_log_level
   cat_api_resolve_buyer_users_by_sso      = var.cat_api_resolve_buyer_users_by_sso
   docker_image_tags                       = var.docker_image_tags
+  enable_ecs_execute_command              = var.enable_ecs_execute_command
   environment_is_ephemeral                = var.environment_is_ephemeral
   environment_name                        = var.environment_name
   hosted_zone_api                         = var.hosted_zone_api

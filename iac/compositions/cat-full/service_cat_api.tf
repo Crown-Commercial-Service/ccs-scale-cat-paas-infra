@@ -46,55 +46,55 @@ resource "aws_route53_record" "cat_api" {
   }
 }
 
-# resource "aws_lb_listener" "cat_api" {
-#   certificate_arn   = module.cat_api_cert.certificate_arn
-#   load_balancer_arn = aws_lb.cat_api.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-2016-08"
+resource "aws_lb_listener" "cat_api" {
+  certificate_arn   = module.cat_api_cert.certificate_arn
+  load_balancer_arn = aws_lb.cat_api.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.cat_api.arn
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cat_api.arn
+  }
+}
 
-# resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
-#   listener_arn = aws_lb_listener.cat_api.arn
+resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
+  listener_arn = aws_lb_listener.cat_api.arn
 
-#   action {
-#     type = "fixed-response"
+  action {
+    type = "fixed-response"
 
-#     fixed_response {
-#       content_type = "application/json"
-#       status_code  = "403"
-#     }
-#   }
+    fixed_response {
+      content_type = "application/json"
+      status_code  = "403"
+    }
+  }
 
-#   condition {
-#     path_pattern {
-#       values = [
-#         "/actuator/*"
-#       ]
-#     }
-#   }
-# }
+  condition {
+    path_pattern {
+      values = [
+        "/actuator/*"
+      ]
+    }
+  }
+}
 
-# resource "aws_lb_target_group" "cat_api" {
-#   name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
-#   ip_address_type = "ipv4"
-#   port            = "8080"
-#   protocol        = "HTTP"
-#   target_type     = "ip"
-#   vpc_id          = module.vpc.vpc_id
+resource "aws_lb_target_group" "cat_api" {
+  name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
+  ip_address_type = "ipv4"
+  port            = "8080"
+  protocol        = "HTTP"
+  target_type     = "ip"
+  vpc_id          = module.vpc.vpc_id
 
-#   health_check {
-#     matcher  = "200"
-#     path     = "/actuator/health"
-#     port     = "8080"
-#     protocol = "HTTP"
-#   }
-# }
+  health_check {
+    matcher  = "200"
+    path     = "/actuator/health"
+    port     = "8080"
+    protocol = "HTTP"
+  }
+}
 
 module "cat_api_task" {
   source = "../../core/resource-groups/ecs-fargate-task-definition"
@@ -270,11 +270,11 @@ resource "aws_ecs_service" "cat_api" {
   name                 = "cat_api"
   task_definition      = module.cat_api_task.task_definition_arn
 
-  # load_balancer {
-  #   container_name   = "http"
-  #   container_port   = 8080
-  #   target_group_arn = aws_lb_target_group.cat_api.arn
-  # }
+  load_balancer {
+    container_name   = "http"
+    container_port   = 8080
+    target_group_arn = aws_lb_target_group.cat_api.arn
+  }
 
   network_configuration {
     assign_public_ip = false

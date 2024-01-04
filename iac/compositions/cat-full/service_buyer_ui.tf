@@ -108,6 +108,11 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths" {
 }
 
 resource "aws_lb_target_group" "buyer_ui" {
+  # Requires an explicit depends_on
+  depends_on = [
+    aws_lb.buyer_ui
+  ]
+
   name            = "${var.resource_name_prefixes.hyphens}-TG-BUYERUI"
   ip_address_type = "ipv4"
   port            = "3000"

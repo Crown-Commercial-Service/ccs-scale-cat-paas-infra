@@ -81,6 +81,11 @@ resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
 }
 
 resource "aws_lb_target_group" "cat_api" {
+  # Requires an explicit depends_on
+  depends_on = [
+    aws_lb.cat_api
+  ]
+
   name            = "${var.resource_name_prefixes.hyphens}-TG-CATAPI"
   ip_address_type = "ipv4"
   port            = "8080"

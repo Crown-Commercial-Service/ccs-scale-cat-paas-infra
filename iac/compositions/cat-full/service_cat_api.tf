@@ -190,11 +190,11 @@ module "cat_api_task" {
           valueFrom = aws_ssm_parameter.manual_config["jaggaer-base-url"].arn
         },
         {
-          name      = "CONFIG_EXTERNAL_JAGGAER_CREATEPROJECT_TEMPLATEID",
+          name      = "CONFIG_EXTERNAL_JAGGAER_CREATEPROJECTTEMPLATEID",
           valueFrom = aws_ssm_parameter.manual_config["jaggaer-project-template-id"].arn
         },
         {
-          name      = "CONFIG_EXTERNAL_JAGGAER_CREATERFX_TEMPLATEID",
+          name      = "CONFIG_EXTERNAL_JAGGAER_CREATERFXTEMPLATEID",
           valueFrom = aws_ssm_parameter.manual_config["jaggaer-itt-template-id"].arn
         },
         {

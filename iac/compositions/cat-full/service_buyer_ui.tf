@@ -284,6 +284,17 @@ resource "aws_security_group_rule" "buyer_ui_lb_http_in" {
   type              = "ingress"
 }
 
+resource "aws_network_acl_rule" "public__allow_http_everywhere_in" {
+  cidr_block     = "0.0.0.0/0"
+  egress         = false
+  from_port      = 80
+  network_acl_id = module.vpc.network_acl_ids.public
+  protocol       = "tcp"
+  rule_action    = "allow"
+  rule_number    = 10000
+  to_port        = 80
+}
+
 resource "aws_security_group_rule" "buyer_ui_lb_https_in" {
   description     = "Allow HTTPS from approved addresses into the Buyer UI LB"
   from_port       = 443

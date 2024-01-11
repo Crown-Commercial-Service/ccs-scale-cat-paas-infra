@@ -59,6 +59,7 @@ resource "aws_lb_listener" "buyer_ui_http_redirect" {
     type = "redirect"
 
     redirect {
+      port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }

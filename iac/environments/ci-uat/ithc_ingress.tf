@@ -30,7 +30,7 @@ variable "ithc_operative_cidr_safelist" {
 variable "db_bastion_instance_root_device_size_gb" {
   type        = number
   description = "Size in GB of the root device on the DB Bastion instance"
-  default     = 12
+  default     = 100
 }
 
 variable "db_bastion_instance_type" {
@@ -42,7 +42,7 @@ variable "db_bastion_instance_type" {
 variable "vpc_scanner_instance_root_device_size_gb" {
   type        = number
   description = "Size in GB of the root device on the VPC Scanner instance"
-  default     = 12
+  default     = 100
 }
 
 variable "vpc_scanner_instance_type" {

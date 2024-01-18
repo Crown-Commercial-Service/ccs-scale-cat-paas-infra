@@ -26,6 +26,11 @@ output "ecs_execution_role" {
   }
 }
 
+output "ingestion_bucket_id" {
+  description = "Full name of the bucket which is to contain the ingestion objects"
+  value       = module.ingestion_bucket.bucket_id
+}
+
 output "network_acl_ids" {
   description = "Object containing the IDs of each of the Network ACLS"
   value       = module.vpc.network_acl_ids

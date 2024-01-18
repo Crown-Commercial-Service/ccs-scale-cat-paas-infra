@@ -31,6 +31,11 @@ output "ingestion_bucket_id" {
   value       = module.ingestion_bucket.bucket_id
 }
 
+output "ingestion_bucket_write_objects_policy_document_json" {
+  description = "JSON describing an IAM policy to allow writing of objects to the ingestion bucket"
+  value       = module.ingestion_bucket.write_objects_policy_document_json
+}
+
 output "network_acl_ids" {
   description = "Object containing the IDs of each of the Network ACLS"
   value       = module.vpc.network_acl_ids

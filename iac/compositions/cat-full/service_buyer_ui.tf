@@ -168,6 +168,9 @@ module "buyer_ui_task" {
       override_command             = null
       port                         = 3000
       secret_environment_variables = [
+        { name      = "AGREEMENTS_SERVICE_API_KEY",
+          valueFrom = aws_ssm_parameter.manual_config["agreements-service-api-key"].arn
+        },
         {
           name      = "AGREEMENTS_SERVICE_API_URL",
           valueFrom = aws_ssm_parameter.manual_config["agreements-service-api-url"].arn

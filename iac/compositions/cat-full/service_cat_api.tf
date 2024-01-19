@@ -114,7 +114,8 @@ module "cat_api_task" {
         { name = "CONFIG_FLAGS_DEVMODE", value = var.cat_api_config_flags_devmode },
         {
           name  = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO",
-          value = var.cat_api_resolve_buyer_users_by_sso ? "1" : ""
+          # Assuming that Spring uses Java Boolean class to convert these
+          value = var.cat_api_resolve_buyer_users_by_sso ? "true" : "false"
         },
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = var.cat_api_eetime_enabled },
         { name = "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION", value = "{enabled: false}" }, # Mirror existing

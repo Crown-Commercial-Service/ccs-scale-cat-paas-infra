@@ -115,7 +115,7 @@ module "cat_api_task" {
         {
           name  = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO",
           # Assuming that Spring uses Java Boolean class to convert these
-          value = var.cat_api_resolve_buyer_users_by_sso ? "true" : "false"
+          value = var.cat_api_resolve_buyer_users_by_sso
         },
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = var.cat_api_eetime_enabled },
         { name = "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION", value = "{enabled: false}" }, # Mirror existing

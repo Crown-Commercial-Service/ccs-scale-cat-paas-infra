@@ -142,9 +142,9 @@ module "migrate_postgres" {
   ecs_execution_role           = module.cat_full.ecs_execution_role
   efs_subnet_ids = []
   # Comment out for first run
-  #  module.cat_full.subnets.application.az_ids["a"],
-  #  module.cat_full.subnets.application.az_ids["b"]
-  #]
+    module.cat_full.subnets.application.az_ids["a"],
+    module.cat_full.subnets.application.az_ids["b"]
+  ]
   migrator_name                          = "cat"
   postgres_docker_image                  = var.postgres_docker_image
   resource_name_prefixes                 = var.resource_name_prefixes

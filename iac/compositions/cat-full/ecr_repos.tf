@@ -8,6 +8,7 @@ module "ecr_repos" {
   is_ephemeral = var.environment_is_ephemeral
   repository_names = [
     "buyer-ui",
+    "cas-ui",
     "cat-api",
   ]
 }

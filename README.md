@@ -1,5 +1,11 @@
 # ccs-scale-cat-paas-infra
 
+Please be aware there is a Git submodule in use; see [later section](#core-iac-modules---git-submodule) for details.
+
+## Service Architecture
+
+Please see [the infrastructure README](iac/README.md) for details of the architecture contained herein.
+
 ## Core IAC modules - Git Submodule
 
 This repo makes use of the core IAC modules. You are encouraged to read [the core README](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/README.md) to understand more about why this is the case.
@@ -23,7 +29,7 @@ git pull --recurse-submodules origin main
 
 ### Further reading
 
-If you are intending to amend any of the submodule code, you will need to be aware of how to manage inter-dependent Git modules in the same file tree. The [offical Git docs](https://git-scm.com/book/en/v2/Git-Tools-Submodules) are a pretty good place to start.
+If you are intending to amend any of the submodule code, you will need to be aware of how to manage inter-dependeiac/README.mdnt Git modules in the same file tree. The [offical Git docs](https://git-scm.com/book/en/v2/Git-Tools-Submodules) are a pretty good place to start.
 
 ## Native AWS Operations
 

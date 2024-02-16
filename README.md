@@ -1,8 +1,10 @@
 # ccs-scale-cat-paas-infra
 
-## Checking out - Git Submodule
+## Core IAC modules - Git Submodule
 
-Note that this repo makes use of a Git submodule to load what's known as the Core infrastructure code. Therefore it will require slightly different operation compared to that of a single-repo checkout.
+This repo makes use of the core IAC modules. You are encouraged to read [the core README](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/README.md) to understand more about why this is the case.
+
+In terms of the impact that has on the operation of this repo, the key thing is to understand how your Git workflow may need to change:
 
 ### Cloning, first time
 

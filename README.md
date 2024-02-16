@@ -1,5 +1,11 @@
 # ccs-scale-cat-paas-infra
 
+Please be aware there is a Git submodule in use; see [later section](#core-iac-modules---git-submodule) for details.
+
+## Service Architecture
+
+Please see [the infrastructure README](iac/README.md) for details of the architecture contained herein.
+
 ## Core IAC modules - Git Submodule
 
 This repo makes use of the core IAC modules. You are encouraged to read [the core README](https://github.com/Crown-Commercial-Service/ccs-migration-alpha-tools/blob/main/README.md) to understand more about why this is the case.

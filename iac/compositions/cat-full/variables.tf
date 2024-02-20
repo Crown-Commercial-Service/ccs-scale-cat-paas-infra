@@ -96,6 +96,12 @@ variable "hosted_zone_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
+variable "rds_apply_immediately" {
+  type        = bool
+  description = "Whether to apply changes immediately or in the next maintenance window"
+  default     = true
+}
+
 variable "rds_allocated_storage_gb" {
   type        = number
   description = "Storage allocation in GiB"

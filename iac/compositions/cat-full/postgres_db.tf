@@ -7,6 +7,7 @@ module "db" {
   source = "../../core/resource-groups/rds-postgres"
 
   allocated_storage_gb         = var.rds_allocated_storage_gb
+  apply_immediately            = var.rds_apply_immediately
   backup_retention_period_days = var.rds_backup_retention_period_days
   db_instance_class            = var.rds_db_instance_class
   db_name                      = local.db_name

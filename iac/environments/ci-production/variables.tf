@@ -68,7 +68,7 @@ variable "docker_image_tags" {
 variable "enable_ecs_execute_command" {
   type        = bool
   description = "If 1, enables ecs exec on all ecs services"
-  default     = true
+  default     = false
 }
 
 variable "environment_is_ephemeral" {

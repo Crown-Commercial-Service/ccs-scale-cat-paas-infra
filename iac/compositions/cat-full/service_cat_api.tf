@@ -26,9 +26,10 @@ locals {
 
 resource "aws_lb" "cat_api" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-CATAPI"
+  idle_timeout       = var.cat_api_idle_timeout
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [
+  security_groups = [
     aws_security_group.cat_api_lb.id
   ]
   subnets = module.vpc.subnets.public.ids
@@ -109,11 +110,11 @@ module "cat_api_task" {
 
   container_definitions = {
     http = {
-      cpu                   = var.task_container_configs.cat_api.http_cpu
+      cpu = var.task_container_configs.cat_api.http_cpu
       environment_variables = [
         { name = "CONFIG_FLAGS_DEVMODE", value = var.cat_api_config_flags_devmode },
         {
-          name  = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO",
+          name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO",
           # Assuming that Spring uses Java Boolean class to convert these
           value = var.cat_api_resolve_buyer_users_by_sso
         },
@@ -129,14 +130,14 @@ module "cat_api_task" {
         { name = "SPRING_PROFILES_ACTIVE", value = "cloud" },
         { name = "VCAP_SERVICES", value = jsonencode(local.cat_api_vcap_object) },
       ]
-      essential                    = true
-      healthcheck_command          = "curl -sf http://localhost:8080/actuator/health || exit 1"
-      image                        = "${module.ecr_repos.repository_urls["cat-api"]}:${var.docker_image_tags.cat_api_http}"
-      log_group_name               = "cat_api"
-      memory                       = var.task_container_configs.cat_api.http_memory
-      mounts                       = []
-      override_command             = null
-      port                         = 8080
+      essential           = true
+      healthcheck_command = "curl -sf http://localhost:8080/actuator/health || exit 1"
+      image               = "${module.ecr_repos.repository_urls["cat-api"]}:${var.docker_image_tags.cat_api_http}"
+      log_group_name      = "cat_api"
+      memory              = var.task_container_configs.cat_api.http_memory
+      mounts              = []
+      override_command    = null
+      port                = 8080
       secret_environment_variables = [
         {
           name      = "CONFIG_EXTERNAL_AGREEMENTSSERVICE_APIKEY",
@@ -285,7 +286,7 @@ resource "aws_ecs_service" "cat_api" {
 
   network_configuration {
     assign_public_ip = false
-    security_groups  = [
+    security_groups = [
       aws_security_group.cat_api_tasks.id,
       module.db.db_clients_security_group_id,
       module.search_domain.opensearch_clients_security_group_id
@@ -317,8 +318,8 @@ resource "aws_security_group" "cat_api_lb" {
 }
 
 resource "aws_security_group_rule" "cat_api_lb__public_https_in" {
-  description     = "Allow HTTPS from approved addresses into the CAT API LB"
-  from_port       = 443
+  description = "Allow HTTPS from approved addresses into the CAT API LB"
+  from_port   = 443
   prefix_list_ids = [
     aws_ec2_managed_prefix_list.cat_api_ingress_safelist.id
   ]

@@ -4,10 +4,12 @@ module "cat_full" {
   aws_account_id                          = var.aws_account_id
   aws_region                              = var.aws_region
   buyer_ui_ingress_cidr_safelist          = var.buyer_ui_ingress_cidr_safelist
+  buyer_ui_idle_timeout                   = var.buyer_ui_idle_timeout
   buyer_ui_public_cert_attempt_validation = var.buyer_ui_public_cert_attempt_validation
   buyer_ui_public_fqdn                    = var.buyer_ui_public_fqdn
   cat_api_config_flags_devmode            = var.cat_api_config_flags_devmode
   cat_api_eetime_enabled                  = var.cat_api_eetime_enabled
+  cat_api_idle_timeout                    = var.cat_api_idle_timeout
   cat_api_ingress_cidr_safelist           = var.cat_api_ingress_cidr_safelist
   cat_api_log_level                       = var.cat_api_log_level
   cat_api_resolve_buyer_users_by_sso      = var.cat_api_resolve_buyer_users_by_sso

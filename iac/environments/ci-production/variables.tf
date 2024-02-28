@@ -8,6 +8,10 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "buyer_ui_idle_timeout" {
+  description = "The time in seconds that the connection is allowed to be idle"
+}
+
 variable "buyer_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the Buyer UI, format {description: CIDR}"
@@ -36,6 +40,10 @@ variable "cat_api_config_flags_devmode" {
 variable "cat_api_eetime_enabled" {
   type        = string
   description = "Service-specific config" # TODO Source clearer explanation
+}
+
+variable "cat_api_idle_timeout" {
+  description = "The time in seconds that the connection is allowed to be idle"
 }
 
 variable "cat_api_ingress_cidr_safelist" {

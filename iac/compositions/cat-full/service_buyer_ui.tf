@@ -1,5 +1,6 @@
 resource "aws_lb" "buyer_ui" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-BUYERUI"
+  idle_timeout       = var.buyer_ui_idle_timeout
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.buyer_ui_lb.id]
@@ -148,7 +149,7 @@ module "buyer_ui_task" {
 
   container_definitions = {
     http = {
-      cpu                   = var.task_container_configs.buyer_ui.http_cpu
+      cpu = var.task_container_configs.buyer_ui.http_cpu
       environment_variables = [
         { name = "CAT_URL", value = "https://${var.buyer_ui_public_fqdn}" },
         { name = "NODE_ENV", value = "production" },
@@ -163,10 +164,10 @@ module "buyer_ui_task" {
       image               = "${module.ecr_repos.repository_urls["buyer-ui"]}:${var.docker_image_tags.buyer_ui_http}"
       log_group_name      = "${var.environment_name}-buyer-ui-nginx" # Must exist already
       memory              = var.task_container_configs.buyer_ui.http_memory
-      mounts              = [
+      mounts = [
       ]
-      override_command             = null
-      port                         = 3000
+      override_command = null
+      port             = 3000
       secret_environment_variables = [
         { name      = "AGREEMENTS_SERVICE_API_KEY",
           valueFrom = aws_ssm_parameter.manual_config["agreements-service-api-key"].arn
@@ -244,7 +245,7 @@ resource "aws_ecs_service" "buyer_ui" {
 
   network_configuration {
     assign_public_ip = false
-    security_groups  = [
+    security_groups = [
       aws_security_group.buyer_ui_tasks.id,
       aws_security_group.cat_api_clients.id,
       module.session_cache.clients_security_group_id,
@@ -277,8 +278,8 @@ resource "aws_security_group" "buyer_ui_lb" {
 
 # To enable redirect from http
 resource "aws_security_group_rule" "buyer_ui_lb_http_in" {
-  description     = "Allow HTTP from approved addresses into the Buyer UI LB"
-  from_port       = 80
+  description = "Allow HTTP from approved addresses into the Buyer UI LB"
+  from_port   = 80
   prefix_list_ids = [
     aws_ec2_managed_prefix_list.buyer_ui_ingress_safelist.id
   ]
@@ -300,8 +301,8 @@ resource "aws_network_acl_rule" "public__allow_http_everywhere_in" {
 }
 
 resource "aws_security_group_rule" "buyer_ui_lb_https_in" {
-  description     = "Allow HTTPS from approved addresses into the Buyer UI LB"
-  from_port       = 443
+  description = "Allow HTTPS from approved addresses into the Buyer UI LB"
+  from_port   = 443
   prefix_list_ids = [
     aws_ec2_managed_prefix_list.buyer_ui_ingress_safelist.id
   ]

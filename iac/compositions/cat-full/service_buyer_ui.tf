@@ -7,14 +7,14 @@ resource "aws_lb" "buyer_ui" {
   subnets            = module.vpc.subnets.public.ids
 
   access_logs {
-    bucket  = module.ingestion_bucket.bucket_id
-    prefix  = "access-logs-buyerui"
+    bucket  = module.logs_bucket.bucket_id
+    prefix  = "access-logs/buyerui"
     enabled = var.enable_lb_access_logs
   }
 
   connection_logs {
-    bucket  = module.ingestion_bucket.bucket_id
-    prefix  = "connection-logs-buyerui"
+    bucket  = module.logs_bucket.bucket_id
+    prefix  = "connection-logs/buyerui"
     enabled = var.enable_lb_connection_logs
   }
 }
@@ -139,6 +139,12 @@ resource "aws_lb_target_group" "buyer_ui" {
     path     = "/isAlive"
     port     = "3000"
     protocol = "HTTP"
+  }
+
+  stickiness {
+    type            = "lb_cookie"
+    enabled         = true
+    cookie_duration = 86400
   }
 }
 

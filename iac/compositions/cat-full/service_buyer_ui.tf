@@ -5,6 +5,18 @@ resource "aws_lb" "buyer_ui" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.buyer_ui_lb.id]
   subnets            = module.vpc.subnets.public.ids
+
+  access_logs {
+    bucket  = module.ingestion_bucket.bucket_id
+    prefix  = "access-logs-buyerui"
+    enabled = var.enable_lb_access_logs
+  }
+
+  connection_logs {
+    bucket  = module.ingestion_bucket.bucket_id
+    prefix  = "connection-logs-buyerui"
+    enabled = var.enable_lb_connection_logs
+  }
 }
 
 resource "aws_route53_record" "buyer_ui" {

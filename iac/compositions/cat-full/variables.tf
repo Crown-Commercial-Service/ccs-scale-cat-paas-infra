@@ -73,6 +73,18 @@ variable "docker_image_tags" {
   description = "Docker tag for deployment of each of the services from ECR"
 }
 
+variable "enable_lb_access_logs" {
+  type        = bool
+  description = "If 1, enables access logs"
+  default     = false
+}
+
+variable "enable_lb_connection_logs" {
+  type        = bool
+  description = "If 1, enables connection logs"
+  default     = false
+}
+
 variable "enable_ecs_execute_command" {
   type        = bool
   description = "If 1, enables ecs exec on all ecs services"

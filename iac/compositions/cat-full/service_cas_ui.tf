@@ -31,23 +31,23 @@ resource "aws_acm_certificate" "public_cas_ui" {
   }
 }
 
-# locals {
-#   public_cas_ui_cert_validations = [
-#     for dvo in aws_acm_certificate.public_cas_ui.domain_validation_options : {
-#       name  = dvo.resource_record_name
-#       value = dvo.resource_record_value
-#       type  = dvo.resource_record_type
-#     }
-#   ]
-# }
+locals {
+  public_cas_ui_cert_validations = [
+    for dvo in aws_acm_certificate.public_cas_ui.domain_validation_options : {
+      name  = dvo.resource_record_name
+      value = dvo.resource_record_value
+      type  = dvo.resource_record_type
+    }
+  ]
+}
 
-# resource "aws_acm_certificate_validation" "public_cas_ui" {
-#   # Only attempt this stage if vars dictate so (see vars for explanation)
-#   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
+resource "aws_acm_certificate_validation" "public_cas_ui" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
-#   certificate_arn         = aws_acm_certificate.public_cas_ui.arn
-#   validation_record_fqdns = [for validation in local.public_cas_ui_cert_validations : validation.name]
-# }
+  certificate_arn         = aws_acm_certificate.public_cas_ui.arn
+  validation_record_fqdns = [for validation in local.public_cas_ui_cert_validations : validation.name]
+}
 
 # Redirect all port 80 requests to port 443
 resource "aws_lb_listener" "cas_ui_http_redirect" {
@@ -66,47 +66,47 @@ resource "aws_lb_listener" "cas_ui_http_redirect" {
   }
 }
 
-# resource "aws_lb_listener" "cas_ui" {
-#   # Only attempt this stage if vars dictate so (see vars for explanation)
-#   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
+resource "aws_lb_listener" "cas_ui" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
-#   certificate_arn   = aws_acm_certificate.public_cas_ui.arn
-#   load_balancer_arn = aws_lb.cas_ui.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
-#   ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.public_cas_ui.arn
+  load_balancer_arn = aws_lb.cas_ui.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.cas_ui.arn
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.cas_ui.arn
+  }
+}
 
-# # Paths we wish to exclude from outside access
-# resource "aws_lb_listener_rule" "blocked_frontend_paths" {
-#   # Only attempt this stage if vars dictate so (see vars for explanation)
-#   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
+# Paths we wish to exclude from outside access
+resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
-#   listener_arn = aws_lb_listener.cas_ui[0].arn
+  listener_arn = aws_lb_listener.cas_ui[0].arn
 
-#   action {
-#     type = "fixed-response"
+  action {
+    type = "fixed-response"
 
-#     fixed_response {
-#       content_type = "text/html"
-#       message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.cas_ui_public_fqdn}/\">Home</a>.</p>"
-#       status_code  = "404"
-#     }
-#   }
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.cas_ui_public_fqdn}/\">Home</a>.</p>"
+      status_code  = "404"
+    }
+  }
 
-#   condition {
-#     path_pattern {
-#       values = [
-#         "/isAlive",
-#       ]
-#     }
-#   }
-# }
+  condition {
+    path_pattern {
+      values = [
+        "/isAlive",
+      ]
+    }
+  }
+}
 
 resource "aws_lb_target_group" "cas_ui" {
   # Requires an explicit depends_on
@@ -168,41 +168,41 @@ module "cas_ui_task" {
   task_memory            = var.task_container_configs.cas_ui.total_memory
 }
 
-# resource "aws_ecs_service" "cas_ui" {
-#   cluster                = module.ecs_cluster.cluster_arn
-#   desired_count          = 0 # Deploy manually
-#   enable_execute_command = var.enable_ecs_execute_command
-#   force_new_deployment   = false
-#   launch_type            = "FARGATE"
-#   name                   = "cas_ui"
-#   task_definition        = module.cas_ui_task.task_definition_arn
+resource "aws_ecs_service" "cas_ui" {
+  cluster                = module.ecs_cluster.cluster_arn
+  desired_count          = 0 # Deploy manually
+  enable_execute_command = var.enable_ecs_execute_command
+  force_new_deployment   = false
+  launch_type            = "FARGATE"
+  name                   = "cas_ui"
+  task_definition        = module.cas_ui_task.task_definition_arn
 
-#   dynamic "load_balancer" {
-#     for_each = var.cas_ui_public_cert_attempt_validation ? toset([1]) : toset([])
-#     content {
-#       container_name   = "http"
-#       container_port   = 3000
-#       target_group_arn = aws_lb_target_group.cas_ui.arn
-#     }
-#   }
+  dynamic "load_balancer" {
+    for_each = var.cas_ui_public_cert_attempt_validation ? toset([1]) : toset([])
+    content {
+      container_name   = "http"
+      container_port   = 3000
+      target_group_arn = aws_lb_target_group.cas_ui.arn
+    }
+  }
 
-#   network_configuration {
-#     assign_public_ip = false
-#     security_groups = [
-#       aws_security_group.cas_ui_tasks.id,
-#       aws_security_group.cat_api_clients.id,
-#       module.session_cache.clients_security_group_id,
-#     ]
-#     subnets = module.vpc.subnets.web.ids
-#   }
+  network_configuration {
+    assign_public_ip = false
+    security_groups = [
+      aws_security_group.cas_ui_tasks.id,
+      aws_security_group.cat_api_clients.id,
+      module.session_cache.clients_security_group_id,
+    ]
+    subnets = module.vpc.subnets.web.ids
+  }
 
-#   lifecycle {
-#     # Don't kill scaled services every time we apply Terraform
-#     ignore_changes = [
-#       desired_count
-#     ]
-#   }
-# }
+  lifecycle {
+    # Don't kill scaled services every time we apply Terraform
+    ignore_changes = [
+      desired_count
+    ]
+  }
+}
 
 resource "aws_iam_role_policy_attachment" "cas_ui_task__ecs_exec_access" {
   role       = module.cas_ui_task.task_role_name

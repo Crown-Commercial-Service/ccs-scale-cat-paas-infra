@@ -9,14 +9,15 @@ locals {
 module "session_cache" {
   source = "../../core/resource-groups/elasticache-redis"
 
-  cluster_id                            = "buyer-ui-sessions"
-  elasticache_cluster_apply_immediately = true
-  engine_version                        = var.session_redis_engine_version
-  node_type                             = var.session_redis_node_type
-  num_cache_nodes                       = var.session_redis_num_cache_nodes
-  resource_name_prefixes                = var.resource_name_prefixes
-  subnet_ids                            = module.vpc.subnets.web.ids
-  vpc_id                                = module.vpc.vpc_id
+  cluster_id                                = "buyer-ui-sessions"
+  elasticache_cluster_apply_immediately     = true
+  elasticache_cluster_parameter_group_name  = var.elasticache_cluster_parameter_group_name
+  engine_version                            = var.session_redis_engine_version
+  node_type                                 = var.session_redis_node_type
+  num_cache_nodes                           = var.session_redis_num_cache_nodes
+  resource_name_prefixes                    = var.resource_name_prefixes
+  subnet_ids                                = module.vpc.subnets.web.ids
+  vpc_id                                    = module.vpc.vpc_id
 }
 
 resource "random_password" "session_secret" {

@@ -33,6 +33,18 @@ resource "aws_lb" "cat_api" {
     aws_security_group.cat_api_lb.id
   ]
   subnets = module.vpc.subnets.public.ids
+
+  access_logs {
+    bucket  = module.logs_bucket.bucket_id
+    prefix  = "access-logs/catapi"
+    enabled = var.enable_lb_access_logs
+  }
+
+  connection_logs {
+    bucket  = module.logs_bucket.bucket_id
+    prefix  = "connection-logs/catapi"
+    enabled = var.enable_lb_connection_logs
+  }
 }
 
 resource "aws_route53_record" "cat_api" {

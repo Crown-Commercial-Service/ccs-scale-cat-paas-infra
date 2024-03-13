@@ -93,6 +93,29 @@ variable "docker_image_tags" {
   description = "Docker tag for deployment of each of the services from ECR"
 }
 
+variable "elasticache_cluster_parameter_group_name" {
+  type        = string
+  description = "The Parameter Group Name for the Elasticache cluster"
+}
+
+variable "elb_account_id" {
+  type        = string
+  description = " ID of the AWS account for Elastic Load Balancing for your Region, default is Europe - London"
+  default     = "652711504416"
+}
+
+variable "enable_lb_access_logs" {
+  type        = bool
+  description = "If 1, enables access logs"
+  default     = false
+}
+
+variable "enable_lb_connection_logs" {
+  type        = bool
+  description = "If 1, enables connection logs"
+  default     = false
+}
+
 variable "enable_ecs_execute_command" {
   type        = bool
   description = "If 1, enables ecs exec on all ecs services"

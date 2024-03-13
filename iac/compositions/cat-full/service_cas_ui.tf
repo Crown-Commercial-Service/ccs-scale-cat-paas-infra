@@ -102,7 +102,7 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
   condition {
     path_pattern {
       values = [
-        "/isAlive",
+        "/health",
       ]
     }
   }
@@ -123,7 +123,7 @@ resource "aws_lb_target_group" "cas_ui" {
 
   health_check {
     matcher  = "200"
-    path     = "/isAlive"
+    path     = "/health"
     port     = "3000"
     protocol = "HTTP"
   }
@@ -202,6 +202,38 @@ resource "aws_ecs_service" "cas_ui" {
       desired_count
     ]
   }
+}
+
+data "aws_iam_policy_document" "cas_ui_task__read_ssm_params" {
+  version = "2012-10-17"
+
+  statement {
+    sid = "AllowCasUiParams"
+
+    effect = "Allow"
+
+    actions = [
+      "ssm:GetParametersByPath",
+      "ssm:GetParameters",
+      "ssm:GetParameter"
+    ]
+
+    resources = [
+      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/cas/ui/*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "cas_ui_task__read_ssm_params_policy" {
+  name        = "cas_ui_read_ssm_params_policy"
+  path        = "/"
+  description = "cas ui task policy"
+  policy      = data.aws_iam_policy_document.cas_ui_task__read_ssm_params.json
+}
+
+resource "aws_iam_role_policy_attachment" "cas_ui_task__read_ssm_params_policy_attach" {
+  role       = module.cas_ui_task.task_role_name
+  policy_arn = aws_iam_policy.cas_ui_task__read_ssm_params_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "cas_ui_task__ecs_exec_access" {

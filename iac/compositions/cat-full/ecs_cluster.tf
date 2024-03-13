@@ -38,7 +38,6 @@ data "aws_iam_policy_document" "ecs_execution_log_permissions" {
   override_policy_documents = [
     module.buyer_ui_task.write_task_logs_policy_document_json,
     module.cat_api_task.write_task_logs_policy_document_json,
-    module.cas_ui_task.write_task_logs_policy_document_json
   ]
 }
 
@@ -46,7 +45,6 @@ data "aws_iam_policy_document" "ecs_execution_pass_task_role_permissions" {
   source_policy_documents = [
     module.buyer_ui_task.pass_task_role_policy_document_json,
     module.cat_api_task.pass_task_role_policy_document_json,
-    module.cas_ui_task.pass_task_role_policy_document_json
   ]
 }
 
@@ -65,22 +63,6 @@ data "aws_iam_policy_document" "read_all_ssm_params" {
 
     resources = [
       "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/*"
-    ]
-  }
-
-  statement {
-    sid = "AllowCasUiParams"
-
-    effect = "Allow"
-
-    actions = [
-      "ssm:GetParametersByPath",
-      "ssm:GetParameters",
-      "ssm:GetParameter"
-    ]
-
-    resources = [
-      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/cas/ui/*"
     ]
   }
 }

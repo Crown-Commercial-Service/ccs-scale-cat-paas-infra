@@ -189,7 +189,7 @@ variable "search_domain_volume_size_gib" {
 variable "service_subdomain_prefixes" {
   type = object({
     buyer_ui = string,
-    cas_ui   = string
+    cas_ui   = string,
     cat_api  = string,
   })
 }

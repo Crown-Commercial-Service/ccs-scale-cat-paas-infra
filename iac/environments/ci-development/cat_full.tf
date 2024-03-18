@@ -3,6 +3,7 @@ module "cat_full" {
 
   aws_account_id                           = var.aws_account_id
   aws_region                               = var.aws_region
+  aws_eip_access_enabled                   = var.aws_eip_access_enabled
   buyer_ui_ingress_cidr_safelist           = var.buyer_ui_ingress_cidr_safelist
   buyer_ui_public_cert_attempt_validation  = var.buyer_ui_public_cert_attempt_validation
   buyer_ui_public_fqdn                     = var.buyer_ui_public_fqdn

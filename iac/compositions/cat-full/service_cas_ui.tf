@@ -276,33 +276,6 @@ resource "aws_security_group_rule" "cas_ui_lb_https_in" {
   type              = "ingress"
 }
 
-# Allow AWS IPs access
-resource "aws_security_group_rule" "nat_gw_cas_ui_lb_http_in" {
-  count       = var.aws_eip_access_enabled ? 1 : 0
-  description = "Allow HTTP from NAT Gateway EIPs"
-  from_port   = 80
-  prefix_list_ids = [
-    aws_ec2_managed_prefix_list.nat_gateways_ingress_safelist.id
-  ]
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cas_ui_lb.id
-  to_port           = 80
-  type              = "ingress"
-}
-
-resource "aws_security_group_rule" "nat_gw_cas_ui_lb_https_in" {
-  count       = var.aws_eip_access_enabled ? 1 : 0
-  description = "Allow HTTP from NAT Gateway EIPs"
-  from_port   = 443
-  prefix_list_ids = [
-    aws_ec2_managed_prefix_list.nat_gateways_ingress_safelist.id
-  ]
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cas_ui_lb.id
-  to_port           = 443
-  type              = "ingress"
-}
-
 resource "aws_security_group" "cas_ui_tasks" {
   name        = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"
   description = "Identifies the holder as one of the CAS UI tasks"

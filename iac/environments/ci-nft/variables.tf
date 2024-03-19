@@ -3,12 +3,6 @@ variable "aws_account_id" {
   description = "AWS account into which to deploy resources"
 }
 
-variable "aws_eip_access_enabled" {
-  description = "Used to allow access to Nat Prefix safelists"
-  type        = bool
-  default     = false
-}
-
 variable "aws_region" {
   type        = string
   description = "Region into which to deploy region-specific resources"

@@ -8,12 +8,6 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
-variable "aws_eip_access_enabled" {
-  description = "Used to allow access to Nat Prefix safelists"
-  type        = bool
-  default     = false
-}
-
 variable "buyer_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the Buyer UI, format {description: CIDR}"

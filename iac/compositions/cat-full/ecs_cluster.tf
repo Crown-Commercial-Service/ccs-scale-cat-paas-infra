@@ -38,7 +38,6 @@ data "aws_iam_policy_document" "ecs_execution_log_permissions" {
   override_policy_documents = [
     module.buyer_ui_task.write_task_logs_policy_document_json,
     module.cat_api_task.write_task_logs_policy_document_json,
-    module.cas_ui_task.write_task_logs_policy_document_json,
   ]
 }
 

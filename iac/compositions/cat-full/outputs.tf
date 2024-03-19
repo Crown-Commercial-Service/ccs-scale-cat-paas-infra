@@ -1,3 +1,8 @@
+output "cat_api_clients_security_group_id" {
+  description = "CAT API clients security group ID"
+  value       = aws_security_group.cat_api_clients.id
+}
+
 output "db_availability_zone" {
   description = "Availability zone for the RDS instance"
   value       = module.db.availability_zone
@@ -13,6 +18,11 @@ output "db_connection_url_ssm_param_arn" {
   value       = module.db.postgres_connection_url_ssm_parameter_arn
 }
 
+output "ecr_repo_urls" {
+  description = "ECR repo urls"
+  value       = module.ecr_repos.repository_urls
+}
+
 output "ecs_cluster_arn" {
   description = "ARN of the ECS Cluster which contains all the services"
   value       = module.ecs_cluster.cluster_arn
@@ -24,6 +34,11 @@ output "ecs_execution_role" {
     arn  = aws_iam_role.ecs_execution_role.arn
     name = aws_iam_role.ecs_execution_role.name
   }
+}
+
+output "ecs_exec_policy_arn" {
+  description = "ECS exec policy arn"
+  value       = aws_iam_policy.ecs_exec_policy.arn
 }
 
 output "ingestion_bucket_id" {
@@ -56,19 +71,15 @@ output "public_buyer_ui_cname_target" {
   value       = aws_route53_record.buyer_ui.fqdn
 }
 
-output "public_cas_ui_cert_validation_records_required" {
-  description = "Details of the cert validation records required for the public-facing cas UI certificate"
-  value       = local.public_cas_ui_cert_validations
+output "redis_credentials" {
+  description = "Redis credentials"
+  sensitive   = true
+  value       = local.redis_credentials
 }
 
-output "public_cas_ui_cname_source" {
-  description = "DNS record to CNAME to the cas UI in this stack"
-  value       = var.cas_ui_public_fqdn
-}
-
-output "public_cas_ui_cname_target" {
-  description = "FQDN to which the public cas UI DNS CNAME should point"
-  value       = aws_route53_record.cas_ui.fqdn
+output "session_cache_clients_security_group_id" {
+  description = "Session cache clients security group ID"
+  value       = module.session_cache.clients_security_group_id
 }
 
 output "subnets" {

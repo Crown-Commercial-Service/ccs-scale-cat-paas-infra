@@ -411,17 +411,3 @@ resource "aws_security_group_rule" "cat_api_lb__cat_api_clients_https_in" {
   to_port                  = 443
   type                     = "ingress"
 }
-
-# Allow AWS IPs access
-resource "aws_security_group_rule" "nat_gw_cat_api_lb_https_in" {
-  count       = var.aws_eip_access_enabled ? 1 : 0
-  description = "Allow HTTP from NAT Gateway EIPs"
-  from_port   = 443
-  prefix_list_ids = [
-    aws_ec2_managed_prefix_list.nat_gateways_ingress_safelist.id
-  ]
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cat_api_lb.id
-  to_port           = 443
-  type              = "ingress"
-}

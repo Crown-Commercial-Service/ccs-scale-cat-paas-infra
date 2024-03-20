@@ -1,3 +1,8 @@
+variable "allow_major_version_upgrade" {
+  type        = bool
+  description = "Opt to allow major version upgrade"
+}
+
 variable "aws_account_id" {
   type        = string
   description = "AWS account into which to deploy resources"

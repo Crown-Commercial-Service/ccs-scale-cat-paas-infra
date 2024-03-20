@@ -1,6 +1,7 @@
 module "cat_full" {
   source = "../../compositions/cat-full"
 
+  allow_major_version_upgrade              = var.allow_major_version_upgrade
   aws_account_id                           = var.aws_account_id
   aws_region                               = var.aws_region
   buyer_ui_idle_timeout                    = var.buyer_ui_idle_timeout

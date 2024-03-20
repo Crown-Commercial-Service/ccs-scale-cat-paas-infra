@@ -3,6 +3,12 @@ variable "aws_account_id" {
   description = "AWS account into which to deploy resources"
 }
 
+variable "allow_major_version_upgrade" {
+  type        = bool
+  description = "Opt to allow major version upgrade (defaults to false)"
+  default     = false
+}
+
 variable "aws_region" {
   type        = string
   description = "Region into which to deploy region-specific resources"

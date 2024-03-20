@@ -1,9 +1,17 @@
+locals {
+  redis_credentials = {
+    host     = var.redis_credentials.host,
+    password = var.redis_credentials.password,
+    port     = var.redis_credentials.port,
+  }
+}
+
 resource "aws_lb" "cas_ui" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASUI"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_ui_lb.id]
-  subnets            = module.vpc.subnets.public.ids
+  subnets            = var.subnets.public.ids
 }
 
 resource "aws_route53_record" "cas_ui" {
@@ -119,7 +127,7 @@ resource "aws_lb_target_group" "cas_ui" {
   port            = "3000"
   protocol        = "HTTP"
   target_type     = "ip"
-  vpc_id          = module.vpc.vpc_id
+  vpc_id          = var.vpc_id
 
   health_check {
     matcher  = "200"
@@ -152,7 +160,7 @@ module "cas_ui_task" {
       environment_variables = []
       essential             = true
       healthcheck_command   = "curl -f http://localhost:3000/isAlive || exit 1"
-      image                 = "${module.ecr_repos.repository_urls["cas-ui"]}:${var.docker_image_tags.cas_ui_http}"
+      image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_ui_http}"
       log_group_name        = "cas_ui"
       memory                = var.task_container_configs.cas_ui.http_memory
       mounts = [
@@ -162,14 +170,15 @@ module "cas_ui_task" {
       secret_environment_variables = []
     }
   }
-  ecs_execution_role_arn = aws_iam_role.ecs_execution_role.arn
+  ecs_execution_role_arn = var.ecs_execution_role_arn
   family_name            = "cas_ui"
   task_cpu               = var.task_container_configs.cas_ui.total_cpu
   task_memory            = var.task_container_configs.cas_ui.total_memory
 }
 
 resource "aws_ecs_service" "cas_ui" {
-  cluster                = module.ecs_cluster.cluster_arn
+  cluster = var.ecs_cluster_arn
+
   desired_count          = 0 # Deploy manually
   enable_execute_command = var.enable_ecs_execute_command
   force_new_deployment   = false
@@ -190,10 +199,10 @@ resource "aws_ecs_service" "cas_ui" {
     assign_public_ip = false
     security_groups = [
       aws_security_group.cas_ui_tasks.id,
-      aws_security_group.cat_api_clients.id,
-      module.session_cache.clients_security_group_id,
+      var.cat_api_clients_security_group_id,
+      var.session_cache_clients_security_group_id,
     ]
-    subnets = module.vpc.subnets.web.ids
+    subnets = var.subnets.web.ids
   }
 
   lifecycle {
@@ -202,6 +211,14 @@ resource "aws_ecs_service" "cas_ui" {
       desired_count
     ]
   }
+}
+
+data "aws_iam_policy_document" "ecs_execution_log_permissions" {
+  # Note: We knowingly expect repeat "DescribeAllLogGroups" Sids, hence we use
+  # `override_` rather than `source_`
+  override_policy_documents = [
+    module.cas_ui_task.write_task_logs_policy_document_json,
+  ]
 }
 
 data "aws_iam_policy_document" "cas_ui_task__read_ssm_params" {
@@ -238,13 +255,13 @@ resource "aws_iam_role_policy_attachment" "cas_ui_task__read_ssm_params_policy_a
 
 resource "aws_iam_role_policy_attachment" "cas_ui_task__ecs_exec_access" {
   role       = module.cas_ui_task.task_role_name
-  policy_arn = aws_iam_policy.ecs_exec_policy.arn
+  policy_arn = var.ecs_exec_policy_arn
 }
 
 resource "aws_security_group" "cas_ui_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:CASUI"
   description = "ALB for CAS UI"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.vpc_id
 
   tags = {
     Name = "${var.resource_name_prefixes.normal}:LB:CASUI"
@@ -279,7 +296,7 @@ resource "aws_security_group_rule" "cas_ui_lb_https_in" {
 resource "aws_security_group" "cas_ui_tasks" {
   name        = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"
   description = "Identifies the holder as one of the CAS UI tasks"
-  vpc_id      = module.vpc.vpc_id
+  vpc_id      = var.vpc_id
 
   tags = {
     Name = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"

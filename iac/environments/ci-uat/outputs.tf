@@ -12,7 +12,6 @@ output "public_buyer_ui_cname_source" {
   value       = module.cat_full.public_buyer_ui_cname_source
 }
 
-
 output "public_buyer_ui_cname_target" {
   description = "FQDN to which the public Buyer UI DNS CNAME should point"
   value       = module.cat_full.public_buyer_ui_cname_target

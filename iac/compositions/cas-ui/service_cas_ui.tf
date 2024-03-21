@@ -170,7 +170,7 @@ module "cas_ui_task" {
       secret_environment_variables = []
     }
   }
-  ecs_execution_role_arn = var.ecs_execution_role_arn
+  ecs_execution_role_arn = var.ecs_execution_role.arn
   family_name            = "cas_ui"
   task_cpu               = var.task_container_configs.cas_ui.total_cpu
   task_memory            = var.task_container_configs.cas_ui.total_memory
@@ -211,14 +211,6 @@ resource "aws_ecs_service" "cas_ui" {
       desired_count
     ]
   }
-}
-
-data "aws_iam_policy_document" "ecs_execution_log_permissions" {
-  # Note: We knowingly expect repeat "DescribeAllLogGroups" Sids, hence we use
-  # `override_` rather than `source_`
-  override_policy_documents = [
-    module.cas_ui_task.write_task_logs_policy_document_json,
-  ]
 }
 
 data "aws_iam_policy_document" "cas_ui_task__read_ssm_params" {

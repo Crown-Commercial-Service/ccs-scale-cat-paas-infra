@@ -14,6 +14,8 @@ module "cat_full" {
   docker_image_tags                        = var.docker_image_tags
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
   enable_ecs_execute_command               = var.enable_ecs_execute_command
+  enable_lb_access_logs                    = var.enable_lb_access_logs
+  enable_lb_connection_logs                = var.enable_lb_connection_logs
   environment_is_ephemeral                 = var.environment_is_ephemeral
   environment_name                         = var.environment_name
   hosted_zone_api                          = var.hosted_zone_api

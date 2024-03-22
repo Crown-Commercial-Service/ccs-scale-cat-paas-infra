@@ -12,9 +12,9 @@ module "cat_full" {
   cat_api_log_level                        = var.cat_api_log_level
   cat_api_resolve_buyer_users_by_sso       = var.cat_api_resolve_buyer_users_by_sso
   docker_image_tags                        = var.docker_image_tags
-  enable_lb_access_logs                    = true
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
-  enable_lb_connection_logs                = true
+  enable_lb_access_logs                    = var.enable_lb_access_logs
+  enable_lb_connection_logs                = var.enable_lb_connection_logs
   enable_ecs_execute_command               = var.enable_ecs_execute_command
   environment_is_ephemeral                 = var.environment_is_ephemeral
   environment_name                         = var.environment_name

@@ -97,6 +97,18 @@ variable "enable_ecs_execute_command" {
   default     = true
 }
 
+variable "enable_lb_access_logs" {
+  type        = bool
+  description = "If 1, enables ALB access logging"
+  default     = true
+}
+
+variable "enable_lb_connection_logs" {
+  type        = bool
+  description = "If 1, enables ALB connection logging"
+  default     = true
+}
+
 variable "environment_is_ephemeral" {
   type        = bool
   description = "If true, indicates that the environment is expected to be destroyed from time to time - Allows for (e.g.) `force_destroy` on S3 buckets"

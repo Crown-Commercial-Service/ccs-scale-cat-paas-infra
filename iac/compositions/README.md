@@ -1,4 +1,4 @@
-# Compositions
+# Compositions 
 
 
 A layer of abstraction between Environments and Modules. The structure runs like this:

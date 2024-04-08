@@ -49,11 +49,8 @@ variable "ecs_cluster_arn" {
   description = "ECS cluster ARN"
 }
 
-variable "ecs_execution_role" {
-  type = object({
-    arn  = string
-    name = string
-  })
+variable "ecs_execution_role_arn" {
+  type        = string
   description = "ECS execution IAM role"
 }
 

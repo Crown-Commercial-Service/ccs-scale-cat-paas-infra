@@ -11,7 +11,7 @@ module "cas_ui" {
   ecr_repo_url                            = module.cat_full.ecr_repo_urls["cas-ui"]
   ecs_cluster_arn                         = module.cat_full.ecs_cluster_arn
   ecs_exec_policy_arn                     = module.cat_full.ecs_exec_policy_arn
-  ecs_execution_role                      = module.cat_full.ecs_execution_role
+  ecs_execution_role_arn                  = module.cat_full.ecs_execution_role.arn
   enable_lb_access_logs                   = var.enable_lb_access_logs
   enable_lb_connection_logs               = var.enable_lb_connection_logs
   enable_ecs_execute_command              = var.enable_ecs_execute_command

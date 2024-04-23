@@ -157,7 +157,9 @@ module "cas_ui_task" {
   container_definitions = {
     http = {
       cpu                   = var.task_container_configs.cas_ui.http_cpu
-      environment_variables = []
+      environment_variables = [
+        { name = "VCAP_SERVICES", value = jsonencode(local.cas_ui_vcap_object) },
+      ]
       essential             = true
       healthcheck_command   = "curl -f http://localhost:3000/isAlive || exit 1"
       image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_ui_http}"

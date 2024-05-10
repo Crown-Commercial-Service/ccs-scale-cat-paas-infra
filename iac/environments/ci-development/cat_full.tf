@@ -34,6 +34,7 @@ module "cat_full" {
   session_redis_node_type                  = var.session_redis_node_type
   session_redis_num_cache_nodes            = var.session_redis_num_cache_nodes
   ssm_parameter_name_prefix                = var.ssm_parameter_name_prefix
+  start_stop                               = var.start_stop
   task_container_configs                   = var.task_container_configs
   vpc_cidr_block                           = var.vpc_cidr_block
 }

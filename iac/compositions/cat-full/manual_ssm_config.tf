@@ -44,8 +44,6 @@ locals {
     "jaggaer-client-id",
     "jaggaer-project-template-id",
     "jaggaer-itt-template-id",
-    "jaggaer-enable-contract-plus",
-    "jaggaer-business-unit-name",
     "jaggaer-self-service-id",
     "jaggaer-token-url",
     "login-director-url",

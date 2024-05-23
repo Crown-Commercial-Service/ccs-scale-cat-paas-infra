@@ -157,6 +157,12 @@ variable "rds_db_instance_class" {
   default     = "db.t3.small"
 }
 
+variable "rds_iam_database_authentication_enabled" {
+  type        = bool
+  description = "Whether to enable IAM database authentication for the API db"
+  default     = true
+}
+
 variable "rds_postgres_engine_version" {
   type        = string
   description = "Version number of db engine to use"

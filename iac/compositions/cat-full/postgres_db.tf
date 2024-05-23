@@ -29,8 +29,8 @@ module "create_rds_postgres_tester" {
 
   aws_account_id                         = var.aws_account_id
   aws_region                             = var.aws_region
-  db_name                                = local.api_db_name
-  db_connection_url_ssm_param_arn        = module.api_db.postgres_connection_url_ssm_parameter_arn
+  db_name                                = local.db_name
+  db_connection_url_ssm_param_arn        = module.db.postgres_connection_url_ssm_parameter_arn
   ecs_execution_role                     = {
     arn  = aws_iam_role.ecs_execution_role.arn
     name = aws_iam_role.ecs_execution_role.name
@@ -38,8 +38,8 @@ module "create_rds_postgres_tester" {
   ecs_cluster_arn                        = module.ecs_cluster.cluster_arn
   postgres_docker_image                  = local.postgres_docker_image
   security_group_ids                     = [
-    aws_security_group.api_tasks.id,
-    module.api_db.db_clients_security_group_id,
+    aws_security_group.cat_api_tasks.id,
+    module.db.db_clients_security_group_id,
   ]
   subnet_id                              = module.vpc.subnets.application.ids[0]
   vpc_id                                 = module.vpc.vpc_id

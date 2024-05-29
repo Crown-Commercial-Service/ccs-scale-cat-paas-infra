@@ -1,0 +1,197 @@
+##
+# Copy this file to local.auto.tfvars (which is excluded from Git)
+# and populate as appropriate.
+#
+# Editing this file? Please keep the variables in alphabetical order.
+# Thank you!
+##
+
+# Enter your dev AWS account ID
+aws_account_id = "123456789012"
+
+# This value is unlikely to change
+aws_region = "eu-west-2"
+
+# Settings for the Buyer UI, passed down as environment variables
+buyer_ui_environment = {
+  agreements-service-api-url    = ""
+  auth-server-base-url          = ""
+  auth-identity-base-url        = ""
+  conclave-wrapper-api-base-url = ""
+  dashboard-banner              = ""
+  gcloud-index                  = ""
+  gcloud-search-api-url         = ""
+  gcloud-services-api-url       = ""
+  gcloud-supplier-api-url       = ""
+  google-tag-manager-id         = ""
+  google-site-tag-id            = ""
+  login-director-url            = ""
+  logit-environment             = ""
+  node-env                      = ""
+  rollbar-host                  = ""
+}
+
+# Map in the format: description = "CIDR_BLOCK"
+buyer_ui_ingress_cidr_safelist = {
+  everywhere = "0.0.0.0/0"
+}
+
+/* If set to `false`, prevents Terraform from trying to validate the cert ownership -
+   This will the the setting required when you first apply Terraform, to enable the
+   process to finish cleanly. Once CNAME records have been created according to the
+   output `public_buyer_ui_cert_validation_records_required`, you can reset this
+   variable to `true` and re-apply. */
+buyer_ui_public_cert_attempt_validation = false
+
+# The public-facing FQDN of the UI as will be supplied in HOST headers for client requests.
+buyer_ui_public_fqdn = "dev.redirect.contractawardservice.crowncommercial.gov.uk"
+
+# Service-specific config TODO Source clearer explanation
+cat_api_config_flags_devmode = ""
+
+# Service-specific config TODO Source clearer explanation
+cat_api_eetime_enabled = false
+
+# Settings for the CAT API, passed down as environment variables
+cat_api_environment = {
+  agreements-service-base-url              = "",
+  auth-server-jwk-set-uri                  = "",
+  conclave-wrapper-api-base-url            = "",
+  conclave-wrapper-identities-api-base-url = "",
+  dev_mode                                 = true,
+  document-upload-service-get-base-url     = "",
+  document-upload-service-s3-bucket        = "",
+  document-upload-service-upload-base-url  = "",
+  eetime_enabled                           = true,
+  gov-uk-notify_invalid-duns-template-id   = "",
+  gov-uk-notify_target-email               = "",
+  gov-uk-notify_template-id                = "",
+  jaggaer-base-url                         = "",
+  jaggaer-client-id                        = "",
+  jaggaer-itt-template-id                  = "",
+  jaggaer-project-template-id              = "",
+  jaggaer-self-service-id                  = "",
+  jaggaer-token-url                        = "",
+  log_level                                = "TRACE",
+  oppertunities-s3-export-schedule         = "",
+  oppertunities-s3-export-ui-link          = "",
+  projects-to-opensearch-sync-schedule     = "",
+  resolve_buyer_users_by_sso               = false
+  rollbar-environment                      = "",
+}
+
+# Map in the format: description = "CIDR_BLOCK"
+cat_api_ingress_cidr_safelist = {
+  everywhere = "0.0.0.0/0"
+}
+
+# Log Level for Java CAT API service
+cat_api_log_level = "INFO"
+
+# Paths to SSM parameters containing secrets for the CAT API
+cat_api_ssm_secret_paths = {
+  agreements-service-api-key                = "",
+  conclave-wrapper-api-key                  = "",
+  conclave-wrapper-identities-api-key       = "",
+  document-upload-service-api-key           = "",
+  document-upload-service-aws-access-key-id = "",
+  document-upload-service-aws-secret-key    = "",
+  gov-uk-notify_api-key                     = "",
+  jaggaer-client-secret                     = "",
+  rollbar-access-token                      = "",
+}
+
+# Service-specific config TODO Source clearer explanation
+cat_api_resolve_buyer_users_by_sso = false
+
+# To specify different builds
+docker_image_tags = {
+  buyer_ui_http = "latest",
+  cat_api_http  = "latest",
+}
+
+# Set true if you expect this environment to be destroyed from time-to-time.
+environment_is_ephemeral = true
+
+# Choose a name for your dev environment, include your own name
+environment_name = "DEV-YOUR_NAME"
+
+# ID and subdomain name for the Hosted Zone to use for A records and cert validation records for the API
+hosted_zone_api = {
+  id   = "/hostedzone/Z09311217J7509358QVJ",
+  name = "dev-cas-api.crowncommercial.gov.uk"
+}
+
+/* ID and subdomain name for the Hosted Zone to use for A records and cert validation records for the UI -
+   Note that client requests to the Buyer UI will be addressed to a HOST header which corresponds to the
+   buyer_ui_public_fqdn variable and that the details below for the hosted_zone_ui are to create the
+   actual A record alias for the ALB in the account. */
+hosted_zone_ui = {
+  id   = "/hostedzone/Z07635393DHP0B38Q9HVZ",
+  name = "dev-cas-ui.crowncommercial.gov.uk"
+}
+
+# RDS sizing options
+rds_allocated_storage_gb         = 10
+rds_backup_retention_period_days = 14
+rds_db_instance_class            = "db.t3.small"
+rds_postgres_engine_version      = 14.6
+# By default this is false - Set true for ephemeral environments
+rds_skip_final_snapshot          = true
+
+# Used to prefix resource names - The various formats are to satisfy the divergent
+# naming requirements across AWS resources
+resource_name_prefixes = {
+  normal        = "CAS:EUW2:DEV",
+  hyphens       = "CAS-EUW2-DEV",
+  hyphens_lower = "cas-euw2-dev",
+}
+
+# Options for Opensearch domain
+search_domain_engine_version  = "OpenSearch_1.3"
+search_domain_instance_count  = 2
+search_domain_volume_size_gib = 20
+
+# Qualifiers to prepend to the hosted zone name in order to specify the public services' FQDNs
+service_subdomain_prefixes = {
+  buyer_ui = "buyers"
+  cat_api  = "api"
+}
+
+# User cache Redis options
+session_redis_engine_version  = "6.2"
+session_redis_node_type       = "cache.t2.small"
+session_redis_num_cache_nodes = 1
+
+# Prefix for each SSM parameter created
+ssm_parameter_name_prefix = "/cat/tf-dev"
+
+# Specify the settings for each task and its containers - See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
+task_container_configs = {
+  buyer_ui = {
+    http_cpu     = 1024,
+    http_memory  = 2048,
+    total_cpu    = 1024,
+    total_memory = 2048,
+  },
+  cat_api = {
+    http_cpu     = 1024,
+    http_memory  = 2048,
+    total_cpu    = 1024,
+    total_memory = 2048,
+  }
+}
+
+# CIDR block for the VPC for this app
+vpc_cidr_block = "10.3.0.0/24"
+
+## For the gpaas-postgres-migrator
+#
+cf_config = {
+  api_endpoint        = "https://api.london.cloud.service.gov.uk"
+  cf_cli_docker_image = "governmentpaas/cf-cli"
+  db_service_instance = "ccs-scale-cat-tenders-pg-service"
+  org                 = "ccs-scale-cat"
+  space               = "pre-production"
+}
+postgres_docker_image = "postgres:14.8"

@@ -204,20 +204,12 @@ module "cat_api_task" {
           valueFrom = aws_ssm_parameter.manual_config["jaggaer-base-url"].arn
         },
         {
-          name      = "CONFIG_EXTERNAL_JAGGAER_BUSINESSUNITNAME",
-          valueFrom = aws_ssm_parameter.manual_config["jaggaer-business-unit-name"].arn
-        },
-        {
           name      = "CONFIG_EXTERNAL_JAGGAER_CREATEPROJECTTEMPLATEID",
           valueFrom = aws_ssm_parameter.manual_config["jaggaer-project-template-id"].arn
         },
         {
           name      = "CONFIG_EXTERNAL_JAGGAER_CREATERFXTEMPLATEID",
           valueFrom = aws_ssm_parameter.manual_config["jaggaer-itt-template-id"].arn
-        },
-        {
-          name      = "CONFIG_EXTERNAL_JAGGAER_ENABLECONTRACTPLUS",
-          valueFrom = aws_ssm_parameter.manual_config["jaggaer-enable-contract-plus"].arn
         },
         {
           name      = "CONFIG_EXTERNAL_JAGGAER_SELFSERVICEID",

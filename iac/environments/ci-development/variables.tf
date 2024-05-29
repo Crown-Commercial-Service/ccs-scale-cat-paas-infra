@@ -226,6 +226,12 @@ variable "ssm_parameter_name_prefix" {
   description = "Prefix for each SSM parameter created"
 }
 
+variable "start_stop" {
+  type        = bool
+  description = "Whether to enable environment start stop"
+  default     = false
+}
+
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 variable "task_container_configs" {
   type = object({

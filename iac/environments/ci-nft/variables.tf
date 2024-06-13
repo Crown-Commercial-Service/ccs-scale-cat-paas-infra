@@ -28,6 +28,11 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "ca_cert_identifier" {
+  type        = string
+  description = "The identifier of the CA certificate for the DB instance."
+}
+
 variable "cas_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"

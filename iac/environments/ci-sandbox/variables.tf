@@ -33,6 +33,21 @@ variable "ca_cert_identifier" {
   description = "The identifier of the CA certificate for the DB instance."
 }
 
+variable "cas_buyer_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the Buyer UI LB WAF Should be enabled"
+}
+
+variable "cas_cat_api_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
+}
+
+variable "cas_web_acl_arn" {
+  type        = string
+  description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
+}
+
 variable "cat_api_config_flags_devmode" {
   type        = string
   description = "Service-specific config" # TODO Source clearer explanation

@@ -45,6 +45,10 @@ resource "aws_lb" "cat_api" {
     prefix  = "connection-logs/catapi"
     enabled = var.enable_lb_connection_logs
   }
+
+  tags = {
+    WAF_ENABLED = var.cas_cat_api_lb_waf_enabled != false ? true : null
+  }
 }
 
 resource "aws_route53_record" "cat_api" {

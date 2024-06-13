@@ -17,6 +17,10 @@ resource "aws_lb" "buyer_ui" {
     prefix  = "connection-logs/buyerui"
     enabled = var.enable_lb_connection_logs
   }
+
+  tags = {
+    WAF_ENABLED = var.cas_buyer_ui_lb_waf_enabled != false ? true : null
+  }
 }
 
 resource "aws_route53_record" "buyer_ui" {

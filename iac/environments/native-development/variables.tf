@@ -28,6 +28,24 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "cas_buyer_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the Buyer UI LB WAF Should be enabled"
+  default     = false
+}
+
+variable "cas_cat_api_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
+  default     = false
+}
+
+variable "cas_web_acl_arn" {
+  type        = string
+  description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
+  default     = "N/A"
+}
+
 variable "cat_api_config_flags_devmode" {
   type        = string
   description = "Service-specific config" # TODO Source clearer explanation

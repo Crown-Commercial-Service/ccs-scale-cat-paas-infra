@@ -37,6 +37,21 @@ variable "ca_cert_identifier" {
   description = "The identifier of the CA certificate for the DB instance."
 }
 
+variable "cas_buyer_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the Buyer UI LB WAF Should be enabled"
+}
+
+variable "cas_cat_api_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
+}
+
+variable "cas_web_acl_arn" {
+  type        = string
+  description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
+}
+
 variable "cas_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"

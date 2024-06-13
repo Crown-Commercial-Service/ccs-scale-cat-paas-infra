@@ -10,6 +10,7 @@ module "db" {
   allow_major_version_upgrade  = var.allow_major_version_upgrade
   apply_immediately            = var.rds_apply_immediately
   backup_retention_period_days = var.rds_backup_retention_period_days
+  ca_cert_identifier           = var.ca_cert_identifier
   db_instance_class            = var.rds_db_instance_class
   db_name                      = local.db_name
   db_username                  = local.db_username

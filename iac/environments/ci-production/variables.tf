@@ -37,6 +37,11 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "ca_cert_identifier" {
+  type        = string
+  description = "The identifier of the CA certificate for the DB instance."
+}
+
 variable "cat_api_config_flags_devmode" {
   type        = string
   description = "Service-specific config" # TODO Source clearer explanation

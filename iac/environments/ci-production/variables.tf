@@ -52,9 +52,9 @@ variable "cas_cat_api_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
 }
 
-variable "cas_web_acl_arn" {
+variable "cas_web_acl_name" {
   type        = string
-  description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
+  description = "The name of the Web ACL (to be associated with enabled Load Balancers)"
 }
 
 variable "cat_api_config_flags_devmode" {

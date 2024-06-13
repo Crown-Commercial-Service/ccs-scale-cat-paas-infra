@@ -28,6 +28,11 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "ca_cert_identifier" {
+  type        = string
+  description = "The identifier of the CA certificate for the DB instance."
+}
+
 variable "cas_buyer_ui_lb_waf_enabled" {
   type        = bool
   description = "Boolean value specifying whether or not the Buyer UI LB WAF Should be enabled"
@@ -81,6 +86,11 @@ variable "docker_image_tags" {
     cat_api_http  = string,
   })
   description = "Docker tag for deployment of each of the services from ECR"
+}
+
+variable "elasticache_cluster_parameter_group_name" {
+  type        = string
+  description = "The Parameter Group Name for the Elasticache cluster"
 }
 
 variable "environment_is_ephemeral" {

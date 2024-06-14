@@ -29,6 +29,7 @@ module "cat_full" {
   rds_db_instance_class                    = var.rds_db_instance_class
   rds_postgres_engine_version              = var.rds_postgres_engine_version
   rds_skip_final_snapshot                  = var.rds_skip_final_snapshot
+  replication_group_enabled                = var.replication_group_enabled
   resource_name_prefixes                   = var.resource_name_prefixes
   search_domain_engine_version             = var.search_domain_engine_version
   search_domain_instance_count             = var.search_domain_instance_count

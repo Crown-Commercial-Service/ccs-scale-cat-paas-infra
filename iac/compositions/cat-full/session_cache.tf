@@ -15,6 +15,7 @@ module "session_cache" {
   engine_version                            = var.session_redis_engine_version
   node_type                                 = var.session_redis_node_type
   num_cache_nodes                           = var.session_redis_num_cache_nodes
+  replication_group_enabled                 = var.replication_group_enabled
   resource_name_prefixes                    = var.resource_name_prefixes
   subnet_ids                                = module.vpc.subnets.web.ids
   vpc_id                                    = module.vpc.vpc_id

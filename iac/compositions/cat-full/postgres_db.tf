@@ -14,6 +14,7 @@ module "db" {
   db_instance_class            = var.rds_db_instance_class
   db_name                      = local.db_name
   db_username                  = local.db_username
+  deletion_protection          = var.deletion_protection
   postgres_engine_version      = var.rds_postgres_engine_version
   resource_name_prefixes       = var.resource_name_prefixes
   skip_final_snapshot          = var.rds_skip_final_snapshot

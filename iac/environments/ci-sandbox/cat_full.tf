@@ -15,6 +15,7 @@ module "cat_full" {
   cat_api_ingress_cidr_safelist            = var.cat_api_ingress_cidr_safelist
   cat_api_log_level                        = var.cat_api_log_level
   cat_api_resolve_buyer_users_by_sso       = var.cat_api_resolve_buyer_users_by_sso
+  deletion_protection                      = var.deletion_protection
   docker_image_tags                        = var.docker_image_tags
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
   enable_lb_access_logs                    = var.enable_lb_access_logs

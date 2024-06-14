@@ -190,6 +190,11 @@ variable "rds_skip_final_snapshot" {
   description = "Whether or not to skip the creation of a final snapshot of the db upon deletion"
 }
 
+variable "replication_group_enabled" {
+  type        = bool
+  description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
+}
+
 # See naming convention doc:
 #   https://crowncommercialservice.atlassian.net/wiki/spaces/GPaaS/pages/3561685032/AWS+3+Tier+Reference+Architecture
 variable "resource_name_prefixes" {

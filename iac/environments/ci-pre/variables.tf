@@ -105,6 +105,11 @@ variable "cat_api_resolve_buyer_users_by_sso" {
   description = "Service-specific config" # TODO Source clearer explanation
 }
 
+variable "deletion_protection" {
+  type        = bool
+  description = "Boolean to opt in/out of enabling deletion protection. The DB cannot be deleted when set to true"
+}
+
 variable "docker_image_tags" {
   type = object({
     buyer_ui_http = string,

@@ -18,7 +18,6 @@ module "cas_ui" {
   environment_is_ephemeral                = var.environment_is_ephemeral
   environment_name                        = var.environment_name
   hosted_zone_cas_ui                      = var.hosted_zone_cas_ui
-  lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   resource_name_prefixes                  = var.resource_name_prefixes
   task_container_configs                  = var.task_container_configs
   redis_credentials                       = module.cat_full.redis_credentials

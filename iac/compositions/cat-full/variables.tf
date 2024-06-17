@@ -115,6 +115,11 @@ variable "elb_account_id" {
   default     = "652711504416"
 }
 
+variable "lb_enable_deletion_protection" {
+  type        = bool
+  description = "Opt whether or not to enable deletion protection on Load Balancers"
+}
+
 variable "enable_lb_access_logs" {
   type        = bool
   description = "If 1, enables access logs"

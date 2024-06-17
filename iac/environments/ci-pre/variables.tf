@@ -176,6 +176,11 @@ variable "hosted_zone_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
+variable "lb_enable_deletion_protection" {
+  type        = bool
+  description = "Opt whether or not to enable deletion protection on Load Balancers"
+}
+
 variable "rds_allocated_storage_gb" {
   type        = number
   description = "Storage allocation in GiB"

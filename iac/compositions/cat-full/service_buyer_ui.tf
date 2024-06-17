@@ -6,6 +6,8 @@ resource "aws_lb" "buyer_ui" {
   security_groups    = [aws_security_group.buyer_ui_lb.id]
   subnets            = module.vpc.subnets.public.ids
 
+  enable_deletion_protection = var.lb_enable_deletion_protection
+
   access_logs {
     bucket  = module.logs_bucket.bucket_id
     prefix  = "access-logs/buyerui"

@@ -34,6 +34,8 @@ resource "aws_lb" "cat_api" {
   ]
   subnets = module.vpc.subnets.public.ids
 
+  enable_deletion_protection = var.lb_enable_deletion_protection
+
   access_logs {
     bucket  = module.logs_bucket.bucket_id
     prefix  = "access-logs/catapi"

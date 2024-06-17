@@ -26,6 +26,7 @@ module "cat_full" {
   environment_name                         = var.environment_name
   hosted_zone_api                          = var.hosted_zone_api
   hosted_zone_ui                           = var.hosted_zone_ui
+  lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   rds_allocated_storage_gb                 = var.rds_allocated_storage_gb
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_db_instance_class                    = var.rds_db_instance_class

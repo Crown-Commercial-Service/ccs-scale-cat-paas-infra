@@ -91,6 +91,11 @@ variable "cat_api_resolve_buyer_users_by_sso" {
   description = "Service-specific config" # TODO Source clearer explanation
 }
 
+variable "default_ssl_policy" {
+  type        = string
+  description = "The default SSL Policy to apply to the Load Balancers"
+}
+
 variable "deletion_protection" {
   type        = bool
   description = "Boolean to opt in/out of enabling deletion protection. The DB cannot be deleted when set to true"
@@ -113,6 +118,11 @@ variable "elb_account_id" {
   type        = string
   description = " ID of the AWS account for Elastic Load Balancing for your Region, default is Europe - London"
   default     = "652711504416"
+}
+
+variable "lb_enable_deletion_protection" {
+  type        = bool
+  description = "Opt whether or not to enable deletion protection on Load Balancers"
 }
 
 variable "enable_lb_access_logs" {

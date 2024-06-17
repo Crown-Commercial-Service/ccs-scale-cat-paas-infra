@@ -18,6 +18,7 @@ module "cat_full" {
   cat_api_ingress_cidr_safelist            = var.cat_api_ingress_cidr_safelist
   cat_api_log_level                        = var.cat_api_log_level
   cat_api_resolve_buyer_users_by_sso       = var.cat_api_resolve_buyer_users_by_sso
+  default_ssl_policy                       = var.default_ssl_policy
   deletion_protection                      = var.deletion_protection
   docker_image_tags                        = var.docker_image_tags
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
@@ -26,6 +27,7 @@ module "cat_full" {
   environment_name                         = var.environment_name
   hosted_zone_api                          = var.hosted_zone_api
   hosted_zone_ui                           = var.hosted_zone_ui
+  lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   rds_allocated_storage_gb                 = var.rds_allocated_storage_gb
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_db_instance_class                    = var.rds_db_instance_class

@@ -6,6 +6,8 @@ resource "aws_lb" "buyer_ui" {
   security_groups    = [aws_security_group.buyer_ui_lb.id]
   subnets            = module.vpc.subnets.public.ids
 
+  enable_deletion_protection = var.lb_enable_deletion_protection
+
   access_logs {
     bucket  = module.logs_bucket.bucket_id
     prefix  = "access-logs/buyerui"
@@ -91,7 +93,7 @@ resource "aws_lb_listener" "buyer_ui" {
   load_balancer_arn = aws_lb.buyer_ui.arn
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  ssl_policy        = var.default_ssl_policy
 
   default_action {
     type             = "forward"

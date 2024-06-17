@@ -105,6 +105,11 @@ variable "cat_api_resolve_buyer_users_by_sso" {
   description = "Service-specific config" # TODO Source clearer explanation
 }
 
+variable "default_ssl_policy" {
+  type        = string
+  description = "The default SSL Policy to apply to the Load Balancers"
+}
+
 variable "deletion_protection" {
   type        = bool
   description = "Boolean to opt in/out of enabling deletion protection. The DB cannot be deleted when set to true"

@@ -70,7 +70,7 @@ resource "aws_lb_listener" "cat_api" {
   load_balancer_arn = aws_lb.cat_api.arn
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  ssl_policy        = var.default_ssl_policy
 
   default_action {
     type             = "forward"

@@ -181,6 +181,12 @@ variable "search_domain_instance_count" {
   description = "Number of instances in the OpenSearch cluster"
 }
 
+variable "search_domain_instance_type" {
+  type        = string
+  description = "Type of compute instance to provide for the OpenSearch domain"
+  default     = "t3.small.search"
+}
+
 variable "search_domain_volume_size_gib" {
   type        = number
   description = "Size (in GiB) of the EBS volume to attach to each Opensearch instance"

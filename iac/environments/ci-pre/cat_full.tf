@@ -36,6 +36,7 @@ module "cat_full" {
   resource_name_prefixes                   = var.resource_name_prefixes
   search_domain_engine_version             = var.search_domain_engine_version
   search_domain_instance_count             = var.search_domain_instance_count
+  search_domain_instance_type              = var.search_domain_instance_type
   search_domain_volume_size_gib            = var.search_domain_volume_size_gib
   service_subdomain_prefixes               = var.service_subdomain_prefixes
   session_redis_engine_version             = var.session_redis_engine_version

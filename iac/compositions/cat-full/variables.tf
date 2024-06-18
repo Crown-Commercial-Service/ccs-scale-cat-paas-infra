@@ -128,7 +128,6 @@ variable "lb_enable_deletion_protection" {
 variable "enable_lb_access_logs" {
   type        = bool
   description = "If 1, enables access logs"
-  default     = false
 }
 
 variable "enable_lb_connection_logs" {

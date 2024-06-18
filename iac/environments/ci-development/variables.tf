@@ -130,7 +130,6 @@ variable "enable_ecs_execute_command" {
 variable "enable_lb_access_logs" {
   type        = bool
   description = "If 1, enables ALB access logging"
-  default     = true
 }
 
 variable "enable_lb_connection_logs" {

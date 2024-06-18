@@ -34,6 +34,8 @@ resource "aws_lb" "cat_api" {
   ]
   subnets = module.vpc.subnets.public.ids
 
+  drop_invalid_header_fields = var.drop_invalid_header_fields
+
   enable_deletion_protection = var.lb_enable_deletion_protection
 
   access_logs {

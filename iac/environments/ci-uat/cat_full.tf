@@ -18,6 +18,7 @@ module "cat_full" {
   default_ssl_policy                       = var.default_ssl_policy
   deletion_protection                      = var.deletion_protection
   docker_image_tags                        = var.docker_image_tags
+  drop_invalid_header_fields               = var.drop_invalid_header_fields
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
   enable_ecs_execute_command               = var.enable_ecs_execute_command
   enable_lb_access_logs                    = var.enable_lb_access_logs

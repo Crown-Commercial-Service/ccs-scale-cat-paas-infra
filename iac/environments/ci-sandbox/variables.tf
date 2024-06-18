@@ -95,6 +95,11 @@ variable "docker_image_tags" {
   description = "Docker tag for deployment of each of the services from ECR"
 }
 
+variable "drop_invalid_header_fields" {
+  type        = bool
+  description = "Boolean to declare whether or not drop_invalid_header_fields should be enabled"
+}
+
 variable "elasticache_cluster_parameter_group_name" {
   type        = string
   description = "The Parameter Group Name for the Elasticache cluster"

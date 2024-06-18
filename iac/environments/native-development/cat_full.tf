@@ -18,6 +18,7 @@ module "cat_full" {
   default_ssl_policy                       = "ELBSecurityPolicy-2016-08"
   deletion_protection                      = var.deletion_protection
   docker_image_tags                        = var.docker_image_tags
+  drop_invalid_header_fields               = var.drop_invalid_header_fields
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
   enable_lb_access_logs                    = false
   environment_is_ephemeral                 = var.environment_is_ephemeral

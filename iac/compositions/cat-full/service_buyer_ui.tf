@@ -6,6 +6,8 @@ resource "aws_lb" "buyer_ui" {
   security_groups    = [aws_security_group.buyer_ui_lb.id]
   subnets            = module.vpc.subnets.public.ids
 
+  drop_invalid_header_fields = var.drop_invalid_header_fields
+
   enable_deletion_protection = var.lb_enable_deletion_protection
 
   access_logs {

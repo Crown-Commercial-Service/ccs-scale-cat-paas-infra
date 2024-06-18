@@ -35,10 +35,10 @@ resource "aws_iam_role" "ecs_execution_role" {
 data "aws_iam_policy_document" "ecs_execution_log_permissions" {
   # Note: We knowingly expect repeat "DescribeAllLogGroups" Sids, hence we use
   # `override_` rather than `source_`
-  override_policy_documents = [
-    module.buyer_ui_task.write_task_logs_policy_document_json,
-    module.cat_api_task.write_task_logs_policy_document_json,
-  ]
+  override_policy_documents = concat(
+    [module.buyer_ui_task.write_task_logs_policy_document_json, module.cat_api_task.write_task_logs_policy_document_json],
+    length(module.create_rds_postgres_tester) > 0 ? [module.create_rds_postgres_tester[0].write_task_logs_policy_document_json] : []
+  )
 }
 
 data "aws_iam_policy_document" "ecs_execution_pass_task_role_permissions" {

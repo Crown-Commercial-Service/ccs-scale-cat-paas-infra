@@ -31,6 +31,7 @@ module "cat_full" {
   rds_allocated_storage_gb                 = var.rds_allocated_storage_gb
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_db_instance_class                    = var.rds_db_instance_class
+  rds_iam_database_authentication_enabled  = var.rds_iam_database_authentication_enabled
   rds_postgres_engine_version              = var.rds_postgres_engine_version
   rds_skip_final_snapshot                  = var.rds_skip_final_snapshot
   replication_group_enabled                = var.replication_group_enabled

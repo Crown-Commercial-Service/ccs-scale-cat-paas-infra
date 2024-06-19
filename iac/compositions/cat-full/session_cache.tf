@@ -6,6 +6,13 @@ locals {
   }
 }
 
+resource "aws_ssm_parameter" "vcap_services" {
+  name        = "${var.ssm_parameter_name_prefix}/vcap-services"
+  description = "VCAP services"
+  type        = "SecureString"
+  value       = jsonencode(local.buyer_ui_vcap_object)
+}
+
 module "session_cache" {
   source = "../../core/resource-groups/elasticache-redis"
 

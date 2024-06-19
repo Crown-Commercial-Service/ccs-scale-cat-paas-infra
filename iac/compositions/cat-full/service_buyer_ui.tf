@@ -241,7 +241,7 @@ module "buyer_ui_task" {
         { name = "ROLLBAR_ACCESS_TOKEN", valueFrom = aws_ssm_parameter.manual_config["rollbar-access-token"].arn },
         { name = "ROLLBAR_HOST", valueFrom = aws_ssm_parameter.manual_config["rollbar-host"].arn },
         { name = "SESSION_SECRET", valueFrom = aws_ssm_parameter.session_secret.arn },
-        { name = "VCAP_SERVICES", value = jsonencode(local.buyer_ui_vcap_object) },
+        { name = "VCAP_SERVICES", valueFrom = aws_ssm_parameter.vcap_services.arn },
       ]
     }
   }

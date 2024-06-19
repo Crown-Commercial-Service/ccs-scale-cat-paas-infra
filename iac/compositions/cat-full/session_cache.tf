@@ -1,7 +1,7 @@
 locals {
   redis_credentials = {
     host     = module.session_cache.redis_host,
-    password = "",
+    password = var.replication_group_enabled == true ? module.session_cache.redis_auth_token : "" # "",
     port     = module.session_cache.redis_port,
   }
 }

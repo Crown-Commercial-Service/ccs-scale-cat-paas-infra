@@ -160,7 +160,7 @@ locals {
   buyer_ui_vcap_object = {
     redis = [
       {
-        name        = "redis"
+        name        = var.replication_group_enabled == true ? "rediss" : "redis"
         credentials = local.redis_credentials
       }
     ]

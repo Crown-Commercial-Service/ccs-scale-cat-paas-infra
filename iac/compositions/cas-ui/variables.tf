@@ -105,6 +105,12 @@ variable "hosted_zone_cas_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
+variable "cas_ui_replication_group_enabled" {
+  type        = bool
+  description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
+  default     = false
+}
+
 variable "redis_credentials" {
   type = object({
     host     = string,

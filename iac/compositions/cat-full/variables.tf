@@ -276,7 +276,7 @@ variable "session_redis_num_cache_nodes" {
 variable "sessions_mode" {
   type        = string
   description = "The value to provide for the SESSIONS MODE argument"
-  default     = "SESSIONS_MODE"
+  default     = "aws-native"
 }
 
 variable "ssm_parameter_name_prefix" {

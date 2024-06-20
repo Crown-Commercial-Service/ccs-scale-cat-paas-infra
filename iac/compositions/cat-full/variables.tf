@@ -273,12 +273,6 @@ variable "session_redis_num_cache_nodes" {
   description = "Number of nodes to instantiate for the user session cache"
 }
 
-variable "sessions_mode" {
-  type        = string
-  description = "The value to provide for the SESSIONS MODE argument"
-  default     = "aws-native"
-}
-
 variable "ssm_parameter_name_prefix" {
   type        = string
   description = "Prefix for each SSM parameter created"

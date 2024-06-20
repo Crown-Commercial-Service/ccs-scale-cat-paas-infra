@@ -181,7 +181,7 @@ module "buyer_ui_task" {
         { name = "NODE_ENV", value = "production" },
         { name = "PORT", value = "3000" },
         # Setting SESSIONS_MODE differently will necessitate in-transit encryption for Redis
-        { name = "SESSIONS_MODE", value = var.sessions_mode },
+        { name = "SESSIONS_MODE", value = var.replication_group_enabled == true ? "dev" : "aws-native" },
         { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_route53_record.cat_api.fqdn}" },
       ]
       essential           = true

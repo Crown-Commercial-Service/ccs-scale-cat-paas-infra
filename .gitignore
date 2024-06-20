@@ -8,6 +8,7 @@
 
 # All *.auto.tfvars files. NOTE There are allowed in a private repository
 **/*.auto.tfvars
+*.tfbackend
 
 # Secrets var file
 **/secret.tfvars

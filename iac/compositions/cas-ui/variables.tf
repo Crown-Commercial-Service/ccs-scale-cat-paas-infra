@@ -108,7 +108,6 @@ variable "hosted_zone_cas_ui" {
 variable "cas_ui_replication_group_enabled" {
   type        = bool
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
-  default     = false
 }
 
 variable "redis_credentials" {

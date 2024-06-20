@@ -6,6 +6,7 @@ module "cas_ui" {
   cas_ui_public_cert_attempt_validation   = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                      = var.cas_ui_public_fqdn
   cas_ui_ingress_cidr_safelist            = var.cas_ui_ingress_cidr_safelist
+  cas_ui_replication_group_enabled        = var.replication_group_enabled
   cat_api_clients_security_group_id       = module.cat_full.cat_api_clients_security_group_id
   docker_image_tags                       = var.docker_image_tags
   ecr_repo_url                            = module.cat_full.ecr_repo_urls["cas-ui"]

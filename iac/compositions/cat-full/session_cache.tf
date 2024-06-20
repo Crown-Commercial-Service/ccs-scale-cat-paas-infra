@@ -1,9 +1,16 @@
 locals {
   redis_credentials = {
     host     = module.session_cache.redis_host,
-    password = "",
+    password = var.replication_group_enabled == true ? module.session_cache.redis_auth_token : "" # "",
     port     = module.session_cache.redis_port,
   }
+}
+
+resource "aws_ssm_parameter" "vcap_services" {
+  name        = "${var.ssm_parameter_name_prefix}/vcap-services"
+  description = "VCAP services"
+  type        = "SecureString"
+  value       = jsonencode(local.buyer_ui_vcap_object)
 }
 
 module "session_cache" {

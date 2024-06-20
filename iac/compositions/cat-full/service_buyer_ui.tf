@@ -160,7 +160,7 @@ locals {
   buyer_ui_vcap_object = {
     redis = [
       {
-        name        = "redis"
+        name        = var.replication_group_enabled == true ? "rediss" : "redis"
         credentials = local.redis_credentials
       }
     ]
@@ -181,9 +181,8 @@ module "buyer_ui_task" {
         { name = "NODE_ENV", value = "production" },
         { name = "PORT", value = "3000" },
         # Setting SESSIONS_MODE differently will necessitate in-transit encryption for Redis
-        { name = "SESSIONS_MODE", value = "aws-native" },
+        { name = "SESSIONS_MODE", value = var.replication_group_enabled == true ? "dev" : "aws-native" },
         { name = "TENDERS_SERVICE_API_URL", value = "https://${aws_route53_record.cat_api.fqdn}" },
-        { name = "VCAP_SERVICES", value = jsonencode(local.buyer_ui_vcap_object) },
       ]
       essential           = true
       healthcheck_command = "curl -f http://localhost:3000/isAlive || exit 1"
@@ -242,6 +241,7 @@ module "buyer_ui_task" {
         { name = "ROLLBAR_ACCESS_TOKEN", valueFrom = aws_ssm_parameter.manual_config["rollbar-access-token"].arn },
         { name = "ROLLBAR_HOST", valueFrom = aws_ssm_parameter.manual_config["rollbar-host"].arn },
         { name = "SESSION_SECRET", valueFrom = aws_ssm_parameter.session_secret.arn },
+        { name = "VCAP_SERVICES", valueFrom = aws_ssm_parameter.vcap_services.arn },
       ]
     }
   }

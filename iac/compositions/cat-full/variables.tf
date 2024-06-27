@@ -300,3 +300,36 @@ variable "vpc_cidr_block" {
   type        = string
   description = "CIDR block to assign to the VPC"
 }
+
+
+# api_-scaling parameters
+
+variable "api_autoscale_instance_min_count" {
+  type        = number
+  default     = 1
+  description = "Minimum number of instances"
+}
+
+variable "api_autoscale_instance_max_count" {
+  type        = number
+  default     = 1
+  description = "Maximum number of instances"
+}
+
+variable "api_autoscale_target_cpu" {
+  type        = number
+  default     = 30
+  description = "Target average cpu utilisation"
+}
+
+variable "api_autoscale_scale_in_cooldown" {
+  type        = number
+  default     = 60
+  description = "Amount of time, in seconds, after a scale in activity completes before another scale in activity can start"
+}
+
+variable "api_autoscale_scale_out_cooldown" {
+  type        = number
+  default     = 60
+  description = "Amount of time, in seconds, after a scale out activity completes before another scale out activity can start"
+}

@@ -427,3 +427,31 @@ resource "aws_security_group_rule" "cat_api_lb__cat_api_clients_https_in" {
   to_port                  = 443
   type                     = "ingress"
 }
+
+# autoscaling
+
+resource "aws_appautoscaling_target" "api_autoscale_target" {
+  max_capacity       = var.api_autoscale_instance_max_count
+  min_capacity       = var.api_autoscale_instance_min_count
+  resource_id        = "service/${module.ecs_cluster.name}/${aws_ecs_service.cat_api.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  service_namespace  = "ecs"
+}
+
+resource "aws_appautoscaling_policy" "api_autoscale_policy" {
+  name               = "api_autoscale"
+  policy_type        = "TargetTrackingScaling"
+  resource_id        = aws_appautoscaling_target.api_autoscale_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.api_autoscale_target.scalable_dimension
+  service_namespace  = aws_appautoscaling_target.api_autoscale_target.service_namespace
+
+  target_tracking_scaling_policy_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ECSServiceAverageCPUUtilization"
+    }
+    scale_in_cooldown  = var.api_autoscale_scale_in_cooldown
+    scale_out_cooldown = var.api_autoscale_scale_out_cooldown
+    target_value       = var.api_autoscale_target_cpu
+  }
+  #depends_on = [aws_appautoscaling_target.api_autoscale_target]
+}

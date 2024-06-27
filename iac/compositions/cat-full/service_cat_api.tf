@@ -433,7 +433,7 @@ resource "aws_security_group_rule" "cat_api_lb__cat_api_clients_https_in" {
 resource "aws_appautoscaling_target" "api_autoscale_target" {
   max_capacity       = var.api_autoscale_instance_max_count
   min_capacity       = var.api_autoscale_instance_min_count
-  resource_id        = "service/${var.resource_name_prefixes.hyphens}-RMI/cat_api"
+  resource_id        = "service/${var.resource_name_prefixes.hyphens}-CAS/cat_api"
   scalable_dimension = "ecs:service:DesiredCount"
   service_namespace  = "ecs"
 }

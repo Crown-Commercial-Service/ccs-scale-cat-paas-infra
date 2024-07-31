@@ -24,7 +24,7 @@ module "db" {
 }
 
 module "create_rds_postgres_tester" {
-  count = var.environment_name != "production" ? 1 : 0
+  count = var.environment_name != "ci-production" && var.environment_name != "production" ? 1 : 0
   source = "../../core/modules/create-rds-postgres-tester"
 
   aws_account_id                         = var.aws_account_id

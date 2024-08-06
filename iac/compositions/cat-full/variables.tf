@@ -1,3 +1,8 @@
+variable "auto_minor_version_upgrade" {
+  type        = bool
+  description = "Opt to enable automatic minor version upgrades"
+}
+
 variable "aws_account_id" {
   type        = string
   description = "AWS account into which to deploy resources"
@@ -192,16 +197,36 @@ variable "rds_backup_retention_period_days" {
   default     = 14
 }
 
+variable "rds_backup_window" {
+  type        = string
+  description = "The daily time range in which automated backups are created (if they are enabled)"
+}
+
 variable "rds_db_instance_class" {
   type        = string
   description = "Type of DB instance"
   default     = "db.t3.small"
 }
 
+variable "rds_event_subscription_email_endpoint" {
+  type        = string
+  description = "The email address to send RDS Event Subscription notifications to"
+}
+
+variable "rds_event_subscription_enabled" {
+  type        = bool
+  description = "Boolean to determine whether or not to enable RDS Event Subscription (defaults to false)"
+}
+
 variable "rds_iam_database_authentication_enabled" {
   type        = bool
   description = "Whether to enable IAM database authentication for the API db"
   default     = false
+}
+
+variable "rds_maintenance_window" {
+  type        = string
+  description = "The window in which RDS Maintenance should be performed (if enabled)"
 }
 
 variable "rds_postgres_engine_version" {

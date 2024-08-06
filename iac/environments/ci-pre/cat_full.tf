@@ -1,6 +1,7 @@
 module "cat_full" {
   source = "../../compositions/cat-full"
 
+  auto_minor_version_upgrade               = var.auto_minor_version_upgrade
   aws_account_id                           = var.aws_account_id
   aws_region                               = var.aws_region
   buyer_ui_ingress_cidr_safelist           = var.buyer_ui_ingress_cidr_safelist
@@ -31,8 +32,12 @@ module "cat_full" {
   hosted_zone_ui                           = var.hosted_zone_ui
   lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   rds_allocated_storage_gb                 = var.rds_allocated_storage_gb
+  rds_backup_window                        = var.rds_backup_window
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_db_instance_class                    = var.rds_db_instance_class
+  rds_event_subscription_email_endpoint    = var.rds_event_subscription_email_endpoint
+  rds_event_subscription_enabled           = var.rds_event_subscription_enabled
+  rds_maintenance_window                   = var.rds_maintenance_window
   rds_postgres_engine_version              = var.rds_postgres_engine_version
   rds_skip_final_snapshot                  = var.rds_skip_final_snapshot
   replication_group_enabled                = var.replication_group_enabled

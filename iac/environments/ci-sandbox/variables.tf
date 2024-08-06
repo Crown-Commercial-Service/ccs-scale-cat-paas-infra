@@ -165,11 +165,6 @@ variable "rds_allocated_storage_gb" {
   default     = 10
 }
 
-variable "rds_apply_immediately" {
-  type        = bool
-  description = "Whether to apply changes immediately or in the next maintenance window"
-}
-
 variable "rds_backup_retention_period_days" {
   type        = number
   description = "Number of days for which to keep backups"

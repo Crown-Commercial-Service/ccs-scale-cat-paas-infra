@@ -188,6 +188,11 @@ variable "rds_iam_database_authentication_enabled" {
   default     = true
 }
 
+variable "rds_event_subscription_email_endpoint" {
+  type        = string
+  description = "The email address to send RDS Event Subscription notifications to"
+}
+
 variable "rds_event_subscription_enabled" {
   type        = bool
   description = "Boolean to determine whether or not to enable RDS Event Subscription (defaults to false)"

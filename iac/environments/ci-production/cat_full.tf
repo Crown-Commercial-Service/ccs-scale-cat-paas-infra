@@ -35,6 +35,7 @@ module "cat_full" {
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_backup_window                        = var.rds_backup_window
   rds_db_instance_class                    = var.rds_db_instance_class
+  rds_event_subscription_email_endpoint    = var.rds_event_subscription_email_endpoint
   rds_event_subscription_enabled           = var.rds_event_subscription_enabled
   rds_maintenance_window                   = var.rds_maintenance_window
   rds_postgres_engine_version              = var.rds_postgres_engine_version

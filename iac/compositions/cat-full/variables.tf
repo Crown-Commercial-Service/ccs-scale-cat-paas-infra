@@ -208,6 +208,11 @@ variable "rds_db_instance_class" {
   default     = "db.t3.small"
 }
 
+variable "rds_event_subscription_email_endpoint" {
+  type        = string
+  description = "The email address to send RDS Event Subscription notifications to"
+}
+
 variable "rds_event_subscription_enabled" {
   type        = bool
   description = "Boolean to determine whether or not to enable RDS Event Subscription (defaults to false)"

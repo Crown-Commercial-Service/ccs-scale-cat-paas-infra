@@ -3,6 +3,7 @@ module "cas_ui" {
 
   aws_account_id                          = var.aws_account_id
   aws_region                              = var.aws_region
+  cas_web_acl_arn                         = data.aws_wafv2_web_acl.cas_web_acl.arn
   cas_ui_lb_waf_enabled                   = var.cas_ui_lb_waf_enabled
   cas_ui_public_cert_attempt_validation   = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                      = var.cas_ui_public_fqdn

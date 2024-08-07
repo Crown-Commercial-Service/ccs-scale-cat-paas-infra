@@ -105,9 +105,29 @@ variable "hosted_zone_cas_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
 variable "cas_ui_replication_group_enabled" {
   type        = bool
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
+}
+
+variable "drop_invalid_header_fields" {
+  type        = bool
+  description = "Boolean to declare whether or not drop_invalid_header_fields should be enabled"
+}
+
+variable "lb_enable_deletion_protection" {
+  type        = bool
+  description = "Opt whether or not to enable deletion protection on Load Balancers"
+}
+
+variable "logs_bucket_id" {
+  type        = string
+  description = "The ID of the logs bucket (for logging on the Load Balancer)"
 }
 
 variable "redis_credentials" {

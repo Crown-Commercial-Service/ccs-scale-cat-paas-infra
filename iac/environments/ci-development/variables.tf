@@ -43,6 +43,11 @@ variable "cas_buyer_ui_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the Buyer UI LB WAF Should be enabled"
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
 variable "cas_cat_api_lb_waf_enabled" {
   type        = bool
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"

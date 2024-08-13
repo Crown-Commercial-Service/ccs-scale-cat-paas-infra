@@ -51,6 +51,11 @@ output "ingestion_bucket_write_objects_policy_document_json" {
   value       = module.ingestion_bucket.write_objects_policy_document_json
 }
 
+output "logs_bucket_id" {
+  description = "Full name of the logs bucket (for the Load Balancer)"
+  value       = module.logs_bucket.bucket_id
+}
+
 output "network_acl_ids" {
   description = "Object containing the IDs of each of the Network ACLS"
   value       = module.vpc.network_acl_ids

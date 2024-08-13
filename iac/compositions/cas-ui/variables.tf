@@ -8,6 +8,11 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "cas_web_acl_arn" {
+  type        = string
+  description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
+}
+
 variable "cas_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
@@ -105,9 +110,29 @@ variable "hosted_zone_cas_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
 variable "cas_ui_replication_group_enabled" {
   type        = bool
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
+}
+
+variable "drop_invalid_header_fields" {
+  type        = bool
+  description = "Boolean to declare whether or not drop_invalid_header_fields should be enabled"
+}
+
+variable "lb_enable_deletion_protection" {
+  type        = bool
+  description = "Opt whether or not to enable deletion protection on Load Balancers"
+}
+
+variable "logs_bucket_id" {
+  type        = string
+  description = "The ID of the logs bucket (for logging on the Load Balancer)"
 }
 
 variable "redis_credentials" {

@@ -12,6 +12,26 @@ resource "aws_lb" "cas_ui" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_ui_lb.id]
   subnets            = var.subnets.public.ids
+
+  drop_invalid_header_fields = var.drop_invalid_header_fields
+
+  enable_deletion_protection = var.lb_enable_deletion_protection
+
+  access_logs {
+    bucket  = var.logs_bucket_id
+    prefix  = "access-logs/casui"
+    enabled = var.enable_lb_access_logs
+  }
+
+  connection_logs {
+    bucket  = var.logs_bucket_id
+    prefix  = "connection-logs/casui"
+    enabled = var.enable_lb_connection_logs
+  }
+
+  tags = {
+    WAF_ENABLED = var.cas_ui_lb_waf_enabled != false ? true : null
+  }
 }
 
 resource "aws_route53_record" "cas_ui" {

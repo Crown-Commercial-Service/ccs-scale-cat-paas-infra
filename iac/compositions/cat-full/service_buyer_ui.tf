@@ -23,7 +23,7 @@ resource "aws_lb" "buyer_ui" {
   }
 
   tags = {
-    WAF_ENABLED = var.cas_buyer_ui_lb_waf_enabled != false ? true : null
+    WAF_ENABLED = var.cas_buyer_ui_lb_waf_enabled == true ? true : null
   }
 }
 
@@ -34,7 +34,7 @@ resource "aws_route53_record" "buyer_ui" {
   zone_id         = var.hosted_zone_ui.id
 
   alias {
-    name                   = aws_lb.buyer_ui.dns_name
+    name                   = var.buyer_ui_redirect_r53_to_cas_ui == false ? aws_lb.buyer_ui.dns_name : aws_ssm_parameter.manual_config["cas-ui-load-balancer-name"].value
     zone_id                = aws_lb.buyer_ui.zone_id
     evaluate_target_health = true
   }

@@ -51,7 +51,7 @@ resource "aws_lb" "cat_api" {
   }
 
   tags = {
-    WAF_ENABLED = var.cas_cat_api_lb_waf_enabled != false ? true : null
+    WAF_ENABLED = var.cas_cat_api_lb_waf_enabled == true ? true : null
   }
 }
 

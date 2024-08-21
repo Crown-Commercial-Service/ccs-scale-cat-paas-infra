@@ -8,6 +8,18 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "cas_ui_lb_listener_acm_arn" {
+  type        = string
+  description = "The full ARN of the ACM certificate to association with the CAS UI LB Listener (should be the redirect ACM cert)"
+  default     = "N/A"
+}
+
+variable "cas_ui_adopt_redirect_certificate" {
+  type        = bool
+  description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
+  default     = false
+}
+
 variable "cas_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
@@ -27,6 +39,16 @@ variable "cas_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
+variable "cas_web_acl_arn" {
+  type        = string
+  description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
+}
+
 variable "cat_api_clients_security_group_id" {
   type        = string
   description = "CAT API clients security group ID"
@@ -37,6 +59,21 @@ variable "docker_image_tags" {
     cas_ui_http = string,
   })
   description = "Docker tag for deployment of each of the services from ECR"
+}
+
+variable "drop_invalid_header_fields" {
+  type        = bool
+  description = "Boolean to declare whether or not drop_invalid_header_fields should be enabled"
+}
+
+variable "lb_enable_deletion_protection" {
+  type        = bool
+  description = "Opt whether or not to enable deletion protection on Load Balancers"
+}
+
+variable "logs_bucket_id" {
+  type        = string
+  description = "The ID of the logs bucket (for logging on the Load Balancer)"
 }
 
 variable "ecr_repo_url" {

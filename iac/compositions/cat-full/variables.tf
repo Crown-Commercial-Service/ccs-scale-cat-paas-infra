@@ -42,6 +42,12 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "buyer_ui_redirect_r53_to_cas_ui" {
+  type        = bool
+  description = "Conditional to determine whether or not the R53 record for the Buyer UI should be redirected to CAS UI (as part of the CAS UI migration - defaults to false)"
+  default     = false
+}
+
 variable "ca_cert_identifier" {
   type        = string
   description = "The identifier of the CA certificate for the DB instance."
@@ -177,6 +183,12 @@ variable "hosted_zone_ui" {
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}
+
+variable "logs_bucket_policy_include_cas_ui" {
+  type        = bool
+  description = "Conditional to determine whether or not the logs bucket policy includes CAS UI"
+  default     = true
 }
 
 variable "rds_apply_immediately" {

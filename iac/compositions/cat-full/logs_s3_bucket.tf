@@ -22,6 +22,34 @@ data "aws_iam_policy_document" "write_logs" {
     resources = [
       "arn:aws:s3:::${local.logs_bucket_name}/access-logs/buyerui/AWSLogs/${var.aws_account_id}/*",
       "arn:aws:s3:::${local.logs_bucket_name}/connection-logs/buyerui/AWSLogs/${var.aws_account_id}/*",
+      "arn:aws:s3:::${local.logs_bucket_name}/access-logs/casui/AWSLogs/${var.aws_account_id}/*",
+      "arn:aws:s3:::${local.logs_bucket_name}/connection-logs/casui/AWSLogs/${var.aws_account_id}/*",
+      "arn:aws:s3:::${local.logs_bucket_name}/access-logs/catapi/AWSLogs/${var.aws_account_id}/*",
+      "arn:aws:s3:::${local.logs_bucket_name}/connection-logs/catapi/AWSLogs/${var.aws_account_id}/*",
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "write_logs_without_cas_ui" {
+  version = "2012-10-17"
+
+  statement {
+    sid = "AllowAlbPutLogs"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${var.elb_account_id}:root"]
+    }
+
+    actions = [
+      "s3:PutObject"
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "arn:aws:s3:::${local.logs_bucket_name}/access-logs/buyerui/AWSLogs/${var.aws_account_id}/*",
+      "arn:aws:s3:::${local.logs_bucket_name}/connection-logs/buyerui/AWSLogs/${var.aws_account_id}/*",
       "arn:aws:s3:::${local.logs_bucket_name}/access-logs/catapi/AWSLogs/${var.aws_account_id}/*",
       "arn:aws:s3:::${local.logs_bucket_name}/connection-logs/catapi/AWSLogs/${var.aws_account_id}/*",
     ]
@@ -37,5 +65,5 @@ module "logs_bucket" {
 
 resource "aws_s3_bucket_policy" "logs_bucket_policy" {
   bucket = module.logs_bucket.bucket_id
-  policy = data.aws_iam_policy_document.write_logs.json
+  policy = var.logs_bucket_policy_include_cas_ui == true ? data.aws_iam_policy_document.write_logs.json : data.aws_iam_policy_document.write_logs_without_cas_ui.json
 }

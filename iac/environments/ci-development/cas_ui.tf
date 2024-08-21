@@ -3,12 +3,17 @@ module "cas_ui" {
 
   aws_account_id                          = var.aws_account_id
   aws_region                              = var.aws_region
+  cas_ui_adopt_redirect_certificate       = var.cas_ui_adopt_redirect_certificate
+  cas_ui_lb_listener_acm_arn              = module.cat_full.buyer_ui_acm_certificate_arn
   cas_ui_public_cert_attempt_validation   = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                      = var.cas_ui_public_fqdn
   cas_ui_ingress_cidr_safelist            = var.cas_ui_ingress_cidr_safelist
   cas_ui_replication_group_enabled        = var.replication_group_enabled
+  cas_web_acl_arn                         = data.aws_wafv2_web_acl.cas_web_acl.arn
+  cas_ui_lb_waf_enabled                   = var.cas_ui_lb_waf_enabled
   cat_api_clients_security_group_id       = module.cat_full.cat_api_clients_security_group_id
   docker_image_tags                       = var.docker_image_tags
+  drop_invalid_header_fields              = var.drop_invalid_header_fields
   ecr_repo_url                            = module.cat_full.ecr_repo_urls["cas-ui"]
   ecs_cluster_arn                         = module.cat_full.ecs_cluster_arn
   ecs_exec_policy_arn                     = module.cat_full.ecs_exec_policy_arn
@@ -19,6 +24,8 @@ module "cas_ui" {
   environment_is_ephemeral                = var.environment_is_ephemeral
   environment_name                        = var.environment_name
   hosted_zone_cas_ui                      = var.hosted_zone_cas_ui
+  lb_enable_deletion_protection           = var.lb_enable_deletion_protection
+  logs_bucket_id                          = module.cat_full.logs_bucket_id
   resource_name_prefixes                  = var.resource_name_prefixes
   task_container_configs                  = var.task_container_configs
   redis_credentials                       = module.cat_full.redis_credentials

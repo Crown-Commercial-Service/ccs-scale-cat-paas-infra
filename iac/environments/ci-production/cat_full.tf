@@ -31,6 +31,7 @@ module "cat_full" {
   hosted_zone_api                          = var.hosted_zone_api
   hosted_zone_ui                           = var.hosted_zone_ui
   lb_enable_deletion_protection            = var.lb_enable_deletion_protection
+  logs_bucket_policy_include_cas_ui        = false
   rds_allocated_storage_gb                 = var.rds_allocated_storage_gb
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_backup_window                        = var.rds_backup_window

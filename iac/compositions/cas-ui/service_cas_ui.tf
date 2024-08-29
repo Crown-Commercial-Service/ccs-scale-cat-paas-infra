@@ -12,6 +12,26 @@ resource "aws_lb" "cas_ui" {
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_ui_lb.id]
   subnets            = var.subnets.public.ids
+
+  drop_invalid_header_fields = var.drop_invalid_header_fields
+
+  enable_deletion_protection = var.lb_enable_deletion_protection
+
+  access_logs {
+    bucket  = var.logs_bucket_id
+    prefix  = "access-logs/casui"
+    enabled = var.enable_lb_access_logs
+  }
+
+  connection_logs {
+    bucket  = var.logs_bucket_id
+    prefix  = "connection-logs/casui"
+    enabled = var.enable_lb_connection_logs
+  }
+
+  tags = {
+    WAF_ENABLED = var.cas_ui_lb_waf_enabled == true ? true : null
+  }
 }
 
 resource "aws_route53_record" "cas_ui" {
@@ -78,7 +98,8 @@ resource "aws_lb_listener" "cas_ui" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
-  certificate_arn   = aws_acm_certificate.public_cas_ui.arn
+  # Conditional logic required for the migration to CAS UI from Buyer UI - once this is complete in all environments, this can be refactored
+  certificate_arn   = var.cas_ui_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_ui.arn : var.cas_ui_lb_listener_acm_arn
   load_balancer_arn = aws_lb.cas_ui.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -88,6 +109,13 @@ resource "aws_lb_listener" "cas_ui" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.cas_ui.arn
   }
+}
+
+resource "aws_lb_listener_certificate" "cas_ui" {
+  # Only attempt this stage if cas_ui_adopt_redirect_certificate == true
+  count           = var.cas_ui_adopt_redirect_certificate == true ? 1 : 0
+  certificate_arn = aws_acm_certificate.public_cas_ui.arn
+  listener_arn    = aws_lb_listener.cas_ui[0].arn
 }
 
 # Paths we wish to exclude from outside access

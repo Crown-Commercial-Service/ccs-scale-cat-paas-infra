@@ -1,3 +1,8 @@
+output "buyer_ui_acm_certificate_arn" {
+  description = "ARN of the Buyer UI ACM certificate"
+  value       = aws_acm_certificate.public_buyer_ui.arn
+}
+
 output "cat_api_clients_security_group_id" {
   description = "CAT API clients security group ID"
   value       = aws_security_group.cat_api_clients.id
@@ -49,6 +54,11 @@ output "ingestion_bucket_id" {
 output "ingestion_bucket_write_objects_policy_document_json" {
   description = "JSON describing an IAM policy to allow writing of objects to the ingestion bucket"
   value       = module.ingestion_bucket.write_objects_policy_document_json
+}
+
+output "logs_bucket_id" {
+  description = "Full name of the logs bucket (for the Load Balancer)"
+  value       = module.logs_bucket.bucket_id
 }
 
 output "network_acl_ids" {

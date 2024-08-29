@@ -8,6 +8,7 @@ module "cat_full" {
   buyer_ui_idle_timeout                    = var.buyer_ui_idle_timeout
   buyer_ui_public_cert_attempt_validation  = var.buyer_ui_public_cert_attempt_validation
   buyer_ui_public_fqdn                     = var.buyer_ui_public_fqdn
+  buyer_ui_redirect_r53_to_cas_ui          = var.buyer_ui_redirect_r53_to_cas_ui
   ca_cert_identifier                       = var.ca_cert_identifier
   cas_buyer_ui_lb_waf_enabled              = var.cas_buyer_ui_lb_waf_enabled
   cas_cat_api_lb_waf_enabled               = var.cas_cat_api_lb_waf_enabled

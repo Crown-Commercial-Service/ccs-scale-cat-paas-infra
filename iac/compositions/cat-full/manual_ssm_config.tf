@@ -17,6 +17,7 @@ locals {
     "auth-server-client-id",
     "auth-server-client-secret",
     "auth-server-jwk-set-uri",
+    "cas-ui-load-balancer-name",
     "conclave-wrapper-api-base-url",
     "conclave-wrapper-api-key",
     "conclave-wrapper-identities-api-base-url",

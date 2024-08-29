@@ -37,6 +37,11 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "buyer_ui_redirect_r53_to_cas_ui" {
+  type        = bool
+  description = "Conditional to determine whether or not the R53 record for the Buyer UI should be redirected to CAS UI (as part of the CAS UI migration - defaults to false)"
+}
+
 variable "ca_cert_identifier" {
   type        = string
   description = "The identifier of the CA certificate for the DB instance."
@@ -52,9 +57,19 @@ variable "cas_cat_api_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
 variable "cas_web_acl_name" {
   type        = string
   description = "The name of the Web ACL (to be associated with enabled Load Balancers)"
+}
+
+variable "cas_ui_adopt_redirect_certificate" {
+  type        = bool
+  description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
 }
 
 variable "cas_ui_ingress_cidr_safelist" {

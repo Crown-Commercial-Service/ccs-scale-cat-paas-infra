@@ -62,6 +62,26 @@ variable "cas_web_acl_name" {
   description = "The name of the Web ACL (to be associated with enabled Load Balancers)"
 }
 
+variable "cas_ui_ingress_cidr_safelist" {
+  type        = map(string)
+  description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
+  validation {
+    condition     = length(var.cas_ui_ingress_cidr_safelist) <= 20
+    error_message = "The cas_ui_ingress_cidr_safelist can have a maximum of 20 entries."
+  }
+}
+
+variable "cas_ui_public_cert_attempt_validation" {
+  type        = bool
+  default     = true
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
+variable "cas_ui_public_fqdn" {
+  type        = string
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
 variable "cat_api_config_flags_devmode" {
   type        = string
   description = "Service-specific config" # TODO Source clearer explanation
@@ -134,6 +154,12 @@ variable "enable_lb_access_logs" {
   description = "If 1, enables ALB access logging"
 }
 
+variable "enable_lb_connection_logs" {
+  type        = bool
+  description = "If 1, enables ALB connection logging"
+  default     = false
+}
+
 variable "environment_is_ephemeral" {
   type        = bool
   description = "If true, indicates that the environment is expected to be destroyed from time to time - Allows for (e.g.) `force_destroy` on S3 buckets"
@@ -150,6 +176,14 @@ variable "hosted_zone_api" {
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
+}
+
+variable "hosted_zone_cas_ui" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
 variable "hosted_zone_ui" {

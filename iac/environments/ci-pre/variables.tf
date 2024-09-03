@@ -28,7 +28,6 @@ variable "buyer_ui_ingress_cidr_safelist" {
 
 variable "buyer_ui_public_cert_attempt_validation" {
   type        = bool
-  default     = false
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 

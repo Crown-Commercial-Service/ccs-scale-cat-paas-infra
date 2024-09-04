@@ -42,6 +42,11 @@ variable "buyer_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "buyer_ui_redirect_r53_to_cas_ui" {
+  type        = bool
+  description = "Conditional to determine whether or not the R53 record for the Buyer UI should be redirected to CAS UI (as part of the CAS UI migration - defaults to false)"
+}
+
 variable "ca_cert_identifier" {
   type        = string
   description = "The identifier of the CA certificate for the DB instance."

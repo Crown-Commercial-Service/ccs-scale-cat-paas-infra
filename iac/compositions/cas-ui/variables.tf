@@ -54,6 +54,11 @@ variable "cat_api_clients_security_group_id" {
   description = "CAT API clients security group ID"
 }
 
+variable "default_ssl_policy" {
+  type        = string
+  description = "The default SSL Policy to apply to the Load Balancers"
+}
+
 variable "docker_image_tags" {
   type = object({
     cas_ui_http = string,

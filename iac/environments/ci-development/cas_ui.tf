@@ -12,6 +12,7 @@ module "cas_ui" {
   cas_web_acl_arn                         = data.aws_wafv2_web_acl.cas_web_acl.arn
   cas_ui_lb_waf_enabled                   = var.cas_ui_lb_waf_enabled
   cat_api_clients_security_group_id       = module.cat_full.cat_api_clients_security_group_id
+  default_ssl_policy                      = var.default_ssl_policy
   docker_image_tags                       = var.docker_image_tags
   drop_invalid_header_fields              = var.drop_invalid_header_fields
   ecr_repo_url                            = module.cat_full.ecr_repo_urls["cas-ui"]

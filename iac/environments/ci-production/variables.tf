@@ -138,6 +138,7 @@ variable "deletion_protection" {
 variable "docker_image_tags" {
   type = object({
     buyer_ui_http = string,
+    cas_ui_http   = string,
     cat_api_http  = string,
   })
   description = "Docker tag for deployment of each of the services from ECR"
@@ -297,6 +298,7 @@ variable "search_domain_volume_size_gib" {
 variable "service_subdomain_prefixes" {
   type = object({
     buyer_ui = string,
+    cas_ui   = string,
     cat_api  = string,
   })
 }
@@ -325,6 +327,12 @@ variable "ssm_parameter_name_prefix" {
 variable "task_container_configs" {
   type = object({
     buyer_ui = object({
+      http_cpu     = number,
+      http_memory  = number,
+      total_cpu    = number,
+      total_memory = number,
+    }),
+    cas_ui = object({
       http_cpu     = number,
       http_memory  = number,
       total_cpu    = number,

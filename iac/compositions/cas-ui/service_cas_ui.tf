@@ -163,6 +163,12 @@ resource "aws_lb_target_group" "cas_ui" {
     port     = "3000"
     protocol = "HTTP"
   }
+
+  stickiness {
+    type            = "lb_cookie"
+    enabled         = true
+    cookie_duration = 86400
+  }
 }
 
 locals {

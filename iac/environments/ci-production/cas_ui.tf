@@ -4,6 +4,7 @@ module "cas_ui" {
   aws_account_id                          = var.aws_account_id
   aws_region                              = var.aws_region
   cas_ui_adopt_redirect_certificate       = var.cas_ui_adopt_redirect_certificate
+  cas_ui_lb_listener_acm_arn              = module.cat_full.buyer_ui_acm_certificate_arn
   cas_ui_public_cert_attempt_validation   = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                      = var.cas_ui_public_fqdn
   cas_ui_ingress_cidr_safelist            = var.cas_ui_ingress_cidr_safelist

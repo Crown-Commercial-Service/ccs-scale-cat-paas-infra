@@ -233,7 +233,7 @@ resource "aws_ecs_service" "cas_ui" {
     assign_public_ip = false
     security_groups = [
       aws_security_group.cas_ui_tasks.id,
-      var.cat_api_clients_security_group_id,
+      aws_security_group.cat_api_clients.id,
       var.session_cache_clients_security_group_id,
     ]
     subnets = var.subnets.web.ids

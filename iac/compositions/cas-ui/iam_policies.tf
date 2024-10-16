@@ -1,4 +1,4 @@
-data "aws_iam_policy_document" "ecs_execution_log_permissions" {
+/*data "aws_iam_policy_document" "ecs_execution_log_permissions" {
   # Note: We knowingly expect repeat "DescribeAllLogGroups" Sids, hence we use
   # `override_` rather than `source_`
   override_policy_documents = [
@@ -25,4 +25,4 @@ resource "aws_iam_role_policy" "ecs_execute__execution_role_permissions" {
   name   = "ecs-execution-permissions-${each.key}"
   role   = var.ecs_execution_role.name
   policy = each.value
-}
+}*/

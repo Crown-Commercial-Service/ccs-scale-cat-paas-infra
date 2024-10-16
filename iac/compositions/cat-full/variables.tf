@@ -134,6 +134,14 @@ variable "drop_invalid_header_fields" {
   description = "Boolean to declare whether or not drop_invalid_header_fields should be enabled"
 }
 
+variable "ecs_execution_role" {
+  type = object({
+    arn  = string
+    name = string
+  })
+  description = "ECS execution IAM role"
+}
+
 variable "elasticache_cluster_parameter_group_name" {
   type        = string
   description = "The Parameter Group Name for the Elasticache cluster"

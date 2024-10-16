@@ -63,6 +63,15 @@ variable "cas_cat_api_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
 }
 
+variable "cas_ui_ingress_cidr_safelist" {
+  type        = map(string)
+  description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
+  validation {
+    condition     = length(var.cas_ui_ingress_cidr_safelist) <= 20
+    error_message = "The cas_ui_ingress_cidr_safelist can have a maximum of 20 entries."
+  }
+}
+
 variable "cas_web_acl_arn" {
   type        = string
   description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"

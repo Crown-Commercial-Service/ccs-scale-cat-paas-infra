@@ -72,6 +72,11 @@ variable "cas_ui_ingress_cidr_safelist" {
   }
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
 variable "cas_web_acl_arn" {
   type        = string
   description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"

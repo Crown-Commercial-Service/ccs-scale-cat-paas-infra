@@ -194,7 +194,7 @@ module "cas_ui_task" {
       environment_variables = []
       essential             = true
       healthcheck_command   = "curl -f http://localhost:3000/isAlive || exit 1"
-      image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_ui_http}"
+      image                 = "${module.ecr_repos.repository_urls["cas-ui"]}:${var.docker_image_tags.cas_ui_http}"
       log_group_name        = "cas_ui"
       memory                = var.task_container_configs.cas_ui.http_memory
       mounts = [

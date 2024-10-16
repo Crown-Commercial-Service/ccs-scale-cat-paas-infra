@@ -59,7 +59,6 @@ module "cat_full" {
   cas_ui_public_cert_attempt_validation    = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                       = var.cas_ui_public_fqdn
   cas_ui_replication_group_enabled         = var.replication_group_enabled
-  ecr_repo_url                             = module.cat_full.ecr_repo_urls["cas-ui"] # Update this
   ecs_cluster_arn                          = module.cat_full.ecs_cluster_arn # Update this
   ecs_exec_policy_arn                      = module.cat_full.ecs_exec_policy_arn # Update this
   ecs_execution_role                       = module.cat_full.ecs_execution_role # Update this

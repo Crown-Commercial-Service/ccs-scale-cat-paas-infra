@@ -380,11 +380,6 @@ variable "cas_ui_replication_group_enabled" {
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
 }
 
-variable "ecr_repo_url" {
-  type        = string
-  description = "CAS-UI ECR repository url"
-}
-
 variable "ecs_cluster_arn" {
   type        = string
   description = "ECS cluster ARN"

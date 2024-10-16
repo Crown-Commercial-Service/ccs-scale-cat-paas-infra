@@ -280,7 +280,7 @@ resource "aws_iam_role_policy_attachment" "cas_ui_task__read_ssm_params_policy_a
 
 resource "aws_iam_role_policy_attachment" "cas_ui_task__ecs_exec_access" {
   role       = module.cas_ui_task.task_role_name
-  policy_arn = var.ecs_exec_policy_arn
+  policy_arn = aws_iam_policy.ecs_exec_policy.arn
 }
 
 resource "aws_security_group" "cas_ui_lb" {

@@ -380,11 +380,6 @@ variable "cas_ui_replication_group_enabled" {
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
 }
 
-variable "ecs_cluster_arn" {
-  type        = string
-  description = "ECS cluster ARN"
-}
-
 variable "ecs_exec_policy_arn" {
   type        = string
   description = "ECS EXEC policy arn"

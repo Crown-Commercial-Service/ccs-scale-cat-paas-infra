@@ -211,8 +211,7 @@ module "cas_ui_task" {
 }
 
 resource "aws_ecs_service" "cas_ui" {
-  cluster = var.ecs_cluster_arn
-
+  cluster                = module.ecs_cluster.cluster_arn
   desired_count          = 0 # Deploy manually
   enable_execute_command = var.enable_ecs_execute_command
   force_new_deployment   = false

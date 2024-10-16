@@ -1,4 +1,4 @@
-/*locals {
+locals {
   redis_credentials = {
     host     = var.redis_credentials.host,
     password = var.redis_credentials.password,
@@ -45,12 +45,12 @@ resource "aws_route53_record" "cas_ui" {
     zone_id                = aws_lb.cas_ui.zone_id
     evaluate_target_health = true
   }
-}*/
+}
 
 # /* Client requests will arrive at the CAS UI with a HOST header corresponding to
 #    the public hostname of the CAS UI (which is CNAMEd through to the cas_ui
 #    "A" record defined above). */
-/*resource "aws_acm_certificate" "public_cas_ui" {
+resource "aws_acm_certificate" "public_cas_ui" {
   domain_name       = var.cas_ui_public_fqdn
   validation_method = "DNS"
 
@@ -360,4 +360,4 @@ resource "aws_security_group_rule" "cas_ui_tasks__lb_3000_in" {
   source_security_group_id = aws_security_group.cas_ui_lb.id
   to_port                  = 3000
   type                     = "ingress"
-}*/
+}

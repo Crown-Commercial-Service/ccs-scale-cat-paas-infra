@@ -63,20 +63,6 @@ variable "cas_cat_api_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
 }
 
-variable "cas_ui_ingress_cidr_safelist" {
-  type        = map(string)
-  description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
-  validation {
-    condition     = length(var.cas_ui_ingress_cidr_safelist) <= 20
-    error_message = "The cas_ui_ingress_cidr_safelist can have a maximum of 20 entries."
-  }
-}
-
-variable "cas_ui_lb_waf_enabled" {
-  type        = bool
-  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
-}
-
 variable "cas_web_acl_arn" {
   type        = string
   description = "The ARN of the Web ACL (to be associated with enabled Load Balancers)"
@@ -137,14 +123,6 @@ variable "docker_image_tags" {
 variable "drop_invalid_header_fields" {
   type        = bool
   description = "Boolean to declare whether or not drop_invalid_header_fields should be enabled"
-}
-
-variable "ecs_execution_role" {
-  type = object({
-    arn  = string
-    name = string
-  })
-  description = "ECS execution IAM role"
 }
 
 variable "elasticache_cluster_parameter_group_name" {
@@ -358,4 +336,117 @@ variable "task_container_configs" {
 variable "vpc_cidr_block" {
   type        = string
   description = "CIDR block to assign to the VPC"
+}
+
+### Implementing CAS UI vars
+variable "cas_ui_adopt_redirect_certificate" {
+  type        = bool
+  description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
+  default     = false
+}
+
+variable "cas_ui_ingress_cidr_safelist" {
+  type        = map(string)
+  description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
+  validation {
+    condition     = length(var.cas_ui_ingress_cidr_safelist) <= 20
+    error_message = "The cas_ui_ingress_cidr_safelist can have a maximum of 20 entries."
+  }
+}
+
+variable "cas_ui_lb_listener_acm_arn" {
+  type        = string
+  description = "The full ARN of the ACM certificate to association with the CAS UI LB Listener (should be the redirect ACM cert)"
+  default     = "N/A"
+}
+
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
+variable "cas_ui_public_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
+variable "cas_ui_public_fqdn" {
+  type        = string
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
+variable "cas_ui_replication_group_enabled" {
+  type        = bool
+  description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
+}
+
+variable "cat_api_clients_security_group_id" {
+  type        = string
+  description = "CAT API clients security group ID"
+}
+
+variable "ecr_repo_url" {
+  type        = string
+  description = "CAS-UI ECR repository url"
+}
+
+variable "ecs_cluster_arn" {
+  type        = string
+  description = "ECS cluster ARN"
+}
+
+variable "ecs_exec_policy_arn" {
+  type        = string
+  description = "ECS EXEC policy arn"
+}
+
+variable "ecs_execution_role" {
+  type = object({
+    arn  = string
+    name = string
+  })
+  description = "ECS execution IAM role"
+}
+
+variable "hosted_zone_cas_ui" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}
+
+variable "logs_bucket_id" {
+  type        = string
+  description = "The ID of the logs bucket (for logging on the Load Balancer)"
+}
+
+variable "redis_credentials" {
+  type = object({
+    host     = string,
+    password = string,
+    port     = number
+  })
+}
+
+variable "session_cache_clients_security_group_id" {
+  type        = string
+  description = "Session cache clients secujrity group ID"
+}
+
+variable "subnets" {
+  type = object({
+    public = object({
+      ids = list(string)
+    })
+    web = object({
+      ids = list(string)
+    })
+  })
+  description = "VPC subnet IDs"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "AWS VPC ID"
 }

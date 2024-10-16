@@ -388,11 +388,6 @@ variable "hosted_zone_cas_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
-variable "logs_bucket_id" {
-  type        = string
-  description = "The ID of the logs bucket (for logging on the Load Balancer)"
-}
-
 variable "redis_credentials" {
   type = object({
     host     = string,

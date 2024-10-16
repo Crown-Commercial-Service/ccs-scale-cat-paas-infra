@@ -18,13 +18,13 @@ resource "aws_lb" "cas_ui" {
   enable_deletion_protection = var.lb_enable_deletion_protection
 
   access_logs {
-    bucket  = var.logs_bucket_id
+    bucket  = module.logs_bucket.bucket_id
     prefix  = "access-logs/casui"
     enabled = var.enable_lb_access_logs
   }
 
   connection_logs {
-    bucket  = var.logs_bucket_id
+    bucket  = module.logs_bucket.bucket_id
     prefix  = "connection-logs/casui"
     enabled = var.enable_lb_connection_logs
   }

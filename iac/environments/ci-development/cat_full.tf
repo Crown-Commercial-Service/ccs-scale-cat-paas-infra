@@ -61,7 +61,6 @@ module "cat_full" {
   cas_ui_replication_group_enabled         = var.replication_group_enabled
   hosted_zone_cas_ui                       = var.hosted_zone_cas_ui
   redis_credentials                        = module.cat_full.redis_credentials # Update this
-  session_cache_clients_security_group_id  = module.cat_full.session_cache_clients_security_group_id # Update this
   subnets                                  = module.cat_full.subnets # Update this
   vpc_id                                   = module.cat_full.vpc_id # Update this
 }

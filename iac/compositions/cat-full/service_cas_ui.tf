@@ -233,7 +233,7 @@ resource "aws_ecs_service" "cas_ui" {
     security_groups = [
       aws_security_group.cas_ui_tasks.id,
       aws_security_group.cat_api_clients.id,
-      var.session_cache_clients_security_group_id,
+      module.session_cache.clients_security_group_id,
     ]
     subnets = var.subnets.web.ids
   }

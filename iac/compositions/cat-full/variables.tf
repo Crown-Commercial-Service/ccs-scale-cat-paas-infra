@@ -396,11 +396,6 @@ variable "redis_credentials" {
   })
 }
 
-variable "session_cache_clients_security_group_id" {
-  type        = string
-  description = "Session cache clients secujrity group ID"
-}
-
 variable "subnets" {
   type = object({
     public = object({

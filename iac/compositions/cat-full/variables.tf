@@ -380,14 +380,6 @@ variable "cas_ui_replication_group_enabled" {
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
 }
 
-variable "ecs_execution_role" {
-  type = object({
-    arn  = string
-    name = string
-  })
-  description = "ECS execution IAM role"
-}
-
 variable "hosted_zone_cas_ui" {
   type = object({
     id   = string

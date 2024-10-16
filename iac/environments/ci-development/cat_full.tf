@@ -59,7 +59,6 @@ module "cat_full" {
   cas_ui_public_cert_attempt_validation    = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                       = var.cas_ui_public_fqdn
   cas_ui_replication_group_enabled         = var.replication_group_enabled
-  ecs_execution_role                       = module.cat_full.ecs_execution_role # Update this
   hosted_zone_cas_ui                       = var.hosted_zone_cas_ui
   logs_bucket_id                           = module.cat_full.logs_bucket_id # Update this
   redis_credentials                        = module.cat_full.redis_credentials # Update this

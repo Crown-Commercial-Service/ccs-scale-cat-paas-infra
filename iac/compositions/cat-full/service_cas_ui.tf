@@ -204,7 +204,7 @@ module "cas_ui_task" {
       secret_environment_variables = []
     }
   }
-  ecs_execution_role_arn = var.ecs_execution_role.arn
+  ecs_execution_role_arn = aws_iam_role.ecs_execution_role.arn
   family_name            = "cas_ui"
   task_cpu               = var.task_container_configs.cas_ui.total_cpu
   task_memory            = var.task_container_configs.cas_ui.total_memory

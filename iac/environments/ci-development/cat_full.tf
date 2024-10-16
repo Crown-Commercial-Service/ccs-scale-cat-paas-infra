@@ -53,4 +53,21 @@ module "cat_full" {
   ssm_parameter_name_prefix                = var.ssm_parameter_name_prefix
   task_container_configs                   = var.task_container_configs
   vpc_cidr_block                           = var.vpc_cidr_block
+  ### Below are the CAS UI specific variables - TODO: Refactor
+  cas_ui_ingress_cidr_safelist             = var.cas_ui_ingress_cidr_safelist
+  cas_ui_lb_waf_enabled                    = var.cas_ui_lb_waf_enabled
+  cas_ui_public_cert_attempt_validation    = var.cas_ui_public_cert_attempt_validation
+  cas_ui_public_fqdn                       = var.cas_ui_public_fqdn
+  cas_ui_replication_group_enabled         = var.replication_group_enabled
+  cat_api_clients_security_group_id        = module.cat_full.cat_api_clients_security_group_id # Update this
+  ecr_repo_url                             = module.cat_full.ecr_repo_urls["cas-ui"] # Update this
+  ecs_cluster_arn                          = module.cat_full.ecs_cluster_arn # Update this
+  ecs_exec_policy_arn                      = module.cat_full.ecs_exec_policy_arn # Update this
+  ecs_execution_role                       = module.cat_full.ecs_execution_role # Update this
+  hosted_zone_cas_ui                       = var.hosted_zone_cas_ui
+  logs_bucket_id                           = module.cat_full.logs_bucket_id # Update this
+  redis_credentials                        = module.cat_full.redis_credentials # Update this
+  session_cache_clients_security_group_id  = module.cat_full.session_cache_clients_security_group_id # Update this
+  subnets                                  = module.cat_full.subnets # Update this
+  vpc_id                                   = module.cat_full.vpc_id # Update this
 }

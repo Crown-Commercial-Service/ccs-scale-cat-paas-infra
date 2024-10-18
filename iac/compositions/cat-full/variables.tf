@@ -395,8 +395,3 @@ variable "redis_credentials" {
     port     = number
   })
 }
-
-variable "vpc_id" {
-  type        = string
-  description = "AWS VPC ID"
-}

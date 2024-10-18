@@ -155,7 +155,7 @@ resource "aws_lb_target_group" "cas_ui" {
   port            = "3000"
   protocol        = "HTTP"
   target_type     = "ip"
-  vpc_id          = var.vpc_id
+  vpc_id          = module.vpc.vpc_id
 
   health_check {
     matcher  = "200"
@@ -286,7 +286,7 @@ resource "aws_iam_role_policy_attachment" "cas_ui_task__ecs_exec_access" {
 resource "aws_security_group" "cas_ui_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:CASUI"
   description = "ALB for CAS UI"
-  vpc_id      = var.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   tags = {
     Name = "${var.resource_name_prefixes.normal}:LB:CASUI"
@@ -321,7 +321,7 @@ resource "aws_security_group_rule" "cas_ui_lb_https_in" {
 resource "aws_security_group" "cas_ui_tasks" {
   name        = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"
   description = "Identifies the holder as one of the CAS UI tasks"
-  vpc_id      = var.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   tags = {
     Name = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"

@@ -7,10 +7,16 @@ module "cat_full" {
   buyer_ui_ingress_cidr_safelist           = var.buyer_ui_ingress_cidr_safelist
   buyer_ui_public_cert_attempt_validation  = var.buyer_ui_public_cert_attempt_validation
   buyer_ui_public_fqdn                     = var.buyer_ui_public_fqdn
+  buyer_ui_redirect_r53_to_cas_ui          = var.buyer_ui_redirect_r53_to_cas_ui
   ca_cert_identifier                       = var.ca_cert_identifier
   cas_buyer_ui_lb_waf_enabled              = var.cas_buyer_ui_lb_waf_enabled
   cas_cat_api_lb_waf_enabled               = var.cas_cat_api_lb_waf_enabled
-  cas_web_acl_arn                          = var.cas_web_acl_arn
+  cas_ui_ingress_cidr_safelist             = var.cas_ui_ingress_cidr_safelist
+  cas_ui_lb_waf_enabled                    = var.cas_ui_lb_waf_enabled
+  cas_ui_public_cert_attempt_validation    = var.cas_ui_public_cert_attempt_validation
+  cas_ui_public_fqdn                       = var.cas_ui_public_fqdn
+  cas_ui_replication_group_enabled         = var.replication_group_enabled
+  cas_web_acl_arn                          = data.aws_wafv2_web_acl.cas_web_acl.arn
   cat_api_config_flags_devmode             = var.cat_api_config_flags_devmode
   cat_api_eetime_enabled                   = var.cat_api_eetime_enabled
   cat_api_ingress_cidr_safelist            = var.cat_api_ingress_cidr_safelist
@@ -27,6 +33,7 @@ module "cat_full" {
   environment_is_ephemeral                 = var.environment_is_ephemeral
   environment_name                         = var.environment_name
   hosted_zone_api                          = var.hosted_zone_api
+  hosted_zone_cas_ui                       = var.hosted_zone_cas_ui
   hosted_zone_ui                           = var.hosted_zone_ui
   lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   rds_allocated_storage_gb                 = var.rds_allocated_storage_gb

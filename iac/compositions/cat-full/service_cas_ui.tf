@@ -1,30 +1,22 @@
-locals {
-  redis_credentials = {
-    host     = var.redis_credentials.host,
-    password = var.redis_credentials.password,
-    port     = var.redis_credentials.port,
-  }
-}
-
 resource "aws_lb" "cas_ui" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASUI"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_ui_lb.id]
-  subnets            = var.subnets.public.ids
+  subnets            = module.vpc.subnets.public.ids
 
   drop_invalid_header_fields = var.drop_invalid_header_fields
 
   enable_deletion_protection = var.lb_enable_deletion_protection
 
   access_logs {
-    bucket  = var.logs_bucket_id
+    bucket  = module.logs_bucket.bucket_id
     prefix  = "access-logs/casui"
     enabled = var.enable_lb_access_logs
   }
 
   connection_logs {
-    bucket  = var.logs_bucket_id
+    bucket  = module.logs_bucket.bucket_id
     prefix  = "connection-logs/casui"
     enabled = var.enable_lb_connection_logs
   }
@@ -99,7 +91,7 @@ resource "aws_lb_listener" "cas_ui" {
   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
   # Conditional logic required for the migration to CAS UI from Buyer UI - once this is complete in all environments, this can be refactored
-  certificate_arn   = var.cas_ui_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_ui.arn : var.cas_ui_lb_listener_acm_arn
+  certificate_arn   = var.cas_ui_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_ui.arn : aws_acm_certificate.public_buyer_ui.arn
   load_balancer_arn = aws_lb.cas_ui.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -155,7 +147,7 @@ resource "aws_lb_target_group" "cas_ui" {
   port            = "3000"
   protocol        = "HTTP"
   target_type     = "ip"
-  vpc_id          = var.vpc_id
+  vpc_id          = module.vpc.vpc_id
 
   health_check {
     matcher  = "200"
@@ -194,7 +186,7 @@ module "cas_ui_task" {
       environment_variables = []
       essential             = true
       healthcheck_command   = "curl -f http://localhost:3000/isAlive || exit 1"
-      image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_ui_http}"
+      image                 = "${module.ecr_repos.repository_urls["cas-ui"]}:${var.docker_image_tags.cas_ui_http}"
       log_group_name        = "cas_ui"
       memory                = var.task_container_configs.cas_ui.http_memory
       mounts = [
@@ -204,15 +196,14 @@ module "cas_ui_task" {
       secret_environment_variables = []
     }
   }
-  ecs_execution_role_arn = var.ecs_execution_role.arn
+  ecs_execution_role_arn = aws_iam_role.ecs_execution_role.arn
   family_name            = "cas_ui"
   task_cpu               = var.task_container_configs.cas_ui.total_cpu
   task_memory            = var.task_container_configs.cas_ui.total_memory
 }
 
 resource "aws_ecs_service" "cas_ui" {
-  cluster = var.ecs_cluster_arn
-
+  cluster                = module.ecs_cluster.cluster_arn
   desired_count          = 0 # Deploy manually
   enable_execute_command = var.enable_ecs_execute_command
   force_new_deployment   = false
@@ -233,10 +224,10 @@ resource "aws_ecs_service" "cas_ui" {
     assign_public_ip = false
     security_groups = [
       aws_security_group.cas_ui_tasks.id,
-      var.cat_api_clients_security_group_id,
-      var.session_cache_clients_security_group_id,
+      aws_security_group.cat_api_clients.id,
+      module.session_cache.clients_security_group_id,
     ]
-    subnets = var.subnets.web.ids
+    subnets = module.vpc.subnets.web.ids
   }
 
   lifecycle {
@@ -281,13 +272,13 @@ resource "aws_iam_role_policy_attachment" "cas_ui_task__read_ssm_params_policy_a
 
 resource "aws_iam_role_policy_attachment" "cas_ui_task__ecs_exec_access" {
   role       = module.cas_ui_task.task_role_name
-  policy_arn = var.ecs_exec_policy_arn
+  policy_arn = aws_iam_policy.ecs_exec_policy.arn
 }
 
 resource "aws_security_group" "cas_ui_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:CASUI"
   description = "ALB for CAS UI"
-  vpc_id      = var.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   tags = {
     Name = "${var.resource_name_prefixes.normal}:LB:CASUI"
@@ -322,7 +313,7 @@ resource "aws_security_group_rule" "cas_ui_lb_https_in" {
 resource "aws_security_group" "cas_ui_tasks" {
   name        = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"
   description = "Identifies the holder as one of the CAS UI tasks"
-  vpc_id      = var.vpc_id
+  vpc_id      = module.vpc.vpc_id
 
   tags = {
     Name = "${var.resource_name_prefixes.normal}:ECSTASK:CASUI"

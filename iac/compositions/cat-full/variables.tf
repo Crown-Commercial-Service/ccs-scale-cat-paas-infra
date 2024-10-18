@@ -396,18 +396,6 @@ variable "redis_credentials" {
   })
 }
 
-variable "subnets" {
-  type = object({
-    public = object({
-      ids = list(string)
-    })
-    web = object({
-      ids = list(string)
-    })
-  })
-  description = "VPC subnet IDs"
-}
-
 variable "vpc_id" {
   type        = string
   description = "AWS VPC ID"

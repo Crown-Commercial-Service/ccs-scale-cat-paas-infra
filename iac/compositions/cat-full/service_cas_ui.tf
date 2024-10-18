@@ -11,7 +11,7 @@ resource "aws_lb" "cas_ui" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_ui_lb.id]
-  subnets            = var.subnets.public.ids
+  subnets            = module.vpc.subnets.public.ids
 
   drop_invalid_header_fields = var.drop_invalid_header_fields
 
@@ -235,7 +235,7 @@ resource "aws_ecs_service" "cas_ui" {
       aws_security_group.cat_api_clients.id,
       module.session_cache.clients_security_group_id,
     ]
-    subnets = var.subnets.web.ids
+    subnets = module.vpc.subnets.web.ids
   }
 
   lifecycle {

@@ -361,12 +361,6 @@ variable "cas_ui_ingress_cidr_safelist" {
   }
 }
 
-variable "cas_ui_lb_listener_acm_arn" {
-  type        = string
-  description = "The full ARN of the ACM certificate to association with the CAS UI LB Listener (should be the redirect ACM cert)"
-  default     = "N/A"
-}
-
 variable "cas_ui_lb_waf_enabled" {
   type        = bool
   description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"

@@ -116,6 +116,7 @@ variable "docker_image_tags" {
   type = object({
     buyer_ui_http = string,
     cat_api_http  = string,
+    cas_ui_http   = string,
   })
   description = "Docker tag for deployment of each of the services from ECR"
 }
@@ -325,6 +326,12 @@ variable "task_container_configs" {
       total_memory = number,
     }),
     cat_api = object({
+      http_cpu     = number,
+      http_memory  = number,
+      total_cpu    = number,
+      total_memory = number,
+    }),
+    cas_ui = object({
       http_cpu     = number,
       http_memory  = number,
       total_cpu    = number,

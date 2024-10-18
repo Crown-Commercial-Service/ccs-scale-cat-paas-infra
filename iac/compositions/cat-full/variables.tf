@@ -349,7 +349,7 @@ variable "vpc_cidr_block" {
 variable "cas_ui_adopt_redirect_certificate" {
   type        = bool
   description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
-  default     = false
+  default     = true
 }
 
 variable "cas_ui_ingress_cidr_safelist" {

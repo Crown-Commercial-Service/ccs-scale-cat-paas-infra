@@ -60,5 +60,4 @@ module "cat_full" {
   cas_ui_public_fqdn                       = var.cas_ui_public_fqdn
   cas_ui_replication_group_enabled         = var.replication_group_enabled
   hosted_zone_cas_ui                       = var.hosted_zone_cas_ui
-  redis_credentials                        = module.cat_full.redis_credentials # Update this
 }

@@ -1,11 +1,3 @@
-locals {
-  redis_credentials = {
-    host     = var.redis_credentials.host,
-    password = var.redis_credentials.password,
-    port     = var.redis_credentials.port,
-  }
-}
-
 resource "aws_lb" "cas_ui" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASUI"
   internal           = false

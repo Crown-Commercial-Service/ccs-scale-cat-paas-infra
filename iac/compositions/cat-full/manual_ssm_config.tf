@@ -57,6 +57,7 @@ locals {
     "opensearch-password",
     "opensearch-uri",
     "opensearch-username",
+    "opensearch-port",
     "oppertunities-s3-export-schedule",
     "oppertunities-s3-export-ui-link",
     "projects-to-opensearch-sync-schedule",

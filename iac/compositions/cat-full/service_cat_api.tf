@@ -248,6 +248,22 @@ module "cat_api_task" {
           valueFrom = aws_ssm_parameter.manual_config["gov-uk-notify-template-id"].arn
         },
         {
+          name      = "CONFIG_EXTERNAL_OPENSEARCH_HOSTNAME",
+          valueFrom = aws_ssm_parameter.manual_config["opensearch-hostname"].arn
+        },
+        {
+          name      = "CONFIG_EXTERNAL_OPENSEARCH_PASSWORD",
+          valueFrom = aws_ssm_parameter.manual_config["opensearch-password"].arn
+        },
+        {
+          name      = "CONFIG_EXTERNAL_OPENSEARCH_URI",
+          valueFrom = aws_ssm_parameter.manual_config["opensearch-uri"].arn
+        },
+        {
+          name      = "CONFIG_EXTERNAL_OPENSEARCH_USERNAME",
+          valueFrom = aws_ssm_parameter.manual_config["opensearch-username"].arn
+        },
+        {
           name      = "CONFIG_EXTERNAL_PROJECTS_SYNC_SCHEDULE",
           valueFrom = aws_ssm_parameter.manual_config["projects-to-opensearch-sync-schedule"].arn
         },

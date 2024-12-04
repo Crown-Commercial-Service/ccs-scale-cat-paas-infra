@@ -264,6 +264,10 @@ module "cat_api_task" {
           valueFrom = aws_ssm_parameter.manual_config["opensearch-username"].arn
         },
         {
+          name      = "CONFIG_EXTERNAL_OPENSEARCH_PORT",
+          valueFrom = aws_ssm_parameter.manual_config["opensearch-port"].arn
+        },
+        {
           name      = "CONFIG_EXTERNAL_PROJECTS_SYNC_SCHEDULE",
           valueFrom = aws_ssm_parameter.manual_config["projects-to-opensearch-sync-schedule"].arn
         },

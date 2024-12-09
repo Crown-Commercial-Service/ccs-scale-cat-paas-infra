@@ -191,6 +191,18 @@ variable "logs_bucket_policy_include_cas_ui" {
   default     = true
 }
 
+variable "ppmt_account" {
+  type        = string
+  description = "Account that receives EventBridge events for PPMT"
+  default     = ""
+}
+
+variable "ppmt_enabled" {
+  type        = bool
+  description = "Whether to enable PPMT"
+  default     = false
+}
+
 variable "rds_apply_immediately" {
   type        = bool
   description = "Whether to apply changes immediately or in the next maintenance window"

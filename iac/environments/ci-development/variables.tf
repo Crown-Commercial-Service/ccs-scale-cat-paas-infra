@@ -202,6 +202,16 @@ variable "lb_enable_deletion_protection" {
   description = "Opt whether or not to enable deletion protection on Load Balancers"
 }
 
+variable "ppmt_account" {
+  type        = string
+  description = "Account that receives EventBridge events for PPMT"
+}
+
+variable "ppmt_enabled" {
+  type        = bool
+  description = "Whether to enable PPMT"
+}
+
 variable "rds_allocated_storage_gb" {
   type        = number
   description = "Storage allocation in GiB"

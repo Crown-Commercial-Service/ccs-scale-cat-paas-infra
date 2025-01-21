@@ -149,6 +149,11 @@ resource "aws_lb_listener_certificate" "cas_ui" {
   listener_arn    = aws_lb_listener.cas_ui[0].arn
 }
 
+resource "aws_lb_listener_certificate" "cas_base_ui" {
+  certificate_arn = aws_acm_certificate.cas_ui_base.arn
+  listener_arn    = aws_lb_listener.cas_ui[0].arn
+}
+
 # Paths we wish to exclude from outside access
 resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
   # Only attempt this stage if vars dictate so (see vars for explanation)

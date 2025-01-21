@@ -20,6 +20,11 @@ variable "cas_ui_adopt_redirect_certificate" {
   default     = false
 }
 
+variable "cas_ui_base_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
 variable "cas_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"
@@ -145,6 +150,15 @@ variable "hosted_zone_cas_ui" {
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}
+
+
+variable "hosted_zone_ui" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the [env]-cas-ui"
 }
 
 variable "cas_ui_replication_group_enabled" {

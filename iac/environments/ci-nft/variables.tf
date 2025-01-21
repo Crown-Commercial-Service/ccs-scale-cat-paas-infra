@@ -48,6 +48,11 @@ variable "cas_cat_api_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
 }
 
+variable "cas_ui_base_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
 variable "cas_ui_lb_waf_enabled" {
   type        = bool
   description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"

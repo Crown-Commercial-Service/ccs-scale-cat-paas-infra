@@ -1,3 +1,8 @@
+output "cas_ui_base_cert_validation_records_required" {
+  description = "Details of the cert validation recrods required for the [env]-cas-ui certificate"
+  value       = local.cas_ui_base_cert_validations
+}
+
 output "public_cas_ui_cert_validation_records_required" {
   description = "Details of the cert validation records required for the public-facing cas UI certificate"
   value       = local.public_cas_ui_cert_validations

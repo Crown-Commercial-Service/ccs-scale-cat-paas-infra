@@ -3,6 +3,7 @@ module "cas_ui" {
 
   aws_account_id                          = var.aws_account_id
   aws_region                              = var.aws_region
+  cas_ui_base_cert_attempt_validation     = var.cas_ui_base_cert_attempt_validation
   cas_ui_lb_listener_acm_arn              = module.cat_full.buyer_ui_acm_certificate_arn
   cas_ui_public_cert_attempt_validation   = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_fqdn                      = var.cas_ui_public_fqdn
@@ -23,6 +24,7 @@ module "cas_ui" {
   environment_is_ephemeral                = var.environment_is_ephemeral
   environment_name                        = var.environment_name
   hosted_zone_cas_ui                      = var.hosted_zone_cas_ui
+  hosted_zone_ui                          = var.hosted_zone_ui
   lb_enable_deletion_protection           = var.lb_enable_deletion_protection
   logs_bucket_id                          = module.cat_full.logs_bucket_id
   resource_name_prefixes                  = var.resource_name_prefixes

@@ -77,6 +77,37 @@ resource "aws_acm_certificate_validation" "public_cas_ui" {
   validation_record_fqdns = [for validation in local.public_cas_ui_cert_validations : validation.name]
 }
 
+# NCAS-350 - Create certificates for [env]-cas-ui domains
+# /* Client requests will arrive at the CAS UI with a HOST header corresponding to
+#    the public hostname of the CAS UI (which is CNAMEd through to the cas_ui
+#    "A" record defined above). */
+resource "aws_acm_certificate" "cas_ui_base" {
+  domain_name       = var.hosted_zone_ui.name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+locals {
+  cas_ui_base_cert_validations = [
+    for dvo in aws_acm_certificate.cas_ui_base.domain_validation_options : {
+      name  = dvo.resource_record_name
+      value = dvo.resource_record_value
+      type  = dvo.resource_record_type
+    }
+  ]
+}
+
+resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_base_cert_attempt_validation ? 1 : 0
+
+  certificate_arn         = aws_acm_certificate.cas_ui_base.arn
+  validation_record_fqdns = [for validation in local.cas_ui_base_cert_validations : validation.name]
+}
+
 # Redirect all port 80 requests to port 443
 resource "aws_lb_listener" "cas_ui_http_redirect" {
   load_balancer_arn = aws_lb.cas_ui.arn

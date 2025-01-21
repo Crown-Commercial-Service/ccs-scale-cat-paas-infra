@@ -1,3 +1,8 @@
+output "cas_ui_base_cert_validation_records_required" {
+  description = "Details of the cert validation records required for the public-facing Buyer UI certificate"
+  value       = module.cas_ui.cas_ui_base_cert_validation_records_required
+}
+
 output "ecs_cluster_arn" {
   description = "ARN of the ECS Cluster which contains all the services"
   value       = module.cat_full.ecs_cluster_arn

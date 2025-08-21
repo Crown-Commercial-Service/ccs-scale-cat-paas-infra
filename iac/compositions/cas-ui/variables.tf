@@ -13,9 +13,14 @@ variable "cas_default_domain" {
   description = "The default domain for CAS"
 }
 
-variable "cas_subject_alternative_domains" {
-  type        = list(string)
-  description = "The SANs which can be used to communicate with CAS"
+variable "cas_esourcing_domain" {
+  type        = string
+  description = "The domain for Esourcing"
+}
+
+variable "cas_redirect_domain" {
+  type        = string
+  description = "The domain for the Redirect URL"
 }
 
 variable "cas_ui_adopt_redirect_certificate" {

@@ -1,4 +1,9 @@
 locals {
+  cas_subject_alternative_domains = [
+    "www.${var.cas_default_domain}",
+    var.cas_redirect_domain,
+    var.cas_esourcing_domain
+  ]
   redis_credentials = {
     host     = var.redis_credentials.host,
     password = var.redis_credentials.password,
@@ -102,7 +107,7 @@ locals {
 
 resource "aws_acm_certificate" "cas_domains" {
   domain_name               = var.cas_default_domain
-  subject_alternative_names = var.cas_subject_alternative_domains
+  subject_alternative_names = local.cas_subject_alternative_domains
   validation_method         = "DNS"
 
   lifecycle {
@@ -170,6 +175,8 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
 
   listener_arn = aws_lb_listener.cas_ui[0].arn
 
+  priority = 1
+
   action {
     type = "fixed-response"
 
@@ -187,6 +194,32 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
       ]
     }
   }
+}
+
+# Add redirect rule for ESourcing
+resource "aws_lb_listener_rule" "esourcing_redirect_rule" {
+  count         = var.cas_ui_public_cert_attempt_validation ? 1 : 0
+  listener_arn  = aws_lb_listener.cas_ui[0].arn
+  priority      = 2
+
+  action {
+    type = "redirect"
+
+    redirect {
+      host        = var.hosted_zone_ui.name
+      path        = "/esourcing"
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    host_header {
+      values = [var.cas_esourcing_domain]
+    }
+  }
+
 }
 
 resource "aws_lb_target_group" "cas_ui" {

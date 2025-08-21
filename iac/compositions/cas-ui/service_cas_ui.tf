@@ -198,9 +198,9 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
 
 # Add redirect rule for ESourcing
 resource "aws_lb_listener_rule" "esourcing_redirect_rule" {
-  count         = var.cas_ui_public_cert_attempt_validation ? 1 : 0
-  listener_arn  = aws_lb_listener.cas_ui[0].arn
-  priority      = 2
+  count        = var.cas_ui_public_cert_attempt_validation ? 1 : 0
+  listener_arn = aws_lb_listener.cas_ui[0].arn
+  priority     = 2
 
   action {
     type = "redirect"

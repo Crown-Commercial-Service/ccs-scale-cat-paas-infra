@@ -1,8 +1,3 @@
-output "buyer_ui_acm_certificate_arn" {
-  description = "ARN of the Buyer UI ACM certificate"
-  value       = aws_acm_certificate.public_buyer_ui.arn
-}
-
 output "cat_api_clients_security_group_id" {
   description = "CAT API clients security group ID"
   value       = aws_security_group.cat_api_clients.id

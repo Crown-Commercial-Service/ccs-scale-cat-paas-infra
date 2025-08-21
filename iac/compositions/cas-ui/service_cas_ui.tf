@@ -139,8 +139,7 @@ resource "aws_lb_listener" "cas_ui" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
-  # Conditional logic required for the migration to CAS UI from Buyer UI - once this is complete in all environments, this can be refactored
-  certificate_arn   = var.cas_ui_lb_listener_acm_arn
+  certificate_arn   = aws_acm_certificate.cas_domains.arn
   load_balancer_arn = aws_lb.cas_ui.arn
   port              = "443"
   protocol          = "HTTPS"

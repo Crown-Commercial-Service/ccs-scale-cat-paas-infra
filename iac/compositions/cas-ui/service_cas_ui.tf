@@ -100,6 +100,16 @@ locals {
   ]
 }
 
+resource "aws_acm_certificate" "cas_domains" {
+  domain_name               = var.cas_default_domain
+  subject_alternative_names = var.cas_subject_alternative_domains
+  validation_method         = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_ui_base_cert_attempt_validation ? 1 : 0
@@ -130,7 +140,7 @@ resource "aws_lb_listener" "cas_ui" {
   count = var.cas_ui_public_cert_attempt_validation ? 1 : 0
 
   # Conditional logic required for the migration to CAS UI from Buyer UI - once this is complete in all environments, this can be refactored
-  certificate_arn   = var.cas_ui_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_ui.arn : var.cas_ui_lb_listener_acm_arn
+  certificate_arn   = var.cas_ui_lb_listener_acm_arn
   load_balancer_arn = aws_lb.cas_ui.arn
   port              = "443"
   protocol          = "HTTPS"

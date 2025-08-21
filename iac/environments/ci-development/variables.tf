@@ -43,6 +43,16 @@ variable "ca_cert_identifier" {
   description = "The identifier of the CA certificate for the DB instance."
 }
 
+variable "cas_default_domain" {
+  type        = string
+  description = "The default domain for CAS"
+}
+
+variable "cas_subject_alternative_domains" {
+  type        = list(string)
+  description = "The SANs which can be used to communicate with CAS"
+}
+
 variable "cas_buyer_ui_lb_waf_enabled" {
   type        = bool
   description = "Boolean value specifying whether or not the Buyer UI LB WAF Should be enabled"

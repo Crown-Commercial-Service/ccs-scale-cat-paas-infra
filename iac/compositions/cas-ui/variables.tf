@@ -8,6 +8,16 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "cas_default_domain" {
+  type        = string
+  description = "The default domain for CAS"
+}
+
+variable "cas_subject_alternative_domains" {
+  type        = list(string)
+  description = "The SANs which can be used to communicate with CAS"
+}
+
 variable "cas_ui_lb_listener_acm_arn" {
   type        = string
   description = "The full ARN of the ACM certificate to association with the CAS UI LB Listener (should be the redirect ACM cert)"

@@ -1,8 +1,8 @@
 locals {
   cas_subject_alternative_domains = [
     "www.${var.cas_default_domain}",
-    var.cas_redirect_domain,
-    var.cas_esourcing_domain
+    var.cas_esourcing_domain,
+    var.cas_redirect_domain
   ]
   redis_credentials = {
     host     = var.redis_credentials.host,

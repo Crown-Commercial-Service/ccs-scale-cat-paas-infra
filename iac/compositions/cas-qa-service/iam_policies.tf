@@ -2,20 +2,20 @@ data "aws_iam_policy_document" "ecs_execution_log_permissions" {
   # Note: We knowingly expect repeat "DescribeAllLogGroups" Sids, hence we use
   # `override_` rather than `source_`
   override_policy_documents = [
-    module.cas_ui_task.write_task_logs_policy_document_json,
+    module.cas_qa_task.write_task_logs_policy_document_json,
   ]
 }
 
 data "aws_iam_policy_document" "ecs_execution_pass_task_role_permissions" {
   source_policy_documents = [
-    module.cas_ui_task.pass_task_role_policy_document_json,
+    module.cas_qa_task.pass_task_role_policy_document_json,
   ]
 }
 
 locals {
   execution_role_policy_docs = {
-    "logs_cas_ui" : data.aws_iam_policy_document.ecs_execution_log_permissions.json,
-    "pass_task_role_cas_ui" : data.aws_iam_policy_document.ecs_execution_pass_task_role_permissions.json,
+    "logs_cas_qa" : data.aws_iam_policy_document.ecs_execution_log_permissions.json,
+    "pass_task_role_cas_qa" : data.aws_iam_policy_document.ecs_execution_pass_task_role_permissions.json,
   }
 }
 

@@ -47,7 +47,7 @@ resource "aws_route53_record" "cas_qa" {
   }
 }
 
-# /* Client requests will arrive at the CAS UI with a HOST header corresponding to
+# /* Client requests will arrive at the CAS QA with a HOST header corresponding to
 #    the public hostname of the CAS QA (which is CNAMEd through to the cas_qa
 #    "A" record defined above). */
 resource "aws_acm_certificate" "public_cas_qa" {
@@ -77,9 +77,9 @@ resource "aws_acm_certificate_validation" "public_cas_qa" {
   validation_record_fqdns = [for validation in local.public_cas_qa_cert_validations : validation.name]
 }
 
-# NCAS-350 - Create certificates for [env]-cas-ui domains
-# /* Client requests will arrive at the CAS UI with a HOST header corresponding to
-#    the public hostname of the CAS UI (which is CNAMEd through to the cas_qa
+# NCAS-350 - Create certificates for [env]-cas-qa domains
+# /* Client requests will arrive at the CAS QA with a HOST header corresponding to
+#    the public hostname of the CAS QA (which is CNAMEd through to the cas_qa
 #    "A" record defined above). */
 resource "aws_acm_certificate" "cas_qa_base" {
   domain_name       = var.hosted_zone_ui.name
@@ -129,7 +129,7 @@ resource "aws_lb_listener" "cas_qa" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_qa_public_cert_attempt_validation ? 1 : 0
 
-  # Conditional logic required for the migration to CAS UI from Buyer UI - once this is complete in all environments, this can be refactored
+  # Conditional logic required for the migration to CAS QA from Buyer UI - once this is complete in all environments, this can be refactored
   certificate_arn   = var.cas_qa_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_qa.arn : var.cas_qa_lb_listener_acm_arn
   load_balancer_arn = aws_lb.cas_qa.arn
   port              = "443"
@@ -287,7 +287,7 @@ data "aws_iam_policy_document" "cas_qa_task__read_ssm_params" {
   version = "2012-10-17"
 
   statement {
-    sid = "AllowCASQAParams"
+    sid = "AllowCasQAParams"
 
     effect = "Allow"
 
@@ -298,7 +298,7 @@ data "aws_iam_policy_document" "cas_qa_task__read_ssm_params" {
     ]
 
     resources = [
-      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/cas/ui/*"
+      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/qanda/api/*"
     ]
   }
 }
@@ -306,7 +306,7 @@ data "aws_iam_policy_document" "cas_qa_task__read_ssm_params" {
 resource "aws_iam_policy" "cas_qa_task__read_ssm_params_policy" {
   name        = "cas_qa_read_ssm_params_policy"
   path        = "/"
-  description = "cas ui task policy"
+  description = "cas qa task policy"
   policy      = data.aws_iam_policy_document.cas_qa_task__read_ssm_params.json
 }
 
@@ -322,7 +322,7 @@ resource "aws_iam_role_policy_attachment" "cas_qa_task__ecs_exec_access" {
 
 resource "aws_security_group" "cas_qa_lb" {
   name        = "${var.resource_name_prefixes.normal}:LB:CASQA"
-  description = "ALB for CAS UI"
+  description = "ALB for CAS QA"
   vpc_id      = var.vpc_id
 
   tags = {
@@ -332,7 +332,7 @@ resource "aws_security_group" "cas_qa_lb" {
 
 # To enable redirect from http
 resource "aws_security_group_rule" "cas_qa_lb_http_in" {
-  description = "Allow HTTP from approved addresses into the CAS UI LB"
+  description = "Allow HTTP from approved addresses into the CAS QA LB"
   from_port   = 80
   prefix_list_ids = [
     aws_ec2_managed_prefix_list.cas_qa_ingress_safelist.id
@@ -344,7 +344,7 @@ resource "aws_security_group_rule" "cas_qa_lb_http_in" {
 }
 
 resource "aws_security_group_rule" "cas_qa_lb_https_in" {
-  description = "Allow HTTPS from approved addresses into the CAS UI LB"
+  description = "Allow HTTPS from approved addresses into the CAS QA LB"
   from_port   = 443
   prefix_list_ids = [
     aws_ec2_managed_prefix_list.cas_qa_ingress_safelist.id
@@ -357,7 +357,7 @@ resource "aws_security_group_rule" "cas_qa_lb_https_in" {
 
 resource "aws_security_group" "cas_qa_tasks" {
   name        = "${var.resource_name_prefixes.normal}:ECSTASK:CASQA"
-  description = "Identifies the holder as one of the CAS UI tasks"
+  description = "Identifies the holder as one of the CAS QA tasks"
   vpc_id      = var.vpc_id
 
   tags = {

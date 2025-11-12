@@ -1,5 +1,5 @@
 resource "aws_ec2_managed_prefix_list" "cas_qa_ingress_safelist" {
-  name           = "CAS UI LB ingress safelist"
+  name           = "CAS QA LB ingress safelist"
   address_family = "IPv4"
   max_entries    = length(var.cas_qa_ingress_cidr_safelist)
 }

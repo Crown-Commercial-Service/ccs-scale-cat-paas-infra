@@ -1,4 +1,4 @@
-module "cas_qa" {
+module "cas_qa_service" {
   source = "../../compositions/cas-qa-service"
 
   aws_account_id                          = var.aws_account_id

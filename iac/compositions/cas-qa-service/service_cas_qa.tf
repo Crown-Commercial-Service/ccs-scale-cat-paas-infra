@@ -129,7 +129,6 @@ resource "aws_lb_listener" "cas_qa" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_qa_public_cert_attempt_validation ? 1 : 0
 
-  # Conditional logic required for the migration to CAS QA from Buyer UI - once this is complete in all environments, this can be refactored
   certificate_arn   = var.cas_qa_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_qa.arn : var.cas_qa_lb_listener_acm_arn
   load_balancer_arn = aws_lb.cas_qa.arn
   port              = "443"
@@ -143,14 +142,7 @@ resource "aws_lb_listener" "cas_qa" {
 }
 
 resource "aws_lb_listener_certificate" "cas_qa" {
-  # Only attempt this stage if cas_qa_adopt_redirect_certificate == true
-  count           = var.cas_qa_adopt_redirect_certificate == true ? 1 : 0
-  certificate_arn = aws_acm_certificate.public_cas_qa.arn
-  listener_arn    = aws_lb_listener.cas_qa[0].arn
-}
-
-resource "aws_lb_listener_certificate" "cas_base_ui" {
-  certificate_arn = aws_acm_certificate.cas_qa_base.arn
+  certificate_arn = aws_acm_certificate.cas_qa.arn
   listener_arn    = aws_lb_listener.cas_qa[0].arn
 }
 
@@ -283,7 +275,7 @@ resource "aws_ecs_service" "cas_qa" {
   }
 }
 
-data "aws_iam_policy_document" "cas_qa_task__read_ssm_params" {
+data "aws_iam_policy_document" "cas_qa_task_read_ssm_params" {
   version = "2012-10-17"
 
   statement {
@@ -303,19 +295,19 @@ data "aws_iam_policy_document" "cas_qa_task__read_ssm_params" {
   }
 }
 
-resource "aws_iam_policy" "cas_qa_task__read_ssm_params_policy" {
+resource "aws_iam_policy" "cas_qa_task_read_ssm_params_policy" {
   name        = "cas_qa_read_ssm_params_policy"
   path        = "/"
   description = "cas qa task policy"
-  policy      = data.aws_iam_policy_document.cas_qa_task__read_ssm_params.json
+  policy      = data.aws_iam_policy_document.cas_qa_task_read_ssm_params.json
 }
 
-resource "aws_iam_role_policy_attachment" "cas_qa_task__read_ssm_params_policy_attach" {
+resource "aws_iam_role_policy_attachment" "cas_qa_task_read_ssm_params_policy_attach" {
   role       = module.cas_qa_task.task_role_name
-  policy_arn = aws_iam_policy.cas_qa_task__read_ssm_params_policy.arn
+  policy_arn = aws_iam_policy.cas_qa_task_read_ssm_params_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "cas_qa_task__ecs_exec_access" {
+resource "aws_iam_role_policy_attachment" "cas_qa_task_ecs_exec_access" {
   role       = module.cas_qa_task.task_role_name
   policy_arn = var.ecs_exec_policy_arn
 }
@@ -365,7 +357,7 @@ resource "aws_security_group" "cas_qa_tasks" {
   }
 }
 
-resource "aws_security_group_rule" "cas_qa_tasks__https_anywhere_out" {
+resource "aws_security_group_rule" "cas_qa_tasks_https_anywhere_out" {
   description = "Allows outward HTTPS from the cas_qa tasks to anywhere"
 
   cidr_blocks       = ["0.0.0.0/0"]
@@ -376,7 +368,7 @@ resource "aws_security_group_rule" "cas_qa_tasks__https_anywhere_out" {
   type              = "egress"
 }
 
-resource "aws_security_group_rule" "cas_qa_lb__4000_cas_qa_tasks_out" {
+resource "aws_security_group_rule" "cas_qa_lb_4000_cas_qa_tasks_out" {
   description = "Allow outward service traffic from the CAS QA LB to the cas_qa tasks"
 
   from_port                = 4000
@@ -387,7 +379,7 @@ resource "aws_security_group_rule" "cas_qa_lb__4000_cas_qa_tasks_out" {
   type                     = "egress"
 }
 
-resource "aws_security_group_rule" "cas_qa_tasks__lb_4000_in" {
+resource "aws_security_group_rule" "cas_qa_tasks_lb_4000_in" {
   description = "Allow inward service traffic from the CAS QA LB to the cas_qa tasks"
 
   from_port                = 4000

@@ -8,6 +8,17 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "auto_minor_version_upgrade" {
+  type        = bool
+  description = "Opt to enable automatic minor version upgrades"
+}
+
+variable "allow_major_version_upgrade" {
+  type        = bool
+  description = "Opt to allow major version upgrade (defaults to false)"
+  default     = false
+}
+
 variable "cas_qa_lb_listener_acm_arn" {
   type        = string
   description = "The full ARN of the ACM certificate to association with the CAS QA LB Listener (should be the redirect ACM cert)"
@@ -59,9 +70,19 @@ variable "cat_api_clients_security_group_id" {
   description = "CAT API clients security group ID"
 }
 
+variable "ca_cert_identifier" {
+  type        = string
+  description = "The identifier of the CA certificate for the DB instance."
+}
+
 variable "default_ssl_policy" {
   type        = string
   description = "The default SSL Policy to apply to the Load Balancers"
+}
+
+variable "deletion_protection" {
+  type        = bool
+  description = "Boolean to opt in/out of enabling deletion protection. The DB cannot be deleted when set to true"
 }
 
 variable "docker_image_tags" {
@@ -164,6 +185,67 @@ variable "hosted_zone_ui" {
 variable "cas_qa_replication_group_enabled" {
   type        = bool
   description = "Boolean value to decide whether or not to enable Elasticache Replication Group"
+}
+
+variable "rds_apply_immediately" {
+  type        = bool
+  description = "Whether to apply changes immediately or in the next maintenance window"
+  default     = true
+}
+
+variable "rds_allocated_storage_gb" {
+  type        = number
+  description = "Storage allocation in GiB"
+  default     = 10
+}
+
+variable "rds_backup_retention_period_days" {
+  type        = number
+  description = "Number of days for which to keep backups"
+  default     = 14
+}
+
+variable "rds_backup_window" {
+  type        = string
+  description = "The daily time range in which automated backups are created (if they are enabled)"
+}
+
+variable "rds_db_instance_class" {
+  type        = string
+  description = "Type of DB instance"
+  default     = "db.t3.small"
+}
+
+variable "rds_event_subscription_email_endpoint" {
+  type        = string
+  description = "The email address to send RDS Event Subscription notifications to"
+}
+
+variable "rds_event_subscription_enabled" {
+  type        = bool
+  description = "Boolean to determine whether or not to enable RDS Event Subscription (defaults to false)"
+}
+
+variable "rds_iam_database_authentication_enabled" {
+  type        = bool
+  description = "Whether to enable IAM database authentication for the API db"
+  default     = false
+}
+
+variable "rds_maintenance_window" {
+  type        = string
+  description = "The window in which RDS Maintenance should be performed (if enabled)"
+}
+
+variable "rds_postgres_engine_version" {
+  type        = string
+  description = "Version number of db engine to use"
+  default     = "14.6"
+}
+
+variable "rds_skip_final_snapshot" {
+  type        = string
+  description = "Whether or not to skip the creation of a final snapshot of the db upon deletion"
 }
 
 variable "redis_credentials" {

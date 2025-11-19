@@ -218,13 +218,13 @@ module "cas_qa_task" {
 
   container_definitions = {
     http = {
-      cpu                   = var.task_container_configs.cas_qa.http_cpu
+      cpu                   = var.task_container_configs.cas_qa_service.http_cpu
       environment_variables = []
       essential             = true
       healthcheck_command   = "curl -f http://localhost:4000/isAlive || exit 1"
       image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_qa_http}"
       log_group_name        = "cas_qa"
-      memory                = var.task_container_configs.cas_qa.http_memory
+      memory                = var.task_container_configs.cas_qa_service.http_memory
       mounts = [
       ]
       override_command             = null
@@ -233,9 +233,9 @@ module "cas_qa_task" {
     }
   }
   ecs_execution_role_arn = var.ecs_execution_role.arn
-  family_name            = "cas_qa"
-  task_cpu               = var.task_container_configs.cas_qa.total_cpu
-  task_memory            = var.task_container_configs.cas_qa.total_memory
+  family_name            = "cas_qa_service"
+  task_cpu               = var.task_container_configs.cas_qa_service.total_cpu
+  task_memory            = var.task_container_configs.cas_qa_service.total_memory
 }
 
 resource "aws_ecs_service" "cas_qa" {

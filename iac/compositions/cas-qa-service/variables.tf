@@ -293,7 +293,7 @@ variable "subnets" {
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 variable "task_container_configs" {
   type = object({
-    cas_qa = object({
+    cas_qa_service = object({
       http_cpu     = number,
       http_memory  = number,
       total_cpu    = number,

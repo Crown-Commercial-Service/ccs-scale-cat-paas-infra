@@ -10,5 +10,6 @@ module "ecr_repos" {
     "buyer-ui",
     "cas-ui",
     "cat-api",
+    "cas-qa-service",
   ]
 }

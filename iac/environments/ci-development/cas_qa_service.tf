@@ -16,7 +16,7 @@ module "cas_qa_service" {
   default_ssl_policy                      = var.default_ssl_policy
   docker_image_tags                       = var.docker_image_tags
   drop_invalid_header_fields              = var.drop_invalid_header_fields
-  ecr_repo_url                            = module.cat_full.ecr_repo_urls["cas-ui"]
+  ecr_repo_url                            = module.cat_full.ecr_repo_urls["cas-qa-service"]
   ecs_cluster_arn                         = module.cat_full.ecs_cluster_arn
   ecs_exec_policy_arn                     = module.cat_full.ecs_exec_policy_arn
   ecs_execution_role                      = module.cat_full.ecs_execution_role

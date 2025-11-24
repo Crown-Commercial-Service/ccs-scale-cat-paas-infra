@@ -47,9 +47,6 @@ resource "aws_route53_record" "cas_qa" {
   }
 }
 
-# /* Client requests will arrive at the CAS QA with a HOST header corresponding to
-#    the public hostname of the CAS QA (which is CNAMEd through to the cas_qa
-#    "A" record defined above). */
 resource "aws_acm_certificate" "public_cas_qa" {
   domain_name       = var.cas_qa_public_fqdn
   validation_method = "DNS"
@@ -70,42 +67,8 @@ locals {
 }
 
 resource "aws_acm_certificate_validation" "public_cas_qa" {
-  # Only attempt this stage if vars dictate so (see vars for explanation)
-  count = var.cas_qa_public_cert_attempt_validation ? 1 : 0
-
   certificate_arn         = aws_acm_certificate.public_cas_qa.arn
   validation_record_fqdns = [for validation in local.public_cas_qa_cert_validations : validation.name]
-}
-
-# NCAS-350 - Create certificates for [env]-cas-qa domains
-# /* Client requests will arrive at the CAS QA with a HOST header corresponding to
-#    the public hostname of the CAS QA (which is CNAMEd through to the cas_qa
-#    "A" record defined above). */
-resource "aws_acm_certificate" "cas_qa_base" {
-  domain_name       = var.hosted_zone_ui.name
-  validation_method = "DNS"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-locals {
-  cas_qa_base_cert_validations = [
-    for dvo in aws_acm_certificate.cas_qa_base.domain_validation_options : {
-      name  = dvo.resource_record_name
-      value = dvo.resource_record_value
-      type  = dvo.resource_record_type
-    }
-  ]
-}
-
-resource "aws_acm_certificate_validation" "public_buyer_ui_cas_qa" {
-  # Only attempt this stage if vars dictate so (see vars for explanation)
-  count = var.cas_qa_base_cert_attempt_validation ? 1 : 0
-
-  certificate_arn         = aws_acm_certificate.cas_qa_base.arn
-  validation_record_fqdns = [for validation in local.cas_qa_base_cert_validations : validation.name]
 }
 
 # Redirect all port 80 requests to port 443
@@ -126,10 +89,7 @@ resource "aws_lb_listener" "cas_qa_http_redirect" {
 }
 
 resource "aws_lb_listener" "cas_qa" {
-  # Only attempt this stage if vars dictate so (see vars for explanation)
-  count = var.cas_qa_public_cert_attempt_validation ? 1 : 0
-
-  certificate_arn   = var.cas_qa_adopt_redirect_certificate == false ? aws_acm_certificate.public_cas_qa.arn : var.cas_qa_lb_listener_acm_arn
+  certificate_arn   = aws_acm_certificate.public_cas_qa.arn
   load_balancer_arn = aws_lb.cas_qa.arn
   port              = "443"
   protocol          = "HTTPS"
@@ -141,17 +101,9 @@ resource "aws_lb_listener" "cas_qa" {
   }
 }
 
-resource "aws_lb_listener_certificate" "cas_qa" {
-  certificate_arn = aws_acm_certificate.cas_qa.arn
-  listener_arn    = aws_lb_listener.cas_qa[0].arn
-}
-
-# Paths we wish to exclude from outside access
 resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_qa" {
-  # Only attempt this stage if vars dictate so (see vars for explanation)
-  count = var.cas_qa_public_cert_attempt_validation ? 1 : 0
 
-  listener_arn = aws_lb_listener.cas_qa[0].arn
+  listener_arn = aws_lb_listener.cas_qa.arn
 
   action {
     type = "fixed-response"
@@ -199,17 +151,6 @@ resource "aws_lb_target_group" "cas_qa" {
   }
 }
 
-locals {
-  cas_qa_vcap_object = {
-    redis = [
-      {
-        name        = var.cas_qa_replication_group_enabled == true ? "rediss" : "redis"
-        credentials = local.redis_credentials
-      }
-    ]
-  }
-}
-
 module "cas_qa_task" {
   source = "../../core/resource-groups/ecs-fargate-task-definition"
 
@@ -218,13 +159,13 @@ module "cas_qa_task" {
 
   container_definitions = {
     http = {
-      cpu                   = var.task_container_configs.cas_qa_service.http_cpu
+      cpu                   = var.task_container_configs.cas_qa.http_cpu
       environment_variables = []
       essential             = true
       healthcheck_command   = "curl -f http://localhost:4000/isAlive || exit 1"
       image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_qa_http}"
       log_group_name        = "cas_qa"
-      memory                = var.task_container_configs.cas_qa_service.http_memory
+      memory                = var.task_container_configs.cas_qa.http_memory
       mounts = [
       ]
       override_command             = null
@@ -233,9 +174,9 @@ module "cas_qa_task" {
     }
   }
   ecs_execution_role_arn = var.ecs_execution_role.arn
-  family_name            = "cas_qa_service"
-  task_cpu               = var.task_container_configs.cas_qa_service.total_cpu
-  task_memory            = var.task_container_configs.cas_qa_service.total_memory
+  family_name            = "cas_qa"
+  task_cpu               = var.task_container_configs.cas_qa.total_cpu
+  task_memory            = var.task_container_configs.cas_qa.total_memory
 }
 
 resource "aws_ecs_service" "cas_qa" {
@@ -248,13 +189,10 @@ resource "aws_ecs_service" "cas_qa" {
   name                   = "cas_qa"
   task_definition        = module.cas_qa_task.task_definition_arn
 
-  dynamic "load_balancer" {
-    for_each = var.cas_qa_public_cert_attempt_validation ? toset([1]) : toset([])
-    content {
-      container_name   = "http"
-      container_port   = 4000
-      target_group_arn = aws_lb_target_group.cas_qa.arn
-    }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.cas_qa.arn
+    container_name   = "http"
+    container_port   = 4000
   }
 
   network_configuration {
@@ -279,7 +217,7 @@ data "aws_iam_policy_document" "cas_qa_task_read_ssm_params" {
   version = "2012-10-17"
 
   statement {
-    sid = "AllowCasQAParams"
+    sid = "AllowCasQaParams"
 
     effect = "Allow"
 
@@ -379,8 +317,8 @@ resource "aws_security_group_rule" "cas_qa_lb_4000_cas_qa_tasks_out" {
   type                     = "egress"
 }
 
-resource "aws_security_group_rule" "cas_qa_tasks_lb_4000_in" {
-  description = "Allow inward service traffic from the CAS QA LB to the cas_qa tasks"
+resource "aws_security_group_rule" "cas_qa_tasks_lb_3000_in" {
+  description = "Allow inward service traffic from the CAS UI LB to the cas_qa tasks"
 
   from_port                = 4000
   protocol                 = "tcp"

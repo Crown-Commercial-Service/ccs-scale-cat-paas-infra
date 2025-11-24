@@ -8,32 +8,10 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
-variable "auto_minor_version_upgrade" {
-  type        = bool
-  description = "Opt to enable automatic minor version upgrades"
-}
-
-variable "allow_major_version_upgrade" {
-  type        = bool
-  description = "Opt to allow major version upgrade (defaults to false)"
-  default     = false
-}
-
 variable "cas_qa_lb_listener_acm_arn" {
   type        = string
   description = "The full ARN of the ACM certificate to association with the CAS QA LB Listener (should be the redirect ACM cert)"
   default     = "N/A"
-}
-
-variable "cas_qa_adopt_redirect_certificate" {
-  type        = bool
-  description = "Conditional to determine whether or not CAS QA should adopt the Redirect certificate (for the migration from Buyer UI to CAS QA - defaults to false)"
-  default     = false
-}
-
-variable "cas_qa_base_cert_attempt_validation" {
-  type        = bool
-  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_qa_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
 variable "cas_qa_ingress_cidr_safelist" {
@@ -45,14 +23,9 @@ variable "cas_qa_ingress_cidr_safelist" {
   }
 }
 
-variable "cas_qa_public_cert_attempt_validation" {
-  type        = bool
-  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_qa_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
-}
-
 variable "cas_qa_public_fqdn" {
   type        = string
-  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_qa` variable"
 }
 
 variable "cas_qa_lb_waf_enabled" {
@@ -160,16 +133,7 @@ variable "hosted_zone_cas_qa" {
     id   = string
     name = string
   })
-  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
-}
-
-
-variable "hosted_zone_ui" {
-  type = object({
-    id   = string
-    name = string
-  })
-  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the [env]-cas-ui"
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }
 
 variable "cas_qa_replication_group_enabled" {
@@ -222,7 +186,7 @@ variable "subnets" {
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 variable "task_container_configs" {
   type = object({
-    cas_qa_service = object({
+    cas_qa = object({
       http_cpu     = number,
       http_memory  = number,
       total_cpu    = number,

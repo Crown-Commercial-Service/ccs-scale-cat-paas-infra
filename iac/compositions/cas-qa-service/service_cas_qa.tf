@@ -302,7 +302,7 @@ resource "aws_security_group" "cas_qa_tasks" {
 }
 
 resource "aws_security_group_rule" "cas_qa_tasks_https_anywhere_out" {
-  description = "Allows outward HTTP from the cas_qa tasks to anywhere"
+  description = "Allows outward HTTPS from the cas_qa tasks to anywhere"
 
   cidr_blocks       = ["0.0.0.0/0"]
   from_port         = 443

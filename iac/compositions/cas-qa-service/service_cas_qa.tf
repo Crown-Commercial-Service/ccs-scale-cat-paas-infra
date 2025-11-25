@@ -17,17 +17,17 @@ resource "aws_lb" "cas_qa" {
 
   enable_deletion_protection = var.lb_enable_deletion_protection
 
-  access_logs {
-    bucket  = var.logs_bucket_id
-    prefix  = "access-logs/casqa"
-    enabled = var.enable_lb_access_logs
-  }
+  # access_logs {
+  #   bucket  = var.logs_bucket_id
+  #   prefix  = "access-logs/casqa"
+  #   enabled = var.enable_lb_access_logs
+  # }
 
-  connection_logs {
-    bucket  = var.logs_bucket_id
-    prefix  = "connection-logs/casqa"
-    enabled = var.enable_lb_connection_logs
-  }
+  # connection_logs {
+  #   bucket  = var.logs_bucket_id
+  #   prefix  = "connection-logs/casqa"
+  #   enabled = var.enable_lb_connection_logs
+  # }
 
   tags = {
     WAF_ENABLED = var.cas_qa_lb_waf_enabled == true ? true : null

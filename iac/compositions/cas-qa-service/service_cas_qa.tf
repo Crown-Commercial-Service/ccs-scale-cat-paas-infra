@@ -317,8 +317,8 @@ resource "aws_security_group_rule" "cas_qa_lb_4000_cas_qa_tasks_out" {
   type                     = "egress"
 }
 
-resource "aws_security_group_rule" "cas_qa_tasks_lb_3000_in" {
-  description = "Allow inward service traffic from the CAS UI LB to the cas_qa tasks"
+resource "aws_security_group_rule" "cas_qa_tasks_lb_4000_in" {
+  description = "Allow inward service traffic from the CAS QA LB to the cas_qa tasks"
 
   from_port                = 4000
   protocol                 = "tcp"

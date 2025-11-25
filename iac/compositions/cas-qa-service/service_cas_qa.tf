@@ -11,7 +11,7 @@ resource "aws_lb" "cas_qa" {
   internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_qa_lb.id]
-  subnets            = var.subnets.private.ids
+  subnets            = var.subnets.web.ids
 
   drop_invalid_header_fields = var.drop_invalid_header_fields
 

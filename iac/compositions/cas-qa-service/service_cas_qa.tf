@@ -8,10 +8,10 @@ locals {
 
 resource "aws_lb" "cas_qa" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASQA"
-  internal           = false
+  internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.cas_qa_lb.id]
-  subnets            = var.subnets.public.ids
+  subnets            = var.subnets.private.ids
 
   drop_invalid_header_fields = var.drop_invalid_header_fields
 
@@ -47,29 +47,29 @@ resource "aws_route53_record" "cas_qa" {
   }
 }
 
-resource "aws_acm_certificate" "public_cas_qa" {
-  domain_name       = var.cas_qa_public_fqdn
-  validation_method = "DNS"
+# resource "aws_acm_certificate" "public_cas_qa" {
+#   domain_name       = var.cas_qa_public_fqdn
+#   validation_method = "DNS"
 
-  lifecycle {
-    create_before_destroy = true
-  }
-}
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
 
-locals {
-  public_cas_qa_cert_validations = [
-    for dvo in aws_acm_certificate.public_cas_qa.domain_validation_options : {
-      name  = dvo.resource_record_name
-      value = dvo.resource_record_value
-      type  = dvo.resource_record_type
-    }
-  ]
-}
+# locals {
+#   public_cas_qa_cert_validations = [
+#     for dvo in aws_acm_certificate.public_cas_qa.domain_validation_options : {
+#       name  = dvo.resource_record_name
+#       value = dvo.resource_record_value
+#       type  = dvo.resource_record_type
+#     }
+#   ]
+# }
 
-resource "aws_acm_certificate_validation" "public_cas_qa" {
-  certificate_arn         = aws_acm_certificate.public_cas_qa.arn
-  validation_record_fqdns = [for validation in local.public_cas_qa_cert_validations : validation.name]
-}
+# resource "aws_acm_certificate_validation" "public_cas_qa" {
+#   certificate_arn         = aws_acm_certificate.public_cas_qa.arn
+#   validation_record_fqdns = [for validation in local.public_cas_qa_cert_validations : validation.name]
+# }
 
 # Redirect all port 80 requests to port 443
 resource "aws_lb_listener" "cas_qa_http_redirect" {
@@ -78,51 +78,57 @@ resource "aws_lb_listener" "cas_qa_http_redirect" {
   protocol          = "HTTP"
 
   default_action {
-    type = "redirect"
+    type = "forward"
 
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
+    forward {
+      target_group {
+        arn = aws_lb_target_group.cas_qa.arn
+      }
     }
+
+    # redirect {
+    #   port        = "443"
+    #   protocol    = "HTTPS"
+    #   status_code = "HTTP_301"
+    # }
   }
 }
 
-resource "aws_lb_listener" "cas_qa" {
-  certificate_arn   = aws_acm_certificate.public_cas_qa.arn
-  load_balancer_arn = aws_lb.cas_qa.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = var.default_ssl_policy
+# resource "aws_lb_listener" "cas_qa" {
+#   certificate_arn   = aws_acm_certificate.public_cas_qa.arn
+#   load_balancer_arn = aws_lb.cas_qa.arn
+#   port              = "443"
+#   protocol          = "HTTPS"
+#   ssl_policy        = var.default_ssl_policy
 
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.cas_qa.arn
-  }
-}
+#   default_action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.cas_qa.arn
+#   }
+# }
 
-resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_qa" {
+# resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_qa" {
 
-  listener_arn = aws_lb_listener.cas_qa.arn
+#   listener_arn = aws_lb_listener.cas_qa.arn
 
-  action {
-    type = "fixed-response"
+#   action {
+#     type = "fixed-response"
 
-    fixed_response {
-      content_type = "text/html"
-      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.cas_qa_public_fqdn}/\">Home</a>.</p>"
-      status_code  = "404"
-    }
-  }
+#     fixed_response {
+#       content_type = "text/html"
+#       message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.cas_qa_public_fqdn}/\">Home</a>.</p>"
+#       status_code  = "404"
+#     }
+#   }
 
-  condition {
-    path_pattern {
-      values = [
-        "/health",
-      ]
-    }
-  }
-}
+#   condition {
+#     path_pattern {
+#       values = [
+#         "/health",
+#       ]
+#     }
+#   }
+# }
 
 resource "aws_lb_target_group" "cas_qa" {
   # Requires an explicit depends_on
@@ -273,17 +279,17 @@ resource "aws_security_group_rule" "cas_qa_lb_http_in" {
   type              = "ingress"
 }
 
-resource "aws_security_group_rule" "cas_qa_lb_https_in" {
-  description = "Allow HTTPS from approved addresses into the CAS QA LB"
-  from_port   = 443
-  prefix_list_ids = [
-    aws_ec2_managed_prefix_list.cas_qa_ingress_safelist.id
-  ]
-  protocol          = "tcp"
-  security_group_id = aws_security_group.cas_qa_lb.id
-  to_port           = 443
-  type              = "ingress"
-}
+# resource "aws_security_group_rule" "cas_qa_lb_https_in" {
+#   description = "Allow HTTPS from approved addresses into the CAS QA LB"
+#   from_port   = 443
+#   prefix_list_ids = [
+#     aws_ec2_managed_prefix_list.cas_qa_ingress_safelist.id
+#   ]
+#   protocol          = "tcp"
+#   security_group_id = aws_security_group.cas_qa_lb.id
+#   to_port           = 443
+#   type              = "ingress"
+# }
 
 resource "aws_security_group" "cas_qa_tasks" {
   name        = "${var.resource_name_prefixes.normal}:ECSTASK:CASQA"
@@ -296,13 +302,13 @@ resource "aws_security_group" "cas_qa_tasks" {
 }
 
 resource "aws_security_group_rule" "cas_qa_tasks_https_anywhere_out" {
-  description = "Allows outward HTTPS from the cas_qa tasks to anywhere"
+  description = "Allows outward HTTP from the cas_qa tasks to anywhere"
 
   cidr_blocks       = ["0.0.0.0/0"]
-  from_port         = 443
+  from_port         = 80
   protocol          = "tcp"
   security_group_id = aws_security_group.cas_qa_tasks.id
-  to_port           = 443
+  to_port           = 80
   type              = "egress"
 }
 

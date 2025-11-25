@@ -72,7 +72,7 @@ resource "aws_route53_record" "cas_qa" {
 # }
 
 # Redirect all port 80 requests to port 443
-resource "aws_lb_listener" "cas_qa_http_redirect" {
+resource "aws_lb_listener" "cas_qa_http" {
   load_balancer_arn = aws_lb.cas_qa.arn
   port              = "80"
   protocol          = "HTTP"
@@ -301,7 +301,7 @@ resource "aws_security_group" "cas_qa_tasks" {
   }
 }
 
-resource "aws_security_group_rule" "cas_qa_tasks_https_anywhere_out" {
+resource "aws_security_group_rule" "cas_qa_tasks_http_anywhere_out" {
   description = "Allows outward HTTP from the cas_qa tasks to anywhere"
 
   cidr_blocks       = ["0.0.0.0/0"]

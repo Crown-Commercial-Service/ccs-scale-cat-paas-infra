@@ -301,14 +301,14 @@ resource "aws_security_group" "cas_qa_tasks" {
   }
 }
 
-resource "aws_security_group_rule" "cas_qa_tasks_http_anywhere_out" {
+resource "aws_security_group_rule" "cas_qa_tasks_https_anywhere_out" {
   description = "Allows outward HTTP from the cas_qa tasks to anywhere"
 
   cidr_blocks       = ["0.0.0.0/0"]
-  from_port         = 80
+  from_port         = 443
   protocol          = "tcp"
   security_group_id = aws_security_group.cas_qa_tasks.id
-  to_port           = 80
+  to_port           = 443
   type              = "egress"
 }
 

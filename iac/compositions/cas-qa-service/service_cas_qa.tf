@@ -168,7 +168,7 @@ module "cas_qa_task" {
       cpu                   = var.task_container_configs.cas_qa.http_cpu
       environment_variables = []
       essential             = true
-      healthcheck_command   = "curl -f http://localhost:4000/isAlive || exit 1"
+      healthcheck_command   = "curl -f http://localhost:4000/health || exit 1"
       image                 = "${var.ecr_repo_url}:${var.docker_image_tags.cas_qa_http}"
       log_group_name        = "cas_qa"
       memory                = var.task_container_configs.cas_qa.http_memory

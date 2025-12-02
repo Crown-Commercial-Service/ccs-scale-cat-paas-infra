@@ -174,9 +174,12 @@ module "cas_qa_task" {
       memory                = var.task_container_configs.cas_qa.http_memory
       mounts = [
       ]
-      override_command             = null
-      port                         = 4000
-      secret_environment_variables = []
+      override_command = null
+      port             = 4000
+      secret_environment_variables = [
+        { "name" : "API_KEY", "valueFrom" : data.aws_ssm_parameter.api_key.arn },
+        { "name" : "BASE_URL", "valueFrom" : data.aws_ssm_parameter.base_url.arn },
+      ]
     }
   }
   ecs_execution_role_arn = var.ecs_execution_role.arn
@@ -234,7 +237,8 @@ data "aws_iam_policy_document" "cas_qa_task_read_ssm_params" {
     ]
 
     resources = [
-      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/qanda/api/*"
+      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/qanda/api/*",
+      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/cat/*"
     ]
   }
 }

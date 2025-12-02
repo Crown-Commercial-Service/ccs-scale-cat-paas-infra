@@ -238,7 +238,7 @@ data "aws_iam_policy_document" "cas_qa_task_read_ssm_params" {
 
     resources = [
       "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/qanda/api/*",
-      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/cat/*"
+      "arn:aws:ssm:${var.aws_region}:${var.aws_account_id}:parameter/cat/${var.environment}/*"
     ]
   }
 }

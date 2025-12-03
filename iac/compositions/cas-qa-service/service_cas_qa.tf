@@ -86,7 +86,7 @@ resource "aws_acm_certificate" "public_cas_qa" {
 
 resource "aws_route53_record" "public_cas_qa" {
   for_each = {
-    for dvo in awsaws_acm_certificate.public_cas_qa.domain_validation_options : dvo.domain_name => {
+    for dvo in aws_acm_certificate.public_cas_qa.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name
       record = dvo.resource_record_value
       type   = dvo.resource_record_type

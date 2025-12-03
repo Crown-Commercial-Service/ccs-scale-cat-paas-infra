@@ -5,5 +5,5 @@ output "public_cas_qa_cname_source" {
 
 output "public_cas_qa_cname_target" {
   description = "FQDN to which the public cas QA DNS CNAME should point"
-  value       = aws_route53_record.cas_qa.fqdn
+  value       = aws_route53_record.public_cas_qa.fqdn
 }

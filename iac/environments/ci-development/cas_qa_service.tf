@@ -21,7 +21,6 @@ module "cas_qa_service" {
   enable_lb_access_logs                   = var.enable_lb_access_logs
   enable_lb_connection_logs               = var.enable_lb_connection_logs
   enable_ecs_execute_command              = var.enable_ecs_execute_command
-  environment                             = var.environment
   environment_is_ephemeral                = var.environment_is_ephemeral
   environment_name                        = var.environment_name
   hosted_zone_cas_qa                      = var.hosted_zone_cas_qa

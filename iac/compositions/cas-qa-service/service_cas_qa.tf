@@ -176,10 +176,7 @@ module "cas_qa_task" {
       ]
       override_command = null
       port             = 4000
-      secret_environment_variables = [
-        { "name" : "API_KEY", "valueFrom" : data.aws_ssm_parameter.api_key.arn },
-        { "name" : "BASE_URL", "valueFrom" : data.aws_ssm_parameter.base_url.arn },
-      ]
+      secret_environment_variables = []
     }
   }
   ecs_execution_role_arn = var.ecs_execution_role.arn

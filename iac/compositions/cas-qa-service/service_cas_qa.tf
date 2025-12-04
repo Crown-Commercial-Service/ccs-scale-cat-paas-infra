@@ -34,18 +34,18 @@ locals {
 #   }
 # }
 
-# resource "aws_route53_record" "cas_qa" {
-#   name            = var.hosted_zone_cas_qa.name
-#   allow_overwrite = true
-#   type            = "A"
-#   zone_id         = var.hosted_zone_cas_qa.id
+resource "aws_route53_record" "cas_qa" {
+  name            = var.hosted_zone_cas_qa.name
+  allow_overwrite = true
+  type            = "A"
+  zone_id         = var.hosted_zone_cas_qa.id
 
-#   alias {
-#     name                   = aws_lb.cas_qa.dns_name
-#     zone_id                = aws_lb.cas_qa.zone_id
-#     evaluate_target_health = true
-#   }
-# }
+  alias {
+    name                   = aws_lb.cas_qa.dns_name
+    zone_id                = aws_lb.cas_qa.zone_id
+    evaluate_target_health = true
+  }
+}
 
 resource "aws_lb" "cas_qa" {
   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASQA"

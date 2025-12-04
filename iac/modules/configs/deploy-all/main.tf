@@ -35,19 +35,19 @@ module "ip-router" {
 }
 
 module "opensearch" {
-  source        = "../../opensearch"
-  environment   = var.environment
-  organisation  = var.organisation
-  service_plan  = var.opensearch_service_plan
-  space         = var.space
+  source       = "../../opensearch"
+  environment  = var.environment
+  organisation = var.organisation
+  service_plan = var.opensearch_service_plan
+  space        = var.space
 }
 
 module "autoscaler" {
-  source        = "../../autoscaler"
-  environment   = var.environment
-  organisation  = var.organisation
-  service_plan  = var.autoscaler_service_plan
-  space         = var.space
+  source       = "../../autoscaler"
+  environment  = var.environment
+  organisation = var.organisation
+  service_plan = var.autoscaler_service_plan
+  space        = var.space
 }
 
 module "redis" {
@@ -61,8 +61,8 @@ module "redis" {
 }
 
 module "s3" {
-  source         = "../../s3"
-  organisation   = var.organisation
-  space          = var.space
-  environment    = var.environment
+  source       = "../../s3"
+  organisation = var.organisation
+  space        = var.space
+  environment  = var.environment
 }

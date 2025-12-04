@@ -252,6 +252,14 @@ module "cat_api_task" {
           valueFrom = aws_ssm_parameter.manual_config["projects-to-opensearch-sync-schedule"].arn
         },
         {
+          name      = "config.external.questionAndAnswerService.apiKey",
+          valueFrom = data.aws_ssm_parameter.api_key.arn
+        },
+        {
+          name      = "config.external.questionAndAnswerService.baseUrl",
+          valueFrom = data.aws_ssm_parameter.base_url.arn
+        },
+        {
           name      = "CONFIG_EXTERNAL_S3_OPPERTUNITIES_SCHEDULE",
           valueFrom = aws_ssm_parameter.manual_config["oppertunities-s3-export-schedule"].arn
         },

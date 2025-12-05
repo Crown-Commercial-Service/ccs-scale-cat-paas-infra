@@ -242,7 +242,7 @@ resource "aws_ecs_service" "cas_qa" {
       var.cat_api_clients_security_group_id,
       var.session_cache_clients_security_group_id,
     ]
-    subnets = var.subnets.web.ids
+    subnets = var.subnets.application.ids
   }
 
   lifecycle {

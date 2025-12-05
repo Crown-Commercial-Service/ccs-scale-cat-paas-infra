@@ -9,7 +9,7 @@ module "cas_qa_service" {
   cas_qa_replication_group_enabled        = var.replication_group_enabled
   cas_web_acl_arn                         = data.aws_wafv2_web_acl.cas_web_acl.arn
   cas_qa_lb_waf_enabled                   = var.cas_qa_lb_waf_enabled
-  cat_api_clients_security_group_id       = module.cat_full.cat_api_clients_security_group_id
+  cat_api_clients_security_group_id       = module.cat_full.db_clients_security_group_id
   session_cache_clients_security_group_id = module.cat_full.session_cache_clients_security_group_id
   default_ssl_policy                      = var.default_ssl_policy
   docker_image_tags                       = var.docker_image_tags

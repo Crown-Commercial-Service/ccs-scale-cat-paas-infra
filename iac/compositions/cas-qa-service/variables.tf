@@ -173,6 +173,9 @@ variable "session_cache_clients_security_group_id" {
 
 variable "subnets" {
   type = object({
+    application = object({
+      ids = list(string)
+    })
     public = object({
       ids = list(string)
     })

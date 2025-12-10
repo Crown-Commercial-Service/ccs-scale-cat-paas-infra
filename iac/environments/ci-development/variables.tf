@@ -343,6 +343,11 @@ variable "ssm_parameter_name_prefix" {
   description = "Prefix for each SSM parameter created"
 }
 
+variable "ssm_parameter_name_prefix_qa" {
+  type        = string
+  description = "Prefix for each SSM parameter created"
+}
+
 # See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-tasks-services.html#fargate-tasks-size
 variable "task_container_configs" {
   type = object({

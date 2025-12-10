@@ -29,6 +29,7 @@ module "cas_qa_service" {
   redis_credentials                       = module.cat_full.redis_credentials
   resource_name_prefixes                  = var.resource_name_prefixes
   service_subdomain_prefixes              = var.service_subdomain_prefixes
+  ssm_parameter_name_prefix_qa            = var.ssm_parameter_name_prefix_qa
   subnets                                 = module.cat_full.subnets
   task_container_configs                  = var.task_container_configs
   vpc_id                                  = module.cat_full.vpc_id

@@ -208,42 +208,9 @@ module "cas_qa_task" {
       memory                = var.task_container_configs.cas_qa.http_memory
       mounts = [
       ]
-      override_command = null
-      port             = 4000
-      secret_environment_variables = [
-        {
-          name      = "CONFIG.SECURITY.APIKEY",
-          valueFrom = aws_ssm_parameter.manual_config["config.security.api-key"].arn
-        },
-        {
-          name      = "CONFIG.AGREEMENTSSERVICE.APIKEY",
-          valueFrom = aws_ssm_parameter.manual_config["external-services.agreements-service.api-key"].arn
-        },
-        {
-          name      = "CONFIG.AGREEMENTSSERVICE.BASEPATH",
-          valueFrom = aws_ssm_parameter.manual_config["external-services.agreements-service.base-path"].arn
-        },
-        {
-          name      = "CONFIG.AGREEMENTSSERVICE.DATATEMPLATESPATH",
-          valueFrom = aws_ssm_parameter.manual_config["external-services.agreements-service.data-templates-path"].arn
-        },
-        {
-          name      = "CONFIG.TENDERS.APIKEY",
-          valueFrom = aws_ssm_parameter.manual_config["external-services.tenders-api.api-key"].arn
-        },
-        {
-          name      = "CONFIG.TENDERS.BASEPATH",
-          valueFrom = aws_ssm_parameter.manual_config["external-services.tenders-api.base-path"].arn
-        },
-        {
-          name      = "CONFIG_ROLLBAR.ACCESSTOKEN",
-          valueFrom = aws_ssm_parameter.manual_config["rollbar.accessToken"].arn
-        },
-        {
-          name      = "CONFIG_ROLLBAR.ENV",
-          valueFrom = aws_ssm_parameter.manual_config["rollbar.env"].arn
-        }
-      ]
+      override_command             = null
+      port                         = 4000
+      secret_environment_variables = []
     }
   }
   ecs_execution_role_arn = var.ecs_execution_role.arn

@@ -171,11 +171,6 @@ variable "session_cache_clients_security_group_id" {
   description = "Session cache clients secujrity group ID"
 }
 
-variable "ssm_parameter_name_prefix_qa" {
-  type        = string
-  description = "Prefix for each SSM parameter created"
-}
-
 variable "subnets" {
   type = object({
     application = object({

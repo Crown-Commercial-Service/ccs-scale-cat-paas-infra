@@ -22,6 +22,7 @@ module "cat_full" {
   drop_invalid_header_fields               = var.drop_invalid_header_fields
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
   enable_ecs_execute_command               = var.enable_ecs_execute_command
+  environment                              = var.environment
   environment_is_ephemeral                 = var.environment_is_ephemeral
   enable_lb_access_logs                    = var.enable_lb_access_logs
   enable_lb_connection_logs                = var.enable_lb_connection_logs

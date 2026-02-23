@@ -47,6 +47,19 @@ resource "aws_route53_record" "cas_ui" {
   }
 }
 
+resource "aws_route53_record" "cas_ui_gca" {
+  name            = var.hosted_zone_cas_ui_gca.name
+  allow_overwrite = true
+  type            = "A"
+  zone_id         = var.hosted_zone_cas_ui_gca.id
+
+  alias {
+    name                   = aws_lb.cas_ui.dns_name
+    zone_id                = aws_lb.cas_ui.zone_id
+    evaluate_target_health = true
+  }
+}
+
 # /* Client requests will arrive at the CAS UI with a HOST header corresponding to
 #    the public hostname of the CAS UI (which is CNAMEd through to the cas_ui
 #    "A" record defined above). */
@@ -59,8 +72,26 @@ resource "aws_acm_certificate" "public_cas_ui" {
   }
 }
 
+resource "aws_acm_certificate" "public_cas_ui_gca" {
+  domain_name       = var.cas_ui_public_gca_fqdn
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 locals {
   public_cas_ui_cert_validations = [
+    for dvo in aws_acm_certificate.public_cas_ui.domain_validation_options : {
+      name  = dvo.resource_record_name
+      value = dvo.resource_record_value
+      type  = dvo.resource_record_type
+    }
+  ]
+
+  # Not the right way to do this but keeping it the same to aid with debugging.
+  public_cas_ui_gca_cert_validations = [
     for dvo in aws_acm_certificate.public_cas_ui.domain_validation_options : {
       name  = dvo.resource_record_name
       value = dvo.resource_record_value
@@ -77,12 +108,29 @@ resource "aws_acm_certificate_validation" "public_cas_ui" {
   validation_record_fqdns = [for validation in local.public_cas_ui_cert_validations : validation.name]
 }
 
+resource "aws_acm_certificate_validation" "public_cas_ui_gca" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_public_gca_cert_attempt_validation ? 1 : 0
+
+  certificate_arn         = aws_acm_certificate.public_cas_ui_gca.arn
+  validation_record_fqdns = [for validation in local.public_cas_ui_gca_cert_validations : validation.name]
+}
+
 # NCAS-350 - Create certificates for [env]-cas-ui domains
 # /* Client requests will arrive at the CAS UI with a HOST header corresponding to
 #    the public hostname of the CAS UI (which is CNAMEd through to the cas_ui
 #    "A" record defined above). */
 resource "aws_acm_certificate" "cas_ui_base" {
   domain_name       = var.hosted_zone_ui.name
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_acm_certificate" "cas_ui_gca_base" {
+  domain_name       = var.hosted_zone_ui_gca.name
   validation_method = "DNS"
 
   lifecycle {
@@ -98,6 +146,16 @@ locals {
       type  = dvo.resource_record_type
     }
   ]
+
+  # Not the right way to do this but keeping it the same to aid with debugging.
+  cas_ui_base_gca_cert_validations = [
+    for dvo in aws_acm_certificate.cas_ui_gca_base.domain_validation_options : {
+      name  = dvo.resource_record_name
+      value = dvo.resource_record_value
+      type  = dvo.resource_record_type
+    }
+  ]
+
 }
 
 resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui" {
@@ -106,6 +164,14 @@ resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui" {
 
   certificate_arn         = aws_acm_certificate.cas_ui_base.arn
   validation_record_fqdns = [for validation in local.cas_ui_base_cert_validations : validation.name]
+}
+
+resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui_gca" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_base_gca_cert_attempt_validation ? 1 : 0
+
+  certificate_arn         = aws_acm_certificate.cas_ui_gca_base.arn
+  validation_record_fqdns = [for validation in local.cas_ui_base_gca_cert_validations : validation.name]
 }
 
 # Redirect all port 80 requests to port 443
@@ -154,6 +220,18 @@ resource "aws_lb_listener_certificate" "cas_base_ui" {
   listener_arn    = aws_lb_listener.cas_ui[0].arn
 }
 
+resource "aws_lb_listener_certificate" "cas_ui_gca" {
+  # Only attempt this stage if cas_ui_adopt_redirect_certificate == true
+  count           = var.cas_ui_gca_adopt_redirect_certificate == true ? 1 : 0
+  certificate_arn = aws_acm_certificate.public_cas_ui_gca.arn
+  listener_arn    = aws_lb_listener.cas_ui[0].arn
+}
+
+resource "aws_lb_listener_certificate" "cas_base_ui_gca" {
+  certificate_arn = aws_acm_certificate.cas_ui_gca_base.arn
+  listener_arn    = aws_lb_listener.cas_ui[0].arn
+}
+
 # Paths we wish to exclude from outside access
 resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
@@ -167,6 +245,32 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui" {
     fixed_response {
       content_type = "text/html"
       message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.cas_ui_public_fqdn}/\">Home</a>.</p>"
+      status_code  = "404"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/health",
+      ]
+    }
+  }
+}
+
+# Paths we wish to exclude from outside access
+resource "aws_lb_listener_rule" "blocked_frontend_paths_cas_ui_gca" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.cas_ui_public_gca_cert_attempt_validation ? 1 : 0
+
+  listener_arn = aws_lb_listener.cas_ui[0].arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.cas_ui_public_gca_fqdn}/\">Home</a>.</p>"
       status_code  = "404"
     }
   }

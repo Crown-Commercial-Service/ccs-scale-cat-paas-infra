@@ -303,14 +303,11 @@ resource "aws_security_group" "cas_qa_lb" {
 # To enable redirect from http
 resource "aws_security_group_rule" "cas_qa_lb_http_in" {
   description = "Allow HTTP from approved addresses into the CAS QA LB"
-  from_port   = 443 #80
-  # prefix_list_ids = [
-  #   aws_ec2_managed_prefix_list.cas_qa_ingress_safelist.id
-  # ]
+  from_port   = 443
   protocol                 = "tcp"
   security_group_id        = aws_security_group.cas_qa_lb.id
-  source_security_group_id = aws_security_group.cas_qa_tasks.id
-  to_port                  = 443 #80
+  source_security_group_id = var.cat_api_task_security_group_id
+  to_port                  = 443
   type                     = "ingress"
 }
 

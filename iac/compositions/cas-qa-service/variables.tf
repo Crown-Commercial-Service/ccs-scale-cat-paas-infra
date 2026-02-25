@@ -8,6 +8,11 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
+variable "cat_api_task_security_group_id" {
+  type        = string
+  description = "CAT API task security group ID"
+}
+
 variable "cas_qa_lb_listener_acm_arn" {
   type        = string
   description = "The full ARN of the ACM certificate to association with the CAS QA LB Listener (should be the redirect ACM cert)"

@@ -143,7 +143,7 @@ resource "aws_lb_listener" "buyer_ui" {
   }
 }
 
-resource "aws_lb_listener" "buyer_ui" {
+resource "aws_lb_listener" "buyer_ui_gca" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.buyer_ui_public_gca_cert_attempt_validation ? 1 : 0
 

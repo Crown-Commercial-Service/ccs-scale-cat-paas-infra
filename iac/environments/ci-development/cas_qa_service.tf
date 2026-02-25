@@ -3,6 +3,7 @@ module "cas_qa_service" {
 
   aws_account_id                          = var.aws_account_id
   aws_region                              = var.aws_region
+  cat_api_task_security_group_id          = module.cat_full.cat_api_task_security_group_id
   cas_qa_lb_listener_acm_arn              = module.cat_full.buyer_ui_acm_certificate_arn
   cas_qa_public_fqdn                      = var.cas_qa_public_fqdn
   cas_qa_ingress_cidr_safelist            = var.cas_qa_ingress_cidr_safelist

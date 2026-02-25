@@ -20,6 +20,12 @@ variable "cas_ui_adopt_redirect_certificate" {
   default     = false
 }
 
+variable "cas_ui_gca_adopt_redirect_certificate" {
+  type        = bool
+  description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
+  default     = false
+}
+
 variable "cas_ui_base_cert_attempt_validation" {
   type        = bool
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."

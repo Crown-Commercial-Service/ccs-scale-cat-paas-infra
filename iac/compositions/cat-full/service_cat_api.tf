@@ -93,7 +93,7 @@ resource "aws_lb_listener" "cat_api" {
 }
 
 resource "aws_lb_listener" "cat_api_gca" {
-  certificate_arn   = module.cat_api_cert_gca.certificate_arn
+  certificate_arn   = module.cat_api_gca_cert.certificate_arn
   load_balancer_arn = aws_lb.cat_api.arn
   port              = "443"
   protocol          = "HTTPS"

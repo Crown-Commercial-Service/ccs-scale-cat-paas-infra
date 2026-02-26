@@ -3,11 +3,6 @@ variable "auto_minor_version_upgrade" {
   description = "Opt to enable automatic minor version upgrades"
 }
 
-variable "allow_major_version_upgrade" {
-  type        = bool
-  description = "Opt to allow major version upgrade"
-}
-
 variable "aws_account_id" {
   type        = string
   description = "AWS account into which to deploy resources"
@@ -33,11 +28,20 @@ variable "buyer_ui_ingress_cidr_safelist" {
 
 variable "buyer_ui_public_cert_attempt_validation" {
   type        = bool
-  default     = false
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
+variable "buyer_ui_public_gca_cert_attempt_validation" {
+  type        = bool
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
 variable "buyer_ui_public_fqdn" {
+  type        = string
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
+variable "buyer_ui_public_gca_fqdn" {
   type        = string
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
@@ -62,12 +66,32 @@ variable "cas_cat_api_lb_waf_enabled" {
   description = "Boolean value specifying whether or not the CAT API LB WAF Should be enabled"
 }
 
+variable "cas_ui_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+}
+
+variable "cas_web_acl_name" {
+  type        = string
+  description = "The name of the Web ACL (to be associated with enabled Load Balancers)"
+}
+
 variable "cas_ui_adopt_redirect_certificate" {
   type        = bool
   description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
 }
 
+variable "cas_ui_gca_adopt_redirect_certificate" {
+  type        = bool
+  description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
+}
+
 variable "cas_ui_base_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
+variable "cas_ui_base_gca_cert_attempt_validation" {
   type        = bool
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
@@ -81,12 +105,13 @@ variable "cas_ui_ingress_cidr_safelist" {
   }
 }
 
-variable "cas_ui_lb_waf_enabled" {
+variable "cas_ui_public_cert_attempt_validation" {
   type        = bool
-  description = "Boolean value specifying whether or not the CAS UI LB WAF Should be enabled"
+  default     = true
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
-variable "cas_ui_public_cert_attempt_validation" {
+variable "cas_ui_public_gca_cert_attempt_validation" {
   type        = bool
   default     = true
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
@@ -97,9 +122,9 @@ variable "cas_ui_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
-variable "cas_web_acl_name" {
+variable "cas_ui_public_gca_fqdn" {
   type        = string
-  description = "The name of the Web ACL (to be associated with enabled Load Balancers)"
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
 variable "cat_api_config_flags_devmode" {
@@ -167,7 +192,7 @@ variable "elasticache_cluster_parameter_group_name" {
 variable "enable_ecs_execute_command" {
   type        = bool
   description = "If 1, enables ecs exec on all ecs services"
-  default     = false
+  default     = true
 }
 
 variable "enable_lb_access_logs" {
@@ -204,6 +229,14 @@ variable "hosted_zone_api" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
 }
 
+variable "hosted_zone_api_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
+}
+
 variable "hosted_zone_cas_ui" {
   type = object({
     id   = string
@@ -212,7 +245,23 @@ variable "hosted_zone_cas_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
+variable "hosted_zone_cas_ui_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}
+
 variable "hosted_zone_ui" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}
+
+variable "hosted_zone_ui_gca" {
   type = object({
     id   = string
     name = string

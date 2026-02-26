@@ -2,13 +2,13 @@ module "cat_full" {
   source = "../../compositions/cat-full"
 
   auto_minor_version_upgrade               = var.auto_minor_version_upgrade
-  allow_major_version_upgrade              = var.allow_major_version_upgrade
   aws_account_id                           = var.aws_account_id
   aws_region                               = var.aws_region
-  buyer_ui_idle_timeout                    = var.buyer_ui_idle_timeout
   buyer_ui_ingress_cidr_safelist           = var.buyer_ui_ingress_cidr_safelist
   buyer_ui_public_cert_attempt_validation  = var.buyer_ui_public_cert_attempt_validation
+  buyer_ui_public_gca_cert_attempt_validation = var.buyer_ui_public_gca_cert_attempt_validation
   buyer_ui_public_fqdn                     = var.buyer_ui_public_fqdn
+  buyer_ui_public_gca_fqdn                 = var.buyer_ui_public_gca_fqdn
   buyer_ui_redirect_r53_to_cas_ui          = var.buyer_ui_redirect_r53_to_cas_ui
   ca_cert_identifier                       = var.ca_cert_identifier
   cas_buyer_ui_lb_waf_enabled              = var.cas_buyer_ui_lb_waf_enabled
@@ -16,7 +16,6 @@ module "cat_full" {
   cas_web_acl_arn                          = data.aws_wafv2_web_acl.cas_web_acl.arn
   cat_api_config_flags_devmode             = var.cat_api_config_flags_devmode
   cat_api_eetime_enabled                   = var.cat_api_eetime_enabled
-  cat_api_idle_timeout                     = var.cat_api_idle_timeout
   cat_api_ingress_cidr_safelist            = var.cat_api_ingress_cidr_safelist
   cat_api_log_level                        = var.cat_api_log_level
   cat_api_resolve_buyer_users_by_sso       = var.cat_api_resolve_buyer_users_by_sso
@@ -27,11 +26,14 @@ module "cat_full" {
   elasticache_cluster_parameter_group_name = var.elasticache_cluster_parameter_group_name
   enable_ecs_execute_command               = var.enable_ecs_execute_command
   enable_lb_access_logs                    = var.enable_lb_access_logs
+  enable_lb_connection_logs                = var.enable_lb_connection_logs
   environment                              = var.environment
   environment_is_ephemeral                 = var.environment_is_ephemeral
   environment_name                         = var.environment_name
   hosted_zone_api                          = var.hosted_zone_api
+  hosted_zone_api_gca                      = var.hosted_zone_api_gca
   hosted_zone_ui                           = var.hosted_zone_ui
+  hosted_zone_ui_gca                       = var.hosted_zone_ui_gca
   lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   ppmt_account                             = var.ppmt_account
   ppmt_enabled                             = var.ppmt_enabled
@@ -39,8 +41,8 @@ module "cat_full" {
   rds_backup_retention_period_days         = var.rds_backup_retention_period_days
   rds_backup_window                        = var.rds_backup_window
   rds_db_instance_class                    = var.rds_db_instance_class
-  rds_event_subscription_email_endpoint    = var.rds_event_subscription_email_endpoint
   rds_event_subscription_enabled           = var.rds_event_subscription_enabled
+  rds_event_subscription_email_endpoint    = var.rds_event_subscription_email_endpoint
   rds_maintenance_window                   = var.rds_maintenance_window
   rds_postgres_engine_version              = var.rds_postgres_engine_version
   rds_skip_final_snapshot                  = var.rds_skip_final_snapshot
@@ -48,10 +50,10 @@ module "cat_full" {
   resource_name_prefixes                   = var.resource_name_prefixes
   search_domain_engine_version             = var.search_domain_engine_version
   search_domain_instance_count             = var.search_domain_instance_count
+  search_domain_instance_type              = var.search_domain_instance_type
   search_domain_volume_size_gib            = var.search_domain_volume_size_gib
   service_subdomain_prefixes               = var.service_subdomain_prefixes
   session_redis_engine_version             = var.session_redis_engine_version
-  search_domain_instance_type              = var.search_domain_instance_type
   session_redis_node_type                  = var.session_redis_node_type
   session_redis_num_cache_nodes            = var.session_redis_num_cache_nodes
   ssm_parameter_name_prefix                = var.ssm_parameter_name_prefix

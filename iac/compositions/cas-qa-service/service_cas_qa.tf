@@ -368,7 +368,7 @@ resource "aws_security_group_rule" "cas_qa_tasks_lb_4000_in" {
 
 resource "aws_network_acl_rule" "web_allow_https_application_a_in" {
   network_acl_id = var.nacl_web_id
-  cidr_block     = "10.3.0.128/27" #IMPROVE
+  cidr_block     = var.subnets.application.cidr_blocks.a
   egress         = false
   from_port      = 443
   to_port        = 443
@@ -379,7 +379,7 @@ resource "aws_network_acl_rule" "web_allow_https_application_a_in" {
 
 resource "aws_network_acl_rule" "web_allow_https_application_b_in" {
   network_acl_id = var.nacl_web_id
-  cidr_block     = "10.3.0.160/27" #IMPROVE
+  cidr_block     = var.subnets.application.cidr_blocks.b
   egress         = false
   from_port      = 443
   to_port        = 443

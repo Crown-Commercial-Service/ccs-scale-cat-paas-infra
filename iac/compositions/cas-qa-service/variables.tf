@@ -184,12 +184,24 @@ variable "subnets" {
   type = object({
     application = object({
       ids = list(string)
+      cidr_blocks = object({
+        a = string
+        b = string
+      })
     })
     public = object({
       ids = list(string)
+      cidr_blocks = object({
+        a = string
+        b = string
+      })
     })
     web = object({
       ids = list(string)
+      cidr_blocks = object({
+        a = string
+        b = string
+      })
     })
   })
   description = "VPC subnet IDs"

@@ -27,6 +27,7 @@ module "cas_qa_service" {
   hosted_zone_cas_qa                      = var.hosted_zone_cas_qa
   lb_enable_deletion_protection           = var.lb_enable_deletion_protection
   logs_bucket_id                          = module.cat_full.logs_bucket_id
+  nacl_web_id                             = module.cat_full.network_acl_ids.web
   redis_credentials                       = module.cat_full.redis_credentials
   resource_name_prefixes                  = var.resource_name_prefixes
   service_subdomain_prefixes              = var.service_subdomain_prefixes

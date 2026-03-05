@@ -140,6 +140,10 @@ variable "hosted_zone_cas_qa" {
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }
+variable "nacl_web_id" {
+  type        = string
+  description = "WEB NACL ID to attach additional rules"
+}
 
 variable "cas_qa_replication_group_enabled" {
   type        = bool

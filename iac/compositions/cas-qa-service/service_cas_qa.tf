@@ -365,3 +365,25 @@ resource "aws_security_group_rule" "cas_qa_tasks_lb_4000_in" {
   to_port                  = 4000
   type                     = "ingress"
 }
+
+resource "aws_network_acl_rule" "web_allow_https_application_a_in" {
+  network_acl_id = var.nacl_web_id
+  cidr_block     = "10.3.0.128/27" #IMPROVE
+  egress         = false
+  from_port      = 443
+  to_port        = 443
+  protocol       = "tcp"
+  rule_action    = "allow"
+  rule_number    = 5300
+}
+
+resource "aws_network_acl_rule" "web_allow_https_application_b_in" {
+  network_acl_id = var.nacl_web_id
+  cidr_block     = "10.3.0.160/27" #IMPROVE
+  egress         = false
+  from_port      = 443
+  to_port        = 443
+  protocol       = "tcp"
+  rule_action    = "allow"
+  rule_number    = 5400
+}

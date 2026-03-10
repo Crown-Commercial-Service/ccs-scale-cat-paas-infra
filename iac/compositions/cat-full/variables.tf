@@ -38,12 +38,28 @@ variable "buyer_ui_public_cert_attempt_validation" {
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
+variable "buyer_ui_public_gca_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
 variable "buyer_ui_public_fqdn" {
   type        = string
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "buyer_ui_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
 variable "buyer_ui_redirect_r53_to_cas_ui" {
+  type        = bool
+  description = "Conditional to determine whether or not the R53 record for the Buyer UI should be redirected to CAS UI (as part of the CAS UI migration - defaults to false)"
+  default     = false
+}
+
+variable "buyer_ui_redirect_r53_to_cas_ui_gca" {
   type        = bool
   description = "Conditional to determine whether or not the R53 record for the Buyer UI should be redirected to CAS UI (as part of the CAS UI migration - defaults to false)"
   default     = false
@@ -183,12 +199,28 @@ variable "hosted_zone_api" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
 }
 
+variable "hosted_zone_api_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
+}
+
 variable "hosted_zone_ui" {
   type = object({
     id   = string
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}
+
+variable "hosted_zone_ui_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
 variable "logs_bucket_policy_include_cas_ui" {

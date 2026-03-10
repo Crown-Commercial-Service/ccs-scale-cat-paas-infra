@@ -4,7 +4,7 @@
 variable "ithc_infra" {
   type        = bool
   description = "Create ITHC Infra true/false"
-  default     = true
+  default     = false
 }
 #Add IPs to Allow List / find a way to add ITHC SG to ALB
 

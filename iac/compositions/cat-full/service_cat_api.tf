@@ -289,7 +289,8 @@ module "cat_api_task" {
           name      = "SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWKSETURI",
           valueFrom = aws_ssm_parameter.manual_config["auth-server-jwk-set-uri"].arn
         },
-
+        { name = "CONFIG_DMP_API_BASE_URL", valueFrom = aws_ssm_parameter.manual_config["dmp-api-base-url"].arn },
+        { name = "CONFIG_DMP_API_BEARER_TOKEN", valueFrom = aws_ssm_parameter.manual_config["dmp-api-bearer-token"].arn },
 
       ]
     }

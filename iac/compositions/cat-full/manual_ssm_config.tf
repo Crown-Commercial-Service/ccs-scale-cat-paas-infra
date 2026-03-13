@@ -23,6 +23,8 @@ locals {
     "conclave-wrapper-identities-api-base-url",
     "conclave-wrapper-identities-api-key",
     "dashboard-banner",
+    "dmp-api-base-url",
+    "dmp-api-bearer-token",
     "document-upload-service-api-key",
     "document-upload-service-aws-access-key-id",
     "document-upload-service-aws-secret-key",

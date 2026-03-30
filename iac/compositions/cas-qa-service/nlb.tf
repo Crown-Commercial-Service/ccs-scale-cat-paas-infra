@@ -69,7 +69,7 @@ resource "aws_lb_target_group" "cas_qa_alb_tg" {
     timeout             = 5
     interval            = 30
     matcher             = "200-399"
-    protocol            = "https"
+    protocol            = "HTTPS"
   }
 }
 

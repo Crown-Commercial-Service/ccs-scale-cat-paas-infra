@@ -137,6 +137,7 @@ variable "docker_image_tags" {
     buyer_ui_http = string,
     cas_ui_http   = string,
     cat_api_http  = string,
+    cas_qa_http   = string
   })
   description = "Docker tag for deployment of each of the services from ECR"
 }
@@ -318,6 +319,7 @@ variable "service_subdomain_prefixes" {
     buyer_ui = string,
     cas_ui   = string,
     cat_api  = string,
+    cas_qa   = string,
   })
 }
 
@@ -362,10 +364,45 @@ variable "task_container_configs" {
       total_cpu    = number,
       total_memory = number,
     })
+    cas_qa = object({
+      http_cpu     = number,
+      http_memory  = number,
+      total_cpu    = number,
+      total_memory = number,
+    })
   })
 }
 
 variable "vpc_cidr_block" {
   type        = string
   description = "CIDR block to assign to the VPC"
+}
+
+
+###
+variable "cas_qa_public_fqdn" {
+  type        = string
+  description = "FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
+variable "cas_qa_ingress_cidr_safelist" {
+  type        = map(string)
+  description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS QA, format {description: CIDR}"
+  validation {
+    condition     = length(var.cas_qa_ingress_cidr_safelist) <= 20
+    error_message = "The cas_qa_ingress_cidr_safelist can have a maximum of 20 entries."
+  }
+}
+
+variable "cas_qa_lb_waf_enabled" {
+  type        = bool
+  description = "Boolean value specifying whether or not the Cas QA LB WAF Should be enabled"
+}
+
+variable "hosted_zone_cas_qa" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
 }

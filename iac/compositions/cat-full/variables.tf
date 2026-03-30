@@ -18,6 +18,7 @@ variable "aws_region" {
   type        = string
   description = "Region into which to deploy region-specific resources"
 }
+
 variable "buyer_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the Buyer UI, format {description: CIDR}"

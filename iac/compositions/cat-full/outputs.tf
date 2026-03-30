@@ -8,6 +8,11 @@ output "cat_api_clients_security_group_id" {
   value       = aws_security_group.cat_api_clients.id
 }
 
+output "cat_api_task_security_group_id" {
+  description = "CAT API task security group ID"
+  value       = aws_security_group.cat_api_tasks.id
+}
+
 output "db_availability_zone" {
   description = "Availability zone for the RDS instance"
   value       = module.db.availability_zone

@@ -392,7 +392,7 @@ variable "task_container_configs" {
       total_cpu    = number,
       total_memory = number,
     }),
-        cas_qa = object({
+    cas_qa = object({
       http_cpu     = number,
       http_memory  = number,
       total_cpu    = number,

@@ -133,17 +133,10 @@ module "cat_api_task" {
       cpu = var.task_container_configs.cat_api.http_cpu
       environment_variables = [
         { name = "CONFIG_FLAGS_DEVMODE", value = var.cat_api_config_flags_devmode },
-        {
-          name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO",
-          # Assuming that Spring uses Java Boolean class to convert these
-          value = var.cat_api_resolve_buyer_users_by_sso
-        },
+        { name = "CONFIG_FLAGS_RESOLVEBUYERUSERSBYSSO", value = var.cat_api_resolve_buyer_users_by_sso }, # Assuming that Spring uses Java Boolean class to convert these
         { name = "ENDPOINT_EXECUTIONTIME_ENABLED", value = var.cat_api_eetime_enabled },
         { name = "JBP_CONFIG_SPRING_AUTO_RECONFIGURATION", value = "{enabled: false}" }, # Mirror existing
-        {
-          name  = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT",
-          value = var.cat_api_log_level
-        },
+        { name = "LOGGING_LEVEL_UK_GOV_CROWNCOMMERCIAL_DTS_SCALE_CAT", value = var.cat_api_log_level },
         { name = "MANAGEMENT_CLOUDFOUNDRY_ENABLED", value = "false" },
         { name = "SPRING_DATASOURCE_URL", value = local.cat_api_spring_datasource_url },
         { name = "SPRING_DATASOURCE_USERNAME", value = module.db.db_connection_username },
@@ -291,7 +284,7 @@ module "cat_api_task" {
         },
         { name = "config.external.dmp-api.base-url", valueFrom = aws_ssm_parameter.manual_config["dmp-api-base-url"].arn },
         { name = "config.external.dmp-api.bearer-token", valueFrom = aws_ssm_parameter.manual_config["dmp-api-bearer-token"].arn },
-
+        { name = "config.api-key", valueFrom = aws_ssm_parameter.manual_config["config-api-key"].arn },
       ]
     }
   }

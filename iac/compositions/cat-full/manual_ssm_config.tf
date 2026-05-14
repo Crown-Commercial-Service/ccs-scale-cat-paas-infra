@@ -22,6 +22,7 @@ locals {
     "conclave-wrapper-api-key",
     "conclave-wrapper-identities-api-base-url",
     "conclave-wrapper-identities-api-key",
+    "config-api-key",
     "dashboard-banner",
     "dmp-api-base-url",
     "dmp-api-bearer-token",

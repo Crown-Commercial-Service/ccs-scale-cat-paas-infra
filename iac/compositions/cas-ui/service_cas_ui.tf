@@ -90,9 +90,8 @@ locals {
     }
   ]
 
-  # Not the right way to do this but keeping it the same to aid with debugging.
   public_cas_ui_gca_cert_validations = [
-    for dvo in aws_acm_certificate.public_cas_ui.domain_validation_options : {
+    for dvo in aws_acm_certificate.public_cas_ui_gca.domain_validation_options : {
       name  = dvo.resource_record_name
       value = dvo.resource_record_value
       type  = dvo.resource_record_type

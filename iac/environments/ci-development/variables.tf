@@ -436,6 +436,11 @@ variable "cas_qa_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
+variable "cas_qa_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_cas_qa_gca` variable"
+}
+
 variable "cas_qa_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS QA, format {description: CIDR}"
@@ -456,4 +461,12 @@ variable "hosted_zone_cas_qa" {
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
+}
+
+variable "hosted_zone_cas_qa_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }

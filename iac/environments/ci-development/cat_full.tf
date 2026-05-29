@@ -27,10 +27,6 @@ module "cat_full" {
   enable_ecs_execute_command               = var.enable_ecs_execute_command
   enable_lb_access_logs                    = var.enable_lb_access_logs
   enable_lb_connection_logs                = var.enable_lb_connection_logs
-<<<<<<< HEAD
-  enable_ecs_execute_command               = var.enable_ecs_execute_command
-=======
->>>>>>> gca_domain
   environment                              = var.environment
   environment_is_ephemeral                 = var.environment_is_ephemeral
   environment_name                         = var.environment_name

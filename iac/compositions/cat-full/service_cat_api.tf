@@ -92,17 +92,9 @@ resource "aws_lb_listener" "cat_api" {
   }
 }
 
-resource "aws_lb_listener" "cat_api_gca" {
-  certificate_arn   = module.cat_api_gca_cert.certificate_arn
-  load_balancer_arn = aws_lb.cat_api.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = var.default_ssl_policy
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.cat_api.arn
-  }
+resource "aws_lb_listener_certificate" "cat_api_gca" {
+  certificate_arn = module.cat_api_gca_cert.certificate_arn
+  listener_arn    = aws_lb_listener.cat_api.arn
 }
 
 resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
@@ -127,7 +119,7 @@ resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
 }
 
 resource "aws_lb_listener_rule" "cat_api_gca_blocked_frontend_paths" {
-  listener_arn = aws_lb_listener.cat_api_gca.arn
+  listener_arn = aws_lb_listener.cat_api.arn
 
   action {
     type = "fixed-response"

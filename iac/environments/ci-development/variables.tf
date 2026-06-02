@@ -199,6 +199,7 @@ variable "enable_lb_access_logs" {
 variable "enable_lb_connection_logs" {
   type        = bool
   description = "If 1, enables ALB connection logging"
+  default     = false
 }
 
 variable "environment" {

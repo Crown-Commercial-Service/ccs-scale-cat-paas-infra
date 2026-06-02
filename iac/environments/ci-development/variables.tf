@@ -324,6 +324,12 @@ variable "rds_postgres_engine_version" {
   default     = "14.6"
 }
 
+variable "rds_iam_database_authentication_enabled" {
+  type        = bool
+  description = "Whether to enable IAM database authentication for the API db"
+  default     = false
+}
+
 variable "rds_skip_final_snapshot" {
   type        = string
   description = "Whether or not to skip the creation of a final snapshot of the db upon deletion"

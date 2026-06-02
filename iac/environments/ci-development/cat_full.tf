@@ -45,6 +45,7 @@ module "cat_full" {
   rds_event_subscription_email_endpoint    = var.rds_event_subscription_email_endpoint
   rds_maintenance_window                   = var.rds_maintenance_window
   rds_postgres_engine_version              = var.rds_postgres_engine_version
+  rds_iam_database_authentication_enabled  = var.rds_iam_database_authentication_enabled
   rds_skip_final_snapshot                  = var.rds_skip_final_snapshot
   replication_group_enabled                = var.replication_group_enabled
   resource_name_prefixes                   = var.resource_name_prefixes

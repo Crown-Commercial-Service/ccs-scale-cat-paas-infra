@@ -107,12 +107,28 @@ resource "aws_acm_certificate_validation" "public_cas_ui" {
   validation_record_fqdns = [for validation in local.public_cas_ui_cert_validations : validation.name]
 }
 
+resource "aws_route53_record" "public_cas_ui_gca_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.public_cas_ui_gca.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = var.hosted_zone_cas_ui_gca.id
+}
+
 resource "aws_acm_certificate_validation" "public_cas_ui_gca" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_ui_public_gca_cert_attempt_validation ? 1 : 0
 
   certificate_arn         = aws_acm_certificate.public_cas_ui_gca.arn
-  validation_record_fqdns = [for validation in local.public_cas_ui_gca_cert_validations : validation.name]
+  validation_record_fqdns = [for record in aws_route53_record.public_cas_ui_gca_cert_validation : record.fqdn]
 }
 
 # NCAS-350 - Create certificates for [env]-cas-ui domains
@@ -165,12 +181,28 @@ resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui" {
   validation_record_fqdns = [for validation in local.cas_ui_base_cert_validations : validation.name]
 }
 
+resource "aws_route53_record" "cas_ui_gca_base_cert_validation" {
+  for_each = {
+    for dvo in aws_acm_certificate.cas_ui_gca_base.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = var.hosted_zone_ui_gca.id
+}
+
 resource "aws_acm_certificate_validation" "public_buyer_ui_cas_ui_gca" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
   count = var.cas_ui_base_gca_cert_attempt_validation ? 1 : 0
 
   certificate_arn         = aws_acm_certificate.cas_ui_gca_base.arn
-  validation_record_fqdns = [for validation in local.cas_ui_base_gca_cert_validations : validation.name]
+  validation_record_fqdns = [for record in aws_route53_record.cas_ui_gca_base_cert_validation : record.fqdn]
 }
 
 # Redirect all port 80 requests to port 443

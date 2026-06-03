@@ -128,7 +128,7 @@ resource "aws_acm_certificate_validation" "public_cas_ui_gca" {
   count = var.cas_ui_public_gca_cert_attempt_validation ? 1 : 0
 
   certificate_arn         = aws_acm_certificate.public_cas_ui_gca.arn
-  validation_record_fqdns = [for record in aws_route53_record.public_cas_ui_gca_cert_validation : record.fqdn]
+  validation_record_fqdns = [for validation in local.public_cas_ui_gca_cert_validations : validation.name]
 }
 
 # NCAS-350 - Create certificates for [env]-cas-ui domains

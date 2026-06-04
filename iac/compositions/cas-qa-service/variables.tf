@@ -33,6 +33,11 @@ variable "cas_qa_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_qa` variable"
 }
 
+variable "cas_qa_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_cas_qa_gca` variable"
+}
+
 variable "cas_qa_lb_waf_enabled" {
   type        = bool
   description = "Boolean value specifying whether or not the CAS QA LB WAF Should be enabled"
@@ -139,6 +144,14 @@ variable "hosted_zone_cas_qa" {
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
+}
+
+variable "hosted_zone_cas_qa_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }
 variable "nacl_web_id" {
   type        = string

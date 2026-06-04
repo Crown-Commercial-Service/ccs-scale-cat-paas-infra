@@ -258,6 +258,12 @@ resource "aws_lb_listener_certificate" "cas_ui_gca" {
   listener_arn    = aws_lb_listener.cas_ui[0].arn
 }
 
+resource "aws_lb_listener_certificate" "cas_redirect_ui_gca" {
+  count           = var.cas_ui_gca_adopt_redirect_certificate == true ? 1 : 0
+  certificate_arn = var.cas_ui_gca_lb_listener_acm_arn
+  listener_arn    = aws_lb_listener.cas_ui[0].arn
+}
+
 resource "aws_lb_listener_certificate" "cas_base_ui_gca" {
   certificate_arn = var.cas_ui_base_gca_cert_attempt_validation ? aws_acm_certificate_validation.public_buyer_ui_cas_ui_gca[0].certificate_arn : aws_acm_certificate.cas_ui_gca_base.arn
   listener_arn    = aws_lb_listener.cas_ui[0].arn

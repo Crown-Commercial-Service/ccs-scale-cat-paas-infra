@@ -14,6 +14,12 @@ variable "cas_ui_lb_listener_acm_arn" {
   default     = "N/A"
 }
 
+variable "cas_ui_gca_lb_listener_acm_arn" {
+  type        = string
+  description = "The full ARN of the GCA ACM certificate to attach to the CAS UI LB Listener as an SNI cert (should be the GCA redirect ACM cert)"
+  default     = "N/A"
+}
+
 variable "cas_ui_adopt_redirect_certificate" {
   type        = bool
   description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"

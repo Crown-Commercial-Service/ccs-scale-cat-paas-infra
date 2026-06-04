@@ -8,7 +8,9 @@ module "cas_ui" {
   cas_ui_base_cert_attempt_validation       = var.cas_ui_base_cert_attempt_validation
   cas_ui_base_gca_cert_attempt_validation   = var.cas_ui_base_gca_cert_attempt_validation
   cas_ui_lb_listener_acm_arn                = module.cat_full.buyer_ui_acm_certificate_arn
-  cas_ui_gca_lb_listener_acm_arn            = module.cat_full.buyer_ui_gca_acm_certificate_arn
+  cas_ui_gca_lb_listener_acm_arn                          = module.cat_full.buyer_ui_gca_acm_certificate_arn
+  cas_ui_contractawardservice_gca_fqdn                    = var.cas_ui_contractawardservice_gca_fqdn
+  cas_ui_contractawardservice_gca_cert_attempt_validation = var.cas_ui_contractawardservice_gca_cert_attempt_validation
   cas_ui_public_cert_attempt_validation     = var.cas_ui_public_cert_attempt_validation
   cas_ui_public_gca_cert_attempt_validation = var.cas_ui_public_gca_cert_attempt_validation
   cas_ui_public_fqdn                        = var.cas_ui_public_fqdn

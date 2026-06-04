@@ -94,6 +94,16 @@ variable "cas_ui_base_gca_cert_attempt_validation" {
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
+variable "cas_ui_contractawardservice_gca_fqdn" {
+  type        = string
+  description = "Public FQDN for the GCA contractawardservice domain (dev.contractawardservice.gca.gov.uk)"
+}
+
+variable "cas_ui_contractawardservice_gca_cert_attempt_validation" {
+  type        = bool
+  description = "If set to false, prevents Terraform from trying to validate the cert ownership. Set to true once the external team has added the ACM validation CNAME to gca.gov.uk."
+}
+
 variable "cas_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS UI, format {description: CIDR}"

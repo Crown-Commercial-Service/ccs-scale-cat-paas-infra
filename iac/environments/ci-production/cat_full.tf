@@ -5,6 +5,9 @@ module "cat_full" {
   allow_major_version_upgrade              = var.allow_major_version_upgrade
   aws_account_id                           = var.aws_account_id
   aws_region                               = var.aws_region
+  backup_environment_id                    = var.backup_environment_id
+  backup_kms_key_id                        = var.backup_kms_key_id
+  backup_retention_months                  = var.backup_retention_months
   buyer_ui_idle_timeout                    = var.buyer_ui_idle_timeout
   buyer_ui_ingress_cidr_safelist           = var.buyer_ui_ingress_cidr_safelist
   buyer_ui_public_cert_attempt_validation  = var.buyer_ui_public_cert_attempt_validation

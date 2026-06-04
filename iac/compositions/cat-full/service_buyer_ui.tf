@@ -40,11 +40,33 @@ resource "aws_route53_record" "buyer_ui" {
   }
 }
 
+resource "aws_route53_record" "buyer_ui_gca" {
+  name            = var.hosted_zone_ui_gca.name
+  allow_overwrite = true
+  type            = "A"
+  zone_id         = var.hosted_zone_ui_gca.id
+
+  alias {
+    name                   = var.buyer_ui_redirect_r53_to_cas_ui_gca == false ? aws_lb.buyer_ui.dns_name : aws_ssm_parameter.manual_config["cas-ui-load-balancer-name"].value
+    zone_id                = aws_lb.buyer_ui.zone_id
+    evaluate_target_health = true
+  }
+}
+
 /* Client requests will arrive at the Buyer UI with a HOST header corresponding to
    the public hostname of the Buyer UI (which is CNAMEd through to the buyer_ui
    "A" record defined above). */
 resource "aws_acm_certificate" "public_buyer_ui" {
   domain_name       = var.buyer_ui_public_fqdn
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_acm_certificate" "public_buyer_ui_gca" {
+  domain_name       = var.buyer_ui_public_gca_fqdn
   validation_method = "DNS"
 
   lifecycle {
@@ -60,6 +82,16 @@ locals {
       type  = dvo.resource_record_type
     }
   ]
+
+  # Not pretty but kept it the same to help debugging.
+  public_buyer_ui_cert_validations_gca = [
+    for dvo in aws_acm_certificate.public_buyer_ui_gca.domain_validation_options : {
+      name  = dvo.resource_record_name
+      value = dvo.resource_record_value
+      type  = dvo.resource_record_type
+    }
+  ]
+
 }
 
 resource "aws_acm_certificate_validation" "public_buyer_ui" {
@@ -68,6 +100,14 @@ resource "aws_acm_certificate_validation" "public_buyer_ui" {
 
   certificate_arn         = aws_acm_certificate.public_buyer_ui.arn
   validation_record_fqdns = [for validation in local.public_buyer_ui_cert_validations : validation.name]
+}
+
+resource "aws_acm_certificate_validation" "public_buyer_ui_gca" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.buyer_ui_public_gca_cert_attempt_validation ? 1 : 0
+
+  certificate_arn         = aws_acm_certificate.public_buyer_ui_gca.arn
+  validation_record_fqdns = [for validation in local.public_buyer_ui_cert_validations_gca : validation.name]
 }
 
 # Redirect all port 80 requests to port 443
@@ -103,6 +143,22 @@ resource "aws_lb_listener" "buyer_ui" {
   }
 }
 
+resource "aws_lb_listener" "buyer_ui_gca" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.buyer_ui_public_gca_cert_attempt_validation ? 1 : 0
+
+  certificate_arn   = aws_acm_certificate.public_buyer_ui_gca.arn
+  load_balancer_arn = aws_lb.buyer_ui.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = var.default_ssl_policy
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.buyer_ui.arn
+  }
+}
+
 # Paths we wish to exclude from outside access
 resource "aws_lb_listener_rule" "blocked_frontend_paths" {
   # Only attempt this stage if vars dictate so (see vars for explanation)
@@ -116,6 +172,32 @@ resource "aws_lb_listener_rule" "blocked_frontend_paths" {
     fixed_response {
       content_type = "text/html"
       message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.buyer_ui_public_fqdn}/\">Home</a>.</p>"
+      status_code  = "404"
+    }
+  }
+
+  condition {
+    path_pattern {
+      values = [
+        "/isAlive",
+      ]
+    }
+  }
+}
+
+# Paths we wish to exclude from outside access
+resource "aws_lb_listener_rule" "blocked_frontend_paths_gca" {
+  # Only attempt this stage if vars dictate so (see vars for explanation)
+  count = var.buyer_ui_public_gca_cert_attempt_validation ? 1 : 0
+
+  listener_arn = aws_lb_listener.buyer_ui[0].arn
+
+  action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/html"
+      message_body = "<p>Path not found. Sorry. Try <a href=\"https://${var.buyer_ui_public_gca_fqdn}/\">Home</a>.</p>"
       status_code  = "404"
     }
   }

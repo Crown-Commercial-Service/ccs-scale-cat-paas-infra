@@ -13,22 +13,6 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
-variable "backup_environment_id" {
-  description = "AWS ENV ID to copy backup"
-  type        = string
-}
-
-variable "backup_kms_key_id" {
-  description = "AWS ENV ID to copy backup"
-  type        = string
-}
-
-variable "backup_retention_months" {
-  description = "The number of months to retain backups"
-  type        = number
-  default     = 1
-}
-
 variable "buyer_ui_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the Buyer UI, format {description: CIDR}"
@@ -44,18 +28,7 @@ variable "buyer_ui_public_cert_attempt_validation" {
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
-variable "buyer_ui_public_gca_cert_attempt_validation" {
-  type        = bool
-  default     = false
-  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
-}
-
 variable "buyer_ui_public_fqdn" {
-  type        = string
-  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
-}
-
-variable "buyer_ui_public_gca_fqdn" {
   type        = string
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
@@ -95,17 +68,7 @@ variable "cas_ui_adopt_redirect_certificate" {
   description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
 }
 
-variable "cas_ui_gca_adopt_redirect_certificate" {
-  type        = bool
-  description = "Conditional to determine whether or not CAS UI should adopt the Redirect certificate (for the migration from Buyer UI to CAS UI - defaults to false)"
-}
-
 variable "cas_ui_base_cert_attempt_validation" {
-  type        = bool
-  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
-}
-
-variable "cas_ui_base_gca_cert_attempt_validation" {
   type        = bool
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `cas_ui_base_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
@@ -125,18 +88,7 @@ variable "cas_ui_public_cert_attempt_validation" {
   description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
 }
 
-variable "cas_ui_public_gca_cert_attempt_validation" {
-  type        = bool
-  default     = true
-  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_cas_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
-}
-
 variable "cas_ui_public_fqdn" {
-  type        = string
-  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
-}
-
-variable "cas_ui_public_gca_fqdn" {
   type        = string
   description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
@@ -241,14 +193,6 @@ variable "hosted_zone_api" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
 }
 
-variable "hosted_zone_api_gca" {
-  type = object({
-    id   = string
-    name = string
-  })
-  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
-}
-
 variable "hosted_zone_cas_ui" {
   type = object({
     id   = string
@@ -257,28 +201,12 @@ variable "hosted_zone_cas_ui" {
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
-variable "hosted_zone_cas_ui_gca" {
-  type = object({
-    id   = string
-    name = string
-  })
-  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
-}
-
 variable "hosted_zone_ui" {
   type = object({
     id   = string
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
-}
-
-variable "hosted_zone_ui_gca" {
-  type = object({
-    id   = string
-    name = string
-  })
-  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
 }
 
 variable "lb_enable_deletion_protection" {
@@ -453,11 +381,6 @@ variable "cas_qa_public_fqdn" {
   description = "FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
 }
 
-variable "cas_qa_public_gca_fqdn" {
-  type        = string
-  description = "GCA FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_cas_qa_gca` variable"
-}
-
 variable "cas_qa_ingress_cidr_safelist" {
   type        = map(string)
   description = "Map of CIDR blocks from which to accept requests for the public-facing Load Balancer for the CAS QA, format {description: CIDR}"
@@ -478,12 +401,4 @@ variable "hosted_zone_cas_qa" {
     name = string
   })
   description = "Properties of the Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
-}
-
-variable "hosted_zone_cas_qa_gca" {
-  type = object({
-    id   = string
-    name = string
-  })
-  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }

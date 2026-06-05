@@ -18,22 +18,6 @@ variable "aws_region" {
   description = "Region into which to deploy region-specific resources"
 }
 
-variable "backup_environment_id" {
-  description = "AWS ENV ID to copy backup"
-  type        = string
-}
-
-variable "backup_kms_key_id" {
-  description = "AWS ENV ID to copy backup"
-  type        = string
-}
-
-variable "backup_retention_months" {
-  description = "The number of months to retain backups"
-  type        = number
-  default     = 1
-}
-
 variable "buyer_ui_idle_timeout" {
   description = "The time in seconds that the connection is allowed to be idle"
 }

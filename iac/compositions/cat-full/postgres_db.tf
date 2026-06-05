@@ -26,10 +26,6 @@ module "db" {
   skip_final_snapshot                   = var.rds_skip_final_snapshot
   subnet_ids                            = module.vpc.subnets.database.ids
   vpc_id                                = module.vpc.vpc_id
-
-  tags = {
-    "${var.backup_retention_tag}" = "${var.backup_retention_months}"
-  }
 }
 
 module "create_rds_postgres_tester" {

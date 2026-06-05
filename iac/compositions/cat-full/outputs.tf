@@ -3,11 +3,6 @@ output "buyer_ui_acm_certificate_arn" {
   value       = aws_acm_certificate.public_buyer_ui.arn
 }
 
-output "buyer_ui_gca_acm_certificate_arn" {
-  description = "ARN of the Buyer UI GCA ACM certificate"
-  value       = aws_acm_certificate.public_buyer_ui_gca.arn
-}
-
 output "cat_api_clients_security_group_id" {
   description = "CAT API clients security group ID"
   value       = aws_security_group.cat_api_clients.id

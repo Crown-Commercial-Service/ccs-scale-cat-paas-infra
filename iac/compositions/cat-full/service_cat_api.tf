@@ -284,7 +284,7 @@ module "cat_api_task" {
         },
         { name = "config.external.dmp-api.base-url", valueFrom = aws_ssm_parameter.manual_config["dmp-api-base-url"].arn },
         { name = "config.external.dmp-api.bearer-token", valueFrom = aws_ssm_parameter.manual_config["dmp-api-bearer-token"].arn },
-        { name = "config.api-key", valueFrom = aws_ssm_parameter.manual_config["config-api-key"].arn },
+        #{ name = "config.api-key", valueFrom = aws_ssm_parameter.manual_config["config-api-key"].arn },
       ]
     }
   }

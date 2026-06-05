@@ -25,8 +25,6 @@ module "cas_qa_service" {
   environment_is_ephemeral                = var.environment_is_ephemeral
   environment_name                        = var.environment_name
   hosted_zone_cas_qa                      = var.hosted_zone_cas_qa
-  hosted_zone_cas_qa_gca                  = var.hosted_zone_cas_qa_gca
-  cas_qa_public_gca_fqdn                  = var.cas_qa_public_gca_fqdn
   lb_enable_deletion_protection           = var.lb_enable_deletion_protection
   nacl_web_id                             = module.cat_full.network_acl_ids.web
   logs_bucket_id                          = module.cat_full.logs_bucket_id

@@ -1,5 +1,6 @@
 module "cat_full" {
-  source = "../../compositions/cat-full"
+  source    = "../../compositions/cat-full"
+  providers = { aws = aws, aws.secondary_region = aws.secondary_region }
 
   auto_minor_version_upgrade               = var.auto_minor_version_upgrade
   aws_account_id                           = var.aws_account_id

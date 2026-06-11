@@ -67,18 +67,6 @@ resource "aws_route53_record" "cat_api" {
   }
 }
 
-resource "aws_route53_record" "cat_api_gca" {
-  name            = var.hosted_zone_api_gca.name
-  allow_overwrite = true
-  type            = "A"
-  zone_id         = var.hosted_zone_api_gca.id
-  alias {
-    name                   = aws_lb.cat_api.dns_name
-    zone_id                = aws_lb.cat_api.zone_id
-    evaluate_target_health = true
-  }
-}
-
 resource "aws_lb_listener" "cat_api" {
   certificate_arn   = module.cat_api_cert.certificate_arn
   load_balancer_arn = aws_lb.cat_api.arn
@@ -92,33 +80,7 @@ resource "aws_lb_listener" "cat_api" {
   }
 }
 
-resource "aws_lb_listener_certificate" "cat_api_gca" {
-  certificate_arn = module.cat_api_gca_cert.certificate_arn
-  listener_arn    = aws_lb_listener.cat_api.arn
-}
-
 resource "aws_lb_listener_rule" "cat_api_blocked_frontend_paths" {
-  listener_arn = aws_lb_listener.cat_api.arn
-
-  action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "application/json"
-      status_code  = "403"
-    }
-  }
-
-  condition {
-    path_pattern {
-      values = [
-        "/actuator/*"
-      ]
-    }
-  }
-}
-
-resource "aws_lb_listener_rule" "cat_api_gca_blocked_frontend_paths" {
   listener_arn = aws_lb_listener.cat_api.arn
 
   action {

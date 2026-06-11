@@ -428,22 +428,6 @@ variable "vpc_cidr_block" {
   description = "CIDR block to assign to the VPC"
 }
 
-variable "backup_environment_id" {
-  description = "AWS ENV ID to copy backup"
-  type        = string
-}
-
-variable "backup_kms_key_id" {
-  description = "AWS ENV ID to copy backup"
-  type        = string
-}
-
-variable "backup_retention_months" {
-  description = "The number of months to retain backups"
-  type        = number
-  default     = 1
-}
-
 variable "buyer_ui_public_gca_cert_attempt_validation" {
   type        = bool
   default     = false

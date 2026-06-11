@@ -1,9 +1,13 @@
 module "cat_full" {
-  source = "../../compositions/cat-full"
+  source    = "../../compositions/cat-full"
+  providers = { aws = aws, aws.secondary_region = aws.secondary_region }
 
   auto_minor_version_upgrade               = var.auto_minor_version_upgrade
   aws_account_id                           = var.aws_account_id
   aws_region                               = var.aws_region
+  backup_environment_id                    = var.backup_environment_id
+  backup_kms_key_id                        = var.backup_kms_key_id
+  backup_retention_months                  = var.backup_retention_months
   buyer_ui_ingress_cidr_safelist           = var.buyer_ui_ingress_cidr_safelist
   buyer_ui_public_cert_attempt_validation  = var.buyer_ui_public_cert_attempt_validation
   buyer_ui_public_gca_cert_attempt_validation = var.buyer_ui_public_gca_cert_attempt_validation

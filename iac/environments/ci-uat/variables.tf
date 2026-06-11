@@ -471,3 +471,19 @@ variable "hosted_zone_cas_qa_gca" {
   })
   description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }
+
+variable "backup_environment_id" {
+  description = "AWS ENV ID to copy backup"
+  type        = string
+}
+
+variable "backup_kms_key_id" {
+  description = "AWS ENV ID to copy backup"
+  type        = string
+}
+
+variable "backup_retention_months" {
+  description = "The number of months to retain backups"
+  type        = number
+  default     = 1
+}

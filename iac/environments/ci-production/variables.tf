@@ -411,3 +411,51 @@ variable "vpc_cidr_block" {
   type        = string
   description = "CIDR block to assign to the VPC"
 }
+
+variable "backup_environment_id" {
+  description = "AWS ENV ID to copy backup"
+  type        = string
+}
+
+variable "backup_kms_key_id" {
+  description = "AWS ENV ID to copy backup"
+  type        = string
+}
+
+variable "backup_retention_months" {
+  description = "The number of months to retain backups"
+  type        = number
+  default     = 1
+}
+
+variable "buyer_ui_public_gca_cert_attempt_validation" {
+  type        = bool
+  default     = false
+  description = "If set to `false`, prevents Terraform from trying to validate the cert ownership - This will the the setting required when you first apply Terraform, to enable the process to finish cleanly. Once CNAME records have been created according to the output `public_buyer_ui_cert_validation_records_required`, you can reset this variable to `true` and re-apply."
+}
+
+variable "buyer_ui_public_gca_fqdn" {
+  type        = string
+  description = "FQDN corresponding to the HOST header which will be present on all UI requests - This will be CNAMEd to the domain specified in the `hosted_zone_ui` variable"
+}
+
+variable "buyer_ui_redirect_r53_to_cas_ui_gca" {
+  type        = bool
+  description = "Conditional to determine whether or not the GCA R53 record for the Buyer UI should be redirected to CAS UI (as part of the CAS UI migration - defaults to false)"
+}
+
+variable "hosted_zone_api_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the API"
+}
+
+variable "hosted_zone_ui_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the UI"
+}

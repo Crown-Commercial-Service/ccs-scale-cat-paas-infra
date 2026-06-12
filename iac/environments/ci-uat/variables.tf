@@ -426,3 +426,8 @@ variable "hosted_zone_cas_qa_gca" {
   })
   description = "Properties of the GCA Hosted Zone (which must be in the same AWS account as the resources) into which we will place alias and cert validation records for the QA"
 }
+
+variable "cas_qa_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_cas_qa_gca` variable"
+}

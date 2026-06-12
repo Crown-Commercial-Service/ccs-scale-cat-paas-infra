@@ -35,7 +35,12 @@ module "cat_full" {
   environment_is_ephemeral                 = var.environment_is_ephemeral
   environment_name                         = var.environment_name
   hosted_zone_api                          = var.hosted_zone_api
+  hosted_zone_api_gca                      = var.hosted_zone_api_gca
   hosted_zone_ui                           = var.hosted_zone_ui
+  hosted_zone_ui_gca                       = var.hosted_zone_ui_gca
+  buyer_ui_public_gca_cert_attempt_validation = var.buyer_ui_public_gca_cert_attempt_validation
+  buyer_ui_public_gca_fqdn                 = var.buyer_ui_public_gca_fqdn
+  buyer_ui_redirect_r53_to_cas_ui_gca      = var.buyer_ui_redirect_r53_to_cas_ui_gca
   lb_enable_deletion_protection            = var.lb_enable_deletion_protection
   ppmt_account                             = var.ppmt_account
   ppmt_enabled                             = var.ppmt_enabled

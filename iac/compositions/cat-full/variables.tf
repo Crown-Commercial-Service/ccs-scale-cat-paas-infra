@@ -377,3 +377,34 @@ variable "vpc_cidr_block" {
   type        = string
   description = "CIDR block to assign to the VPC"
 }
+
+variable "hosted_zone_api_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone into which we will place alias and cert validation records for the API"
+}
+
+variable "hosted_zone_ui_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone into which we will place alias and cert validation records for the UI"
+}
+
+variable "buyer_ui_redirect_r53_to_cas_ui_gca" {
+  type        = bool
+  description = "Conditional to determine whether or not the GCA R53 record for the Buyer UI should be redirected to CAS UI (defaults to false)"
+}
+
+variable "buyer_ui_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header for Buyer UI requests - CNAMEd to the domain in `hosted_zone_ui_gca`"
+}
+
+variable "buyer_ui_public_gca_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the GCA cert ownership for the Buyer UI public domain"
+}

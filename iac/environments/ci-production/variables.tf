@@ -499,3 +499,16 @@ variable "hosted_zone_cas_ui_gca" {
   })
   description = "Properties of the GCA Hosted Zone for CAS UI alias and cert validation records"
 }
+
+variable "hosted_zone_cas_qa_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone for CAS QA alias and cert validation records"
+}
+
+variable "cas_qa_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header for CAS QA requests - CNAMEd to the domain in `hosted_zone_cas_qa_gca`"
+}

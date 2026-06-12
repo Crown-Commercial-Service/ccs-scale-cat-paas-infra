@@ -431,3 +431,51 @@ variable "cas_qa_public_gca_fqdn" {
   type        = string
   description = "GCA FQDN corresponding to the HOST header which will be present on all QA requests - This will be CNAMEd to the domain specified in the `hosted_zone_cas_qa_gca` variable"
 }
+
+variable "cas_ui_gca_adopt_redirect_certificate" {
+  type        = bool
+  description = "Conditional to determine whether or not CAS UI should adopt the GCA Redirect certificate (defaults to false)"
+  default     = false
+}
+
+variable "cas_ui_base_gca_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the GCA cert ownership for the CAS UI base domain"
+}
+
+variable "cas_ui_contractawardservice_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN for the contract award service (CAS UI)"
+}
+
+variable "cas_ui_contractawardservice_gca_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the GCA cert for the contractawardservice domain"
+  default     = false
+}
+
+variable "cas_ui_public_gca_cert_attempt_validation" {
+  type        = bool
+  description = "If set to `false`, prevents Terraform from trying to validate the GCA cert ownership for the CAS UI public domain"
+}
+
+variable "cas_ui_public_gca_fqdn" {
+  type        = string
+  description = "GCA FQDN corresponding to the HOST header for CAS UI requests - CNAMEd to the domain in `hosted_zone_ui_gca`"
+}
+
+variable "hosted_zone_cas_ui_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone for CAS UI alias and cert validation records"
+}
+
+variable "hosted_zone_ui_gca" {
+  type = object({
+    id   = string
+    name = string
+  })
+  description = "Properties of the GCA Hosted Zone for UI alias and cert validation records"
+}

@@ -278,9 +278,9 @@ resource "aws_lb_listener_certificate" "cas_base_ui" {
 }
 
 resource "aws_lb_listener_certificate" "cas_ui_gca" {
-  # Only attempt this stage if cas_ui_adopt_redirect_certificate == true
-  count           = var.cas_ui_gca_adopt_redirect_certificate == true ? 1 : 0
-  certificate_arn = aws_acm_certificate.public_cas_ui_gca.arn
+  # Only attempt this stage if cas_ui_gca_adopt_redirect_certificate == true and the cert is validated
+  count           = var.cas_ui_gca_adopt_redirect_certificate == true && var.cas_ui_public_gca_cert_attempt_validation ? 1 : 0
+  certificate_arn = aws_acm_certificate_validation.public_cas_ui_gca[0].certificate_arn
   listener_arn    = aws_lb_listener.cas_ui[0].arn
 }
 

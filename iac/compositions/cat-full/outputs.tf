@@ -91,6 +91,21 @@ output "public_buyer_ui_cname_target" {
   value       = aws_route53_record.buyer_ui.fqdn
 }
 
+output "public_buyer_ui_gca_cert_validation_records_required" {
+  description = "Details of the cert validation records required for the public-facing GCA Buyer UI certificate"
+  value       = local.public_buyer_ui_cert_validations_gca
+}
+
+output "public_buyer_ui_gca_cname_source" {
+  description = "DNS record to CNAME to the GCA Buyer UI in this stack"
+  value       = var.buyer_ui_public_gca_fqdn
+}
+
+output "public_buyer_ui_gca_cname_target" {
+  description = "FQDN to which the public GCA Buyer UI DNS CNAME should point"
+  value       = aws_route53_record.buyer_ui_gca.fqdn
+}
+
 output "redis_credentials" {
   description = "Redis credentials"
   sensitive   = true

@@ -136,7 +136,7 @@ resource "aws_acm_certificate_validation" "external_cas_qa_gca" {
 
 resource "aws_lb_listener_certificate" "external_cas_qa_gca" {
   listener_arn    = aws_lb_listener.cas_qa.arn
-  certificate_arn = aws_acm_certificate.external_cas_qa_gca.arn
+  certificate_arn = aws_acm_certificate_validation.external_cas_qa_gca.certificate_arn
 }
 
 resource "aws_route53_record" "cas_qa_nlb_gca" {

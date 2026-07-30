@@ -104,6 +104,54 @@ resource "aws_route53_record" "cas_qa_nlb" {
   }
 }
 
+resource "aws_acm_certificate" "external_cas_qa_gca" {
+  domain_name       = "ext.${var.cas_qa_public_gca_fqdn}"
+  validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_route53_record" "external_cas_qa_gca" {
+  for_each = {
+    for dvo in aws_acm_certificate.external_cas_qa_gca.domain_validation_options : dvo.domain_name => {
+      name   = dvo.resource_record_name
+      record = dvo.resource_record_value
+      type   = dvo.resource_record_type
+    }
+  }
+  allow_overwrite = true
+  name            = each.value.name
+  records         = [each.value.record]
+  ttl             = 60
+  type            = each.value.type
+  zone_id         = var.hosted_zone_cas_qa_gca.id
+}
+
+resource "aws_acm_certificate_validation" "external_cas_qa_gca" {
+  certificate_arn         = aws_acm_certificate.external_cas_qa_gca.arn
+  validation_record_fqdns = [for record in aws_route53_record.external_cas_qa_gca : record.fqdn]
+}
+
+resource "aws_lb_listener_certificate" "external_cas_qa_gca" {
+  listener_arn    = aws_lb_listener.cas_qa.arn
+  certificate_arn = aws_acm_certificate_validation.external_cas_qa_gca.certificate_arn
+}
+
+resource "aws_route53_record" "cas_qa_nlb_gca" {
+  name            = "ext.${var.hosted_zone_cas_qa_gca.name}"
+  allow_overwrite = true
+  type            = "A"
+  zone_id         = var.hosted_zone_cas_qa_gca.id
+
+  alias {
+    name                   = aws_lb.cas_qa_nlb.dns_name
+    zone_id                = aws_lb.cas_qa_nlb.zone_id
+    evaluate_target_health = true
+  }
+}
+
 resource "aws_security_group" "cas_qa_nlb" {
   name        = "${var.resource_name_prefixes.normal}:NLB:CASQA"
   description = "External NLB for CAS QA"

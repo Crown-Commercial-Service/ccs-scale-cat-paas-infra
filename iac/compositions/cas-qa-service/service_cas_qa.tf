@@ -60,18 +60,6 @@ resource "aws_lb" "cas_qa" {
   }
 }
 
-resource "aws_lb_attribute" "cas_qa_hsts" {
-  load_balancer_arn = aws_lb.cas_qa.arn
-  key               = "routing.http.response.strict_transport_security.header_value"
-  value             = "max-age=31536000; includeSubDomains"
-}
-
-resource "aws_lb_attribute" "cas_qa_csp" {
-  load_balancer_arn = aws_lb.cas_qa.arn
-  key               = "routing.http.response.content_security_policy.header_value"
-  value             = "default-src 'self';"
-}
-
 # resource "aws_lb" "cas_qa_ext" {
 #   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASQA-EXT"
 #   internal           = false
@@ -189,6 +177,9 @@ resource "aws_lb_listener" "cas_qa" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = var.default_ssl_policy
+
+  routing_http_response_strict_transport_security_header_value = "max-age=31536000; includeSubDomains"
+  routing_http_response_content_security_policy_header_value   = "default-src 'self';"
 
   default_action {
     type             = "forward"

@@ -178,6 +178,9 @@ resource "aws_lb_listener" "cas_qa" {
   protocol          = "HTTPS"
   ssl_policy        = var.default_ssl_policy
 
+  routing_http_response_strict_transport_security_header_value = "max-age=31536000; includeSubDomains"
+  routing_http_response_content_security_policy_header_value   = "default-src 'self';"
+
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.cas_qa.arn

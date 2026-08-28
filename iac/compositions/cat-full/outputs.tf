@@ -3,6 +3,11 @@ output "buyer_ui_acm_certificate_arn" {
   value       = aws_acm_certificate.public_buyer_ui.arn
 }
 
+output "buyer_ui_gca_acm_certificate_arn" {
+  description = "ARN of the Buyer UI GCA ACM certificate"
+  value       = aws_acm_certificate.public_buyer_ui_gca.arn
+}
+
 output "cat_api_clients_security_group_id" {
   description = "CAT API clients security group ID"
   value       = aws_security_group.cat_api_clients.id
@@ -84,6 +89,21 @@ output "public_buyer_ui_cname_source" {
 output "public_buyer_ui_cname_target" {
   description = "FQDN to which the public Buyer UI DNS CNAME should point"
   value       = aws_route53_record.buyer_ui.fqdn
+}
+
+output "public_buyer_ui_gca_cert_validation_records_required" {
+  description = "Details of the cert validation records required for the public-facing GCA Buyer UI certificate"
+  value       = local.public_buyer_ui_cert_validations_gca
+}
+
+output "public_buyer_ui_gca_cname_source" {
+  description = "DNS record to CNAME to the GCA Buyer UI in this stack"
+  value       = var.buyer_ui_public_gca_fqdn
+}
+
+output "public_buyer_ui_gca_cname_target" {
+  description = "FQDN to which the public GCA Buyer UI DNS CNAME should point"
+  value       = aws_route53_record.buyer_ui_gca.fqdn
 }
 
 output "redis_credentials" {

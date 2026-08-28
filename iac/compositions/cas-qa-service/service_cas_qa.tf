@@ -47,6 +47,18 @@ resource "aws_lb" "cas_qa" {
   }
 }
 
+resource "aws_lb_attribute" "cas_qa_hsts" {
+  load_balancer_arn = aws_lb.cas_qa.arn
+  key               = "routing.http.response.strict_transport_security.header_value"
+  value             = "max-age=31536000; includeSubDomains"
+}
+
+resource "aws_lb_attribute" "cas_qa_csp" {
+  load_balancer_arn = aws_lb.cas_qa.arn
+  key               = "routing.http.response.content_security_policy.header_value"
+  value             = "default-src 'self';"
+}
+
 # resource "aws_lb" "cas_qa_ext" {
 #   name               = "${var.resource_name_prefixes.hyphens}-ALB-CASQA-EXT"
 #   internal           = false
